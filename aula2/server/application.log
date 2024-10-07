@@ -1,0 +1,424 @@
+2023-08-21T15:36:07.305-03:00  INFO 34524 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Starting ServerApplication using Java 17 with PID 34524 (D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server\target\classes started by vinic in D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server)
+2023-08-21T15:36:07.315-03:00  INFO 34524 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : The following 1 profile is active: "dev"
+2023-08-21T15:36:07.385-03:00  INFO 34524 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-08-21T15:36:07.385-03:00  INFO 34524 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-08-21T15:36:08.371-03:00 ERROR 34524 --- [restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+java.lang.TypeNotPresentException: Type javax.servlet.http.HttpServletRequest not present
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:125) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.reifyTypeArguments(Reifier.java:68) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:138) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.computeSuperInterfaces(ClassRepository.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.getSuperInterfaces(ClassRepository.java:95) ~[na:na]
+	at java.base/java.lang.Class.getGenericInterfaces(Class.java:1211) ~[na:na]
+	at org.springframework.core.ResolvableType.getInterfaces(ResolvableType.java:503) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.core.ResolvableType.as(ResolvableType.java:451) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.core.ResolvableType.forClass(ResolvableType.java:1063) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.plugin.core.config.PluginRegistriesBeanDefinitionRegistrar.getTargetType(PluginRegistriesBeanDefinitionRegistrar.java:101) ~[spring-plugin-core-2.0.0.RELEASE.jar:2.0.0.RELEASE]
+	at org.springframework.plugin.core.config.PluginRegistriesBeanDefinitionRegistrar.registerBeanDefinitions(PluginRegistriesBeanDefinitionRegistrar.java:71) ~[spring-plugin-core-2.0.0.RELEASE.jar:2.0.0.RELEASE]
+	at org.springframework.context.annotation.ImportBeanDefinitionRegistrar.registerBeanDefinitions(ImportBeanDefinitionRegistrar.java:86) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:373) ~[spring-context-6.0.11.jar:6.0.11]
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721) ~[na:na]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:372) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:427) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:287) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:344) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:115) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:771) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:589) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:734) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:436) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:312) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295) ~[spring-boot-3.1.2.jar:3.1.2]
+	at br.edu.utfpr.pb.pw26s.server.ServerApplication.main(ServerApplication.java:24) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.1.2.jar:3.1.2]
+Caused by: java.lang.ClassNotFoundException: javax.servlet.http.HttpServletRequest
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:114) ~[na:na]
+	... 37 common frames omitted
+
+2023-08-21T15:37:25.435-03:00  INFO 35592 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Starting ServerApplication using Java 17 with PID 35592 (D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server\target\classes started by vinic in D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server)
+2023-08-21T15:37:25.437-03:00  INFO 35592 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : The following 1 profile is active: "dev"
+2023-08-21T15:37:25.490-03:00  INFO 35592 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-08-21T15:37:25.490-03:00  INFO 35592 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-08-21T15:37:26.496-03:00 ERROR 35592 --- [restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+java.lang.TypeNotPresentException: Type javax.servlet.http.HttpServletRequest not present
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:125) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.reifyTypeArguments(Reifier.java:68) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:138) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.computeSuperInterfaces(ClassRepository.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.getSuperInterfaces(ClassRepository.java:95) ~[na:na]
+	at java.base/java.lang.Class.getGenericInterfaces(Class.java:1211) ~[na:na]
+	at org.springframework.core.ResolvableType.getInterfaces(ResolvableType.java:503) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.core.ResolvableType.as(ResolvableType.java:451) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.core.ResolvableType.forClass(ResolvableType.java:1063) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.plugin.core.config.PluginRegistriesBeanDefinitionRegistrar.getTargetType(PluginRegistriesBeanDefinitionRegistrar.java:101) ~[spring-plugin-core-2.0.0.RELEASE.jar:2.0.0.RELEASE]
+	at org.springframework.plugin.core.config.PluginRegistriesBeanDefinitionRegistrar.registerBeanDefinitions(PluginRegistriesBeanDefinitionRegistrar.java:71) ~[spring-plugin-core-2.0.0.RELEASE.jar:2.0.0.RELEASE]
+	at org.springframework.context.annotation.ImportBeanDefinitionRegistrar.registerBeanDefinitions(ImportBeanDefinitionRegistrar.java:86) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:373) ~[spring-context-6.0.11.jar:6.0.11]
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721) ~[na:na]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:372) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:427) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:287) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:344) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:115) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:771) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:589) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:734) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:436) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:312) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295) ~[spring-boot-3.1.2.jar:3.1.2]
+	at br.edu.utfpr.pb.pw26s.server.ServerApplication.main(ServerApplication.java:24) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.1.2.jar:3.1.2]
+Caused by: java.lang.ClassNotFoundException: javax.servlet.http.HttpServletRequest
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:114) ~[na:na]
+	... 37 common frames omitted
+
+2023-08-21T15:39:04.837-03:00  INFO 19488 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Starting ServerApplication using Java 17 with PID 19488 (D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server\target\classes started by vinic in D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server)
+2023-08-21T15:39:04.839-03:00  INFO 19488 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : The following 1 profile is active: "dev"
+2023-08-21T15:39:04.893-03:00  INFO 19488 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-08-21T15:39:04.893-03:00  INFO 19488 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-08-21T15:39:05.657-03:00 ERROR 19488 --- [restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+java.lang.TypeNotPresentException: Type javax.servlet.http.HttpServletRequest not present
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:125) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.reifyTypeArguments(Reifier.java:68) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:138) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.computeSuperInterfaces(ClassRepository.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.getSuperInterfaces(ClassRepository.java:95) ~[na:na]
+	at java.base/java.lang.Class.getGenericInterfaces(Class.java:1211) ~[na:na]
+	at org.springframework.core.ResolvableType.getInterfaces(ResolvableType.java:503) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.core.ResolvableType.as(ResolvableType.java:451) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.core.ResolvableType.forClass(ResolvableType.java:1063) ~[spring-core-6.0.11.jar:6.0.11]
+	at org.springframework.plugin.core.config.PluginRegistriesBeanDefinitionRegistrar.getTargetType(PluginRegistriesBeanDefinitionRegistrar.java:101) ~[spring-plugin-core-2.0.0.RELEASE.jar:2.0.0.RELEASE]
+	at org.springframework.plugin.core.config.PluginRegistriesBeanDefinitionRegistrar.registerBeanDefinitions(PluginRegistriesBeanDefinitionRegistrar.java:71) ~[spring-plugin-core-2.0.0.RELEASE.jar:2.0.0.RELEASE]
+	at org.springframework.context.annotation.ImportBeanDefinitionRegistrar.registerBeanDefinitions(ImportBeanDefinitionRegistrar.java:86) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:373) ~[spring-context-6.0.11.jar:6.0.11]
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721) ~[na:na]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:372) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:427) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:287) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:344) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:115) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:771) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:589) ~[spring-context-6.0.11.jar:6.0.11]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:734) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:436) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:312) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1306) ~[spring-boot-3.1.2.jar:3.1.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1295) ~[spring-boot-3.1.2.jar:3.1.2]
+	at br.edu.utfpr.pb.pw26s.server.ServerApplication.main(ServerApplication.java:24) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.1.2.jar:3.1.2]
+Caused by: java.lang.ClassNotFoundException: javax.servlet.http.HttpServletRequest
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:114) ~[na:na]
+	... 37 common frames omitted
+
+2023-08-21T15:46:10.547-03:00  INFO 9452 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Starting ServerApplication using Java 17 with PID 9452 (D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server\target\classes started by vinic in D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server)
+2023-08-21T15:46:10.548-03:00  INFO 9452 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : The following 1 profile is active: "dev"
+2023-08-21T15:46:10.599-03:00  INFO 9452 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-08-21T15:46:10.599-03:00  INFO 9452 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-08-21T15:46:11.671-03:00  INFO 9452 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-21T15:46:11.756-03:00  INFO 9452 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 76 ms. Found 3 JPA repository interfaces.
+2023-08-21T15:46:12.444-03:00  INFO 9452 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-08-21T15:46:12.462-03:00  INFO 9452 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-08-21T15:46:12.462-03:00  INFO 9452 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.11]
+2023-08-21T15:46:12.556-03:00  INFO 9452 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-08-21T15:46:12.557-03:00  INFO 9452 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1958 ms
+2023-08-21T15:46:12.677-03:00  INFO 9452 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-08-21T15:46:12.951-03:00  INFO 9452 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:pw25s-dev user=SA
+2023-08-21T15:46:12.954-03:00  INFO 9452 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-08-21T15:46:12.970-03:00  INFO 9452 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:pw25s-dev'
+2023-08-21T15:46:13.158-03:00  INFO 9452 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-21T15:46:13.241-03:00  INFO 9452 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.6.Final
+2023-08-21T15:46:13.244-03:00  INFO 9452 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-08-21T15:46:13.256-03:00  WARN 9452 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000021: Encountered deprecated setting [javax.persistence.validation.mode], use [jakarta.persistence.validation.mode] instead
+2023-08-21T15:46:14.132-03:00  INFO 9452 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T15:46:14.342-03:00  INFO 9452 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-08-21T15:46:14.660-03:00  INFO 9452 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T15:46:15.281-03:00  INFO 9452 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-21T15:46:15.283-03:00  INFO 9452 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T15:46:15.813-03:00  INFO 9452 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 14 endpoint(s) beneath base path '/actuator'
+2023-08-21T15:46:15.874-03:00  WARN 9452 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-08-21T15:46:15.998-03:00  INFO 9452 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@415bba31, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3698082e, org.springframework.security.web.context.SecurityContextHolderFilter@6dbdebf2, org.springframework.security.web.header.HeaderWriterFilter@43e63fa3, org.springframework.security.web.authentication.logout.LogoutFilter@6dba4ec2, br.edu.utfpr.pb.pw26s.server.security.JWTAuthenticationFilter@748fe9cc, br.edu.utfpr.pb.pw26s.server.security.JWTAuthorizationFilter@20f00d3e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@20379ada, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1f2cce86, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3ce6a123, org.springframework.security.web.session.SessionManagementFilter@43f9a5b8, org.springframework.security.web.access.ExceptionTranslationFilter@275ef54f, org.springframework.security.web.access.intercept.AuthorizationFilter@5945de3a]
+2023-08-21T15:46:16.352-03:00  INFO 9452 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-08-21T15:46:16.412-03:00  INFO 9452 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-21T15:46:16.425-03:00  INFO 9452 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Started ServerApplication in 6.344 seconds (process running for 7.137)
+2023-08-21T15:46:16.656-03:00  INFO 9452 --- [RMI TCP Connection(5)-172.21.192.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-21T15:46:16.657-03:00  INFO 9452 --- [RMI TCP Connection(5)-172.21.192.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-08-21T15:46:16.658-03:00  INFO 9452 --- [RMI TCP Connection(5)-172.21.192.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-08-21T15:46:16.715-03:00  INFO 9452 --- [registrationTask1] d.c.b.a.c.r.ApplicationRegistrator       : Application registered itself as da6c8b6a96cd
+2023-08-21T15:46:16.832-03:00  WARN 9452 --- [http-nio-8080-exec-1] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:16.935-03:00  WARN 9452 --- [http-nio-8080-exec-3] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:16.951-03:00  WARN 9452 --- [http-nio-8080-exec-2] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.032-03:00  WARN 9452 --- [http-nio-8080-exec-10] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.032-03:00  WARN 9452 --- [http-nio-8080-exec-7] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.033-03:00  WARN 9452 --- [http-nio-8080-exec-4] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.034-03:00  WARN 9452 --- [http-nio-8080-exec-8] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.036-03:00  WARN 9452 --- [http-nio-8080-exec-1] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.036-03:00  WARN 9452 --- [http-nio-8080-exec-9] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.038-03:00  WARN 9452 --- [http-nio-8080-exec-3] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.038-03:00  WARN 9452 --- [http-nio-8080-exec-2] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.040-03:00  WARN 9452 --- [http-nio-8080-exec-6] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.041-03:00  WARN 9452 --- [http-nio-8080-exec-5] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.044-03:00  WARN 9452 --- [http-nio-8080-exec-9] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.045-03:00  WARN 9452 --- [http-nio-8080-exec-8] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.050-03:00  WARN 9452 --- [http-nio-8080-exec-14] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.050-03:00  WARN 9452 --- [http-nio-8080-exec-11] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.053-03:00  WARN 9452 --- [http-nio-8080-exec-17] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.055-03:00  WARN 9452 --- [http-nio-8080-exec-16] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.061-03:00  WARN 9452 --- [http-nio-8080-exec-12] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.062-03:00  WARN 9452 --- [http-nio-8080-exec-15] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.066-03:00  WARN 9452 --- [http-nio-8080-exec-18] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:17.063-03:00  WARN 9452 --- [http-nio-8080-exec-13] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:34.430-03:00  WARN 9452 --- [http-nio-8080-exec-7] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:35.448-03:00  WARN 9452 --- [http-nio-8080-exec-1] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:46:54.430-03:00  WARN 9452 --- [http-nio-8080-exec-3] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:47:14.431-03:00  WARN 9452 --- [http-nio-8080-exec-5] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:47:34.427-03:00  WARN 9452 --- [http-nio-8080-exec-15] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:47:54.428-03:00  WARN 9452 --- [http-nio-8080-exec-11] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:48:14.431-03:00  WARN 9452 --- [http-nio-8080-exec-13] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:48:34.426-03:00  WARN 9452 --- [http-nio-8080-exec-15] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:48:44.439-03:00  WARN 9452 --- [http-nio-8080-exec-11] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:49:04.440-03:00  WARN 9452 --- [http-nio-8080-exec-13] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:49:24.440-03:00  WARN 9452 --- [http-nio-8080-exec-7] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:49:44.427-03:00  WARN 9452 --- [http-nio-8080-exec-12] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:49:54.440-03:00  WARN 9452 --- [http-nio-8080-exec-21] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:50:14.431-03:00  WARN 9452 --- [http-nio-8080-exec-1] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:50:34.438-03:00  WARN 9452 --- [http-nio-8080-exec-22] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:50:54.427-03:00  WARN 9452 --- [http-nio-8080-exec-18] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:51:13.404-03:00  WARN 9452 --- [http-nio-8080-exec-15] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:51:14.434-03:00  WARN 9452 --- [http-nio-8080-exec-17] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:51:34.437-03:00  WARN 9452 --- [http-nio-8080-exec-11] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:51:54.433-03:00  WARN 9452 --- [http-nio-8080-exec-13] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T15:52:03.747-03:00  INFO 9452 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T15:52:04.149-03:00  WARN 9452 --- [SpringApplicationShutdownHook] o.s.b.f.support.DisposableBeanAdapter    : Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2023-08-21T15:52:04.150-03:00  INFO 9452 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-08-21T15:52:04.290-03:00  INFO 9452 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-08-21T15:52:12.322-03:00  INFO 32160 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Starting ServerApplication using Java 17 with PID 32160 (D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server\target\classes started by vinic in D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server)
+2023-08-21T15:52:12.324-03:00  INFO 32160 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : The following 1 profile is active: "dev"
+2023-08-21T15:52:12.380-03:00  INFO 32160 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-08-21T15:52:12.380-03:00  INFO 32160 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-08-21T15:52:13.796-03:00  INFO 32160 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-21T15:52:13.956-03:00  INFO 32160 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 147 ms. Found 3 JPA repository interfaces.
+2023-08-21T15:52:14.935-03:00  INFO 32160 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-08-21T15:52:14.944-03:00  INFO 32160 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-08-21T15:52:14.944-03:00  INFO 32160 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.11]
+2023-08-21T15:52:15.006-03:00  INFO 32160 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-08-21T15:52:15.006-03:00  INFO 32160 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2626 ms
+2023-08-21T15:52:15.111-03:00  INFO 32160 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-08-21T15:52:15.331-03:00  INFO 32160 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:pw25s-dev user=SA
+2023-08-21T15:52:15.333-03:00  INFO 32160 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-08-21T15:52:15.342-03:00  INFO 32160 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:pw25s-dev'
+2023-08-21T15:52:15.492-03:00  INFO 32160 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-21T15:52:15.542-03:00  INFO 32160 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.6.Final
+2023-08-21T15:52:15.546-03:00  INFO 32160 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-08-21T15:52:15.552-03:00  WARN 32160 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000021: Encountered deprecated setting [javax.persistence.validation.mode], use [jakarta.persistence.validation.mode] instead
+2023-08-21T15:52:15.670-03:00  INFO 32160 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T15:52:15.803-03:00  INFO 32160 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-08-21T15:52:16.020-03:00  INFO 32160 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T15:52:16.628-03:00  INFO 32160 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-21T15:52:16.633-03:00  INFO 32160 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T15:52:17.292-03:00  INFO 32160 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 14 endpoint(s) beneath base path '/actuator'
+2023-08-21T15:52:17.360-03:00  WARN 32160 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-08-21T15:52:17.475-03:00  INFO 32160 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@61669324, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@30ee5abf, org.springframework.security.web.context.SecurityContextHolderFilter@651251df, org.springframework.security.web.header.HeaderWriterFilter@522d2f03, org.springframework.security.web.authentication.logout.LogoutFilter@3698082e, br.edu.utfpr.pb.pw26s.server.security.JWTAuthenticationFilter@579371e7, br.edu.utfpr.pb.pw26s.server.security.JWTAuthorizationFilter@56fe806e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@9cf3ab1, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@156e8818, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3d4c626, org.springframework.security.web.session.SessionManagementFilter@8623d4, org.springframework.security.web.access.ExceptionTranslationFilter@26da6e0d, org.springframework.security.web.access.intercept.AuthorizationFilter@377cd4bb]
+2023-08-21T15:52:17.862-03:00  INFO 32160 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-08-21T15:52:17.952-03:00  INFO 32160 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-21T15:52:17.966-03:00  INFO 32160 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Started ServerApplication in 6.29 seconds (process running for 7.366)
+2023-08-21T15:52:18.075-03:00  INFO 32160 --- [registrationTask1] d.c.b.a.c.r.ApplicationRegistrator       : Application registered itself as da6c8b6a96cd
+2023-08-21T15:52:18.118-03:00  INFO 32160 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-21T15:52:18.118-03:00  INFO 32160 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-08-21T15:52:18.122-03:00  INFO 32160 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2023-08-21T15:54:00.200-03:00  INFO 32160 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T15:54:00.588-03:00  WARN 32160 --- [SpringApplicationShutdownHook] o.s.b.f.support.DisposableBeanAdapter    : Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2023-08-21T15:54:00.590-03:00  INFO 32160 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-08-21T15:54:00.728-03:00  INFO 32160 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-08-21T15:54:05.302-03:00  INFO 9396 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Starting ServerApplication using Java 17 with PID 9396 (D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server\target\classes started by vinic in D:\dev\utfpr\aulas\pw26s-2023-2-temp\aula2\server)
+2023-08-21T15:54:05.304-03:00  INFO 9396 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : The following 1 profile is active: "dev"
+2023-08-21T15:54:05.350-03:00  INFO 9396 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-08-21T15:54:05.350-03:00  INFO 9396 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-08-21T15:54:06.326-03:00  INFO 9396 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-21T15:54:06.397-03:00  INFO 9396 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 64 ms. Found 3 JPA repository interfaces.
+2023-08-21T15:54:07.000-03:00  INFO 9396 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-08-21T15:54:07.008-03:00  INFO 9396 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-08-21T15:54:07.008-03:00  INFO 9396 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.11]
+2023-08-21T15:54:07.059-03:00  INFO 9396 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-08-21T15:54:07.060-03:00  INFO 9396 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1709 ms
+2023-08-21T15:54:07.147-03:00  INFO 9396 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-08-21T15:54:07.330-03:00  INFO 9396 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:pw25s-dev user=SA
+2023-08-21T15:54:07.330-03:00  INFO 9396 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-08-21T15:54:07.339-03:00  INFO 9396 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:pw25s-dev'
+2023-08-21T15:54:07.473-03:00  INFO 9396 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-21T15:54:07.518-03:00  INFO 9396 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.6.Final
+2023-08-21T15:54:07.519-03:00  INFO 9396 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-08-21T15:54:07.524-03:00  WARN 9396 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000021: Encountered deprecated setting [javax.persistence.validation.mode], use [jakarta.persistence.validation.mode] instead
+2023-08-21T15:54:07.639-03:00  INFO 9396 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T15:54:07.752-03:00  INFO 9396 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-08-21T15:54:07.964-03:00  INFO 9396 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T15:54:08.561-03:00  INFO 9396 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-21T15:54:08.564-03:00  INFO 9396 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T15:54:09.094-03:00  INFO 9396 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 14 endpoint(s) beneath base path '/actuator'
+2023-08-21T15:54:09.170-03:00  WARN 9396 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-08-21T15:54:09.295-03:00  INFO 9396 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@12321ff, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3f0dc87e, org.springframework.security.web.context.SecurityContextHolderFilter@d1afc27, org.springframework.security.web.header.HeaderWriterFilter@6857694b, org.springframework.security.web.authentication.logout.LogoutFilter@6b002df7, br.edu.utfpr.pb.pw26s.server.security.JWTAuthenticationFilter@2cffbbd5, br.edu.utfpr.pb.pw26s.server.security.JWTAuthorizationFilter@411e6d9c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@275ef54f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@43f9a5b8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@59aa9099, org.springframework.security.web.session.SessionManagementFilter@3d217e06, org.springframework.security.web.access.ExceptionTranslationFilter@4960b1cf, org.springframework.security.web.access.intercept.AuthorizationFilter@4ede09cc]
+2023-08-21T15:54:09.707-03:00  INFO 9396 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-08-21T15:54:09.780-03:00  INFO 9396 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-21T15:54:09.796-03:00  INFO 9396 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Started ServerApplication in 5.016 seconds (process running for 5.834)
+2023-08-21T15:54:09.918-03:00  INFO 9396 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-21T15:54:09.918-03:00  INFO 9396 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-08-21T15:54:09.921-03:00  INFO 9396 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2023-08-21T15:54:09.921-03:00  INFO 9396 --- [registrationTask1] d.c.b.a.c.r.ApplicationRegistrator       : Application registered itself as da6c8b6a96cd
+2023-08-21T15:54:43.906-03:00  INFO 9396 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T15:54:44.299-03:00  WARN 9396 --- [SpringApplicationShutdownHook] o.s.b.f.support.DisposableBeanAdapter    : Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2023-08-21T15:54:44.301-03:00  INFO 9396 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-08-21T15:54:44.482-03:00  INFO 9396 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-08-21T16:54:40.506-03:00  INFO 32520 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Starting ServerApplication using Java 17 with PID 32520 (D:\dev\utfpr\aulas\pw26s-2023-2\aula2\server\target\classes started by vinic in D:\dev\utfpr\aulas\pw26s-2023-2\aula2\server)
+2023-08-21T16:54:40.509-03:00  INFO 32520 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : The following 1 profile is active: "dev"
+2023-08-21T16:54:40.548-03:00  INFO 32520 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-08-21T16:54:40.548-03:00  INFO 32520 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-08-21T16:54:41.562-03:00  INFO 32520 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-21T16:54:41.625-03:00  INFO 32520 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 57 ms. Found 3 JPA repository interfaces.
+2023-08-21T16:54:42.158-03:00  INFO 32520 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-08-21T16:54:42.165-03:00  INFO 32520 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-08-21T16:54:42.166-03:00  INFO 32520 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.11]
+2023-08-21T16:54:42.217-03:00  INFO 32520 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-08-21T16:54:42.218-03:00  INFO 32520 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1670 ms
+2023-08-21T16:54:42.296-03:00  INFO 32520 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-08-21T16:54:42.455-03:00  INFO 32520 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:pw26s-dev user=SA
+2023-08-21T16:54:42.456-03:00  INFO 32520 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-08-21T16:54:42.465-03:00  INFO 32520 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:pw26s-dev'
+2023-08-21T16:54:42.593-03:00  INFO 32520 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-08-21T16:54:42.594-03:00  INFO 32520 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-08-21T16:54:42.594-03:00  INFO 32520 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : 
+2023-08-21T16:54:42.606-03:00  INFO 32520 --- [restartedMain] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:pw26s-dev (H2 2.1)
+2023-08-21T16:54:42.653-03:00  INFO 32520 --- [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2023-08-21T16:54:42.656-03:00  INFO 32520 --- [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.012s)
+2023-08-21T16:54:42.663-03:00  INFO 32520 --- [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2023-08-21T16:54:42.685-03:00  INFO 32520 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2023-08-21T16:54:42.691-03:00  INFO 32520 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1.0 - Init"
+2023-08-21T16:54:42.708-03:00  INFO 32520 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1.1 - Data"
+2023-08-21T16:54:42.715-03:00  INFO 32520 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "PUBLIC", now at version v1.1 (execution time 00:00.033s)
+2023-08-21T16:54:42.773-03:00  INFO 32520 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-21T16:54:42.817-03:00  INFO 32520 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.6.Final
+2023-08-21T16:54:42.819-03:00  INFO 32520 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-08-21T16:54:42.823-03:00  WARN 32520 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000021: Encountered deprecated setting [javax.persistence.validation.mode], use [jakarta.persistence.validation.mode] instead
+2023-08-21T16:54:42.925-03:00  INFO 32520 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T16:54:43.029-03:00  INFO 32520 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-08-21T16:54:43.222-03:00  INFO 32520 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T16:54:43.742-03:00  INFO 32520 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-21T16:54:43.745-03:00  INFO 32520 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T16:54:44.202-03:00  INFO 32520 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 15 endpoint(s) beneath base path '/actuator'
+2023-08-21T16:54:44.337-03:00  WARN 32520 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-08-21T16:54:44.440-03:00  INFO 32520 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7a3040a0, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7cd6c0b6, org.springframework.security.web.context.SecurityContextHolderFilter@548a360b, org.springframework.security.web.header.HeaderWriterFilter@4285a415, org.springframework.security.web.authentication.logout.LogoutFilter@7dc3697f, br.edu.utfpr.pb.pw26s.server.security.JWTAuthenticationFilter@66620944, br.edu.utfpr.pb.pw26s.server.security.JWTAuthorizationFilter@5b5c536b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@34f8cd28, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@323b2f33, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@23913de0, org.springframework.security.web.session.SessionManagementFilter@3d9714fe, org.springframework.security.web.access.ExceptionTranslationFilter@43719ed1, org.springframework.security.web.access.intercept.AuthorizationFilter@6edd17bf]
+2023-08-21T16:54:44.851-03:00  INFO 32520 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-08-21T16:54:44.923-03:00  INFO 32520 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-21T16:54:44.937-03:00  INFO 32520 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Started ServerApplication in 4.829 seconds (process running for 5.514)
+2023-08-21T16:54:45.011-03:00  WARN 32520 --- [registrationTask1] d.c.b.a.c.r.ApplicationRegistrator       : Failed to register application as Application(name=spring-boot-application, managementUrl=http://172.21.192.1:8080/actuator, healthUrl=http://172.21.192.1:8080/actuator/health, serviceUrl=http://172.21.192.1:8080/) at spring-boot-admin ([http://127.0.0.1:8081/instances]): I/O error on POST request for "http://127.0.0.1:8081/instances": Connection refused: no further information. Further attempts are logged on DEBUG level
+2023-08-21T16:54:45.424-03:00  INFO 32520 --- [RMI TCP Connection(2)-172.21.192.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-21T16:54:45.424-03:00  INFO 32520 --- [RMI TCP Connection(2)-172.21.192.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-08-21T16:54:45.426-03:00  INFO 32520 --- [RMI TCP Connection(2)-172.21.192.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2023-08-21T16:54:58.330-03:00  INFO 32520 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T16:54:58.717-03:00  WARN 32520 --- [SpringApplicationShutdownHook] o.s.b.f.support.DisposableBeanAdapter    : Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2023-08-21T16:54:58.718-03:00  INFO 32520 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-08-21T16:54:58.874-03:00  INFO 32520 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-08-21T19:38:19.784-03:00  INFO 3276 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Starting ServerApplication using Java 17 with PID 3276 (D:\dev\utfpr\aulas\pw26s-2023-2\aula2\server\target\classes started by vinic in D:\dev\utfpr\aulas\pw26s-2023-2\aula2\server)
+2023-08-21T19:38:19.786-03:00  INFO 3276 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : The following 1 profile is active: "dev"
+2023-08-21T19:38:19.831-03:00  INFO 3276 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-08-21T19:38:19.831-03:00  INFO 3276 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-08-21T19:38:21.066-03:00  INFO 3276 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-08-21T19:38:21.132-03:00  INFO 3276 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 60 ms. Found 3 JPA repository interfaces.
+2023-08-21T19:38:21.737-03:00  INFO 3276 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2023-08-21T19:38:21.747-03:00  INFO 3276 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-08-21T19:38:21.747-03:00  INFO 3276 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.11]
+2023-08-21T19:38:21.823-03:00  INFO 3276 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-08-21T19:38:21.824-03:00  INFO 3276 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1992 ms
+2023-08-21T19:38:21.929-03:00  INFO 3276 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-08-21T19:38:22.163-03:00  INFO 3276 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:pw26s-dev user=SA
+2023-08-21T19:38:22.165-03:00  INFO 3276 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-08-21T19:38:22.178-03:00  INFO 3276 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:pw26s-dev'
+2023-08-21T19:38:22.349-03:00  INFO 3276 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.16.3 by Redgate
+2023-08-21T19:38:22.349-03:00  INFO 3276 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2023-08-21T19:38:22.349-03:00  INFO 3276 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : 
+2023-08-21T19:38:22.372-03:00  INFO 3276 --- [restartedMain] o.f.c.i.database.base.BaseDatabaseType   : Database: jdbc:h2:mem:pw26s-dev (H2 2.1)
+2023-08-21T19:38:22.450-03:00  INFO 3276 --- [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2023-08-21T19:38:22.455-03:00  INFO 3276 --- [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.030s)
+2023-08-21T19:38:22.462-03:00  INFO 3276 --- [restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2023-08-21T19:38:22.493-03:00  INFO 3276 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2023-08-21T19:38:22.500-03:00  INFO 3276 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1.0 - Init"
+2023-08-21T19:38:22.518-03:00  INFO 3276 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version "1.1 - Data"
+2023-08-21T19:38:22.525-03:00  INFO 3276 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "PUBLIC", now at version v1.1 (execution time 00:00.035s)
+2023-08-21T19:38:22.581-03:00  INFO 3276 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-08-21T19:38:22.639-03:00  INFO 3276 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.6.Final
+2023-08-21T19:38:22.641-03:00  INFO 3276 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-08-21T19:38:22.648-03:00  WARN 3276 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000021: Encountered deprecated setting [javax.persistence.validation.mode], use [jakarta.persistence.validation.mode] instead
+2023-08-21T19:38:22.760-03:00  INFO 3276 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T19:38:22.881-03:00  INFO 3276 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-08-21T19:38:23.112-03:00  INFO 3276 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-08-21T19:38:23.650-03:00  INFO 3276 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-08-21T19:38:23.653-03:00  INFO 3276 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T19:38:24.125-03:00  INFO 3276 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 15 endpoint(s) beneath base path '/actuator'
+2023-08-21T19:38:24.249-03:00  WARN 3276 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-08-21T19:38:24.358-03:00  INFO 3276 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6a23bf4b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4d0970d0, org.springframework.security.web.context.SecurityContextHolderFilter@5b5c536b, org.springframework.security.web.header.HeaderWriterFilter@49ea7890, org.springframework.security.web.authentication.logout.LogoutFilter@6952b942, br.edu.utfpr.pb.pw26s.server.security.JWTAuthenticationFilter@7ca77c81, br.edu.utfpr.pb.pw26s.server.security.JWTAuthorizationFilter@8505c3f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@69089a54, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@218bef7b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7ffe7399, org.springframework.security.web.session.SessionManagementFilter@7a3040a0, org.springframework.security.web.access.ExceptionTranslationFilter@78fd9e75, org.springframework.security.web.access.intercept.AuthorizationFilter@29f1cf90]
+2023-08-21T19:38:24.785-03:00  INFO 3276 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-08-21T19:38:24.849-03:00  INFO 3276 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2023-08-21T19:38:24.863-03:00  INFO 3276 --- [restartedMain] b.e.u.pb.pw26s.server.ServerApplication  : Started ServerApplication in 5.486 seconds (process running for 6.404)
+2023-08-21T19:38:25.308-03:00  INFO 3276 --- [registrationTask1] d.c.b.a.c.r.ApplicationRegistrator       : Application registered itself as da6c8b6a96cd
+2023-08-21T19:38:25.360-03:00  INFO 3276 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-08-21T19:38:25.360-03:00  INFO 3276 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-08-21T19:38:25.362-03:00  INFO 3276 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-08-21T19:42:03.193-03:00  WARN 3276 --- [http-nio-8080-exec-4] ocalVariableTableParameterNameDiscoverer : Using deprecated '-debug' fallback for parameter name resolution. Compile the affected code with '-parameters' instead or avoid its introspection: com.zaxxer.hikari.pool.HikariPool
+2023-08-21T19:47:31.345-03:00  INFO 3276 --- [http-nio-8080-exec-2] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [g_state={"i_l":2,"i_p":1686794156169}] that contained an invalid cookie. That cookie will be ignored.
+ Note: further occurrences of this error will be logged at DEBUG level.
+2023-08-21T19:47:31.986-03:00  WARN 3276 --- [http-nio-8080-exec-10] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T19:48:20.425-03:00  WARN 3276 --- [http-nio-8080-exec-8] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T19:53:40.365-03:00  WARN 3276 --- [http-nio-8080-exec-1] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T19:53:41.112-03:00  WARN 3276 --- [http-nio-8080-exec-10] o.s.c.s.ResourceBundleMessageSource      : ResourceBundle [messages/messages] not found for MessageSource: Can't find bundle for base name messages/messages, locale en_US
+2023-08-21T20:12:09.945-03:00  INFO 3276 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-08-21T20:12:10.331-03:00  WARN 3276 --- [SpringApplicationShutdownHook] o.s.b.f.support.DisposableBeanAdapter    : Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2023-08-21T20:12:10.333-03:00  INFO 3276 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-08-21T20:12:10.491-03:00  INFO 3276 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
