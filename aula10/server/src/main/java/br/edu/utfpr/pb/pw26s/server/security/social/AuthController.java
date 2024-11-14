@@ -1,7 +1,6 @@
 package br.edu.utfpr.pb.pw26s.server.security.social;
 
 import br.edu.utfpr.pb.pw26s.server.model.AuthProvider;
-import br.edu.utfpr.pb.pw26s.server.model.Authority;
 import br.edu.utfpr.pb.pw26s.server.model.User;
 import br.edu.utfpr.pb.pw26s.server.repository.AuthorityRepository;
 import br.edu.utfpr.pb.pw26s.server.repository.UserRepository;
@@ -12,18 +11,16 @@ import br.edu.utfpr.pb.pw26s.server.service.AuthService;
 import br.edu.utfpr.pb.pw26s.server.service.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashSet;
 

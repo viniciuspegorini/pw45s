@@ -44,13 +44,11 @@ public class MinioUtil {
         if (flag) {
             StatObjectResponse statObject = statObject(bucketName, objectName);
             if (statObject != null && statObject.size() > 0) {
-                InputStream stream =
-                        minioClient.getObject(
-                                GetObjectArgs.builder()
-                                        .bucket(bucketName)
-                                        .object(objectName)
-                                        .build());
-                return stream;
+                return minioClient.getObject(
+                        GetObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(objectName)
+                                .build());
             }
         }
         return null;
@@ -59,13 +57,11 @@ public class MinioUtil {
     // Check if bucket name exists
     @SneakyThrows
     public boolean bucketExists(String bucketName) {
-        boolean found =
-                minioClient.bucketExists(
-                        BucketExistsArgs.builder().
-                                bucket(bucketName).
-                                build());
 
-        return found;
+        return minioClient.bucketExists(
+                BucketExistsArgs.builder().
+                        bucket(bucketName).
+                        build());
     }
 
     // Create bucket name
@@ -132,9 +128,7 @@ public class MinioUtil {
             minioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
             flag = bucketExists(bucketName);
 
-            if (!flag) {
-                return true;
-            }
+            return !flag;
         }
         return false;
     }
@@ -192,10 +186,8 @@ public class MinioUtil {
     public StatObjectResponse statObject(String bucketName, String objectName) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            StatObjectResponse stat =
-                    minioClient.statObject(
-                            StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
-            return stat;
+            return minioClient.statObject(
+                    StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
         }
         return null;
     }
@@ -207,15 +199,13 @@ public class MinioUtil {
         if (flag) {
             StatObjectResponse statObject = statObject(bucketName, objectName);
             if (statObject != null && statObject.size() > 0) {
-                InputStream stream =
-                        minioClient.getObject(
-                                GetObjectArgs.builder()
-                                        .bucket(bucketName)
-                                        .object(objectName)
-                                        .offset(offset)
-                                        .length(length)
-                                        .build());
-                return stream;
+                return minioClient.getObject(
+                        GetObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(objectName)
+                                .offset(offset)
+                                .length(length)
+                                .build());
             }
         }
         return null;

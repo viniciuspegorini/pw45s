@@ -25,12 +25,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    private final AuthorityRepository authorityRepository;
-
-    public CustomOAuth2UserService(UserRepository userRepository, UserService userService, AuthorityRepository authorityRepository) {
+    public CustomOAuth2UserService(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
         this.userService = userService;
-        this.authorityRepository = authorityRepository;
     }
 
     @Override

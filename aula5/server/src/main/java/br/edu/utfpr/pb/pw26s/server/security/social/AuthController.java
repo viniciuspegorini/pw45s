@@ -7,11 +7,11 @@ import br.edu.utfpr.pb.pw26s.server.repository.UserRepository;
 import br.edu.utfpr.pb.pw26s.server.security.SecurityConstants;
 import br.edu.utfpr.pb.pw26s.server.security.dto.AuthenticationResponse;
 import br.edu.utfpr.pb.pw26s.server.security.dto.UserResponseDTO;
-import br.edu.utfpr.pb.pw26s.server.service.AuthService;
 import br.edu.utfpr.pb.pw26s.server.service.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+
+import com.google.api.client.json.webtoken.JsonWebToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,12 +48,12 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> auth(HttpServletRequest request, HttpServletResponse response) {
         String idToken = request.getHeader("Auth-Id-Token");
         if (idToken != null) {
-            final Payload payload;
+            final JsonWebToken.Payload payload;
             try {
                 payload = googleTokenVerifier.verify(
                         idToken.replace(SecurityConstants.TOKEN_PREFIX, "") );
                 if (payload != null) {
-                    String username = payload.getEmail();
+                    String username = (String) payload.get("email");
 
                     User user = userRepository.findByUsername(username);
                     if (user == null) {

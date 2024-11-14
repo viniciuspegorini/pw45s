@@ -64,6 +64,24 @@
 ## 1 - Seminário
 ### Escolha uma linguagem, plataforma e/ou framework para desenvolvimento Web (Java, PHP, Node.js, Perl, Ruby on Rails, .NET(C♯, VB), Python, etc.) ou Híbrido (Android, IOs):
 
+- ALEXANDRE KURPEL KUHN, FERNANDO LUIS LOFF - Nest.js
+- DANIEL KAGHOFER, TIAGO CENCI - Flask
+- LUCAS CALADO BRESOLINO - Go
+- KARINE LUCION, MATHEUS MARTARELLO GUTSTEIN - Cypres 
+- ANALICE MOSCHEN, MATHEUS DE SOUZA GUEDES - Play
+- EVERTON ROMANN - Pyramid
+- VICTOR GUILHERME CORTELETTE FERREIRA, LUAN FILIPE FINATTO - Svelte
+- GABRIEL GOTARDO ROSA, IGOR GUSTAVO MATIELLO - Vue.js
+- GUILHERME KURPEL KUHN, LUCAS VINICIUS FERREIRA BERTELLA - Ruby on rails
+- PEDRO VICTOR FERREIRA ANDREOLI - Laravel
+- VINICIUS FLYSSAK, DAVID IRUAN MARTINELLO DOS SANTOS - Angular
+- BRUNO HENRIQUE LEAO RUARO, RENAN GUSTAVO CEZAROTTO DE MATOS - Quarkus
+- GEOVANE DE CAMPOS SOARES - .NET
+- GUSTAVO HENRIQUE DE BARROS MESTRE, ANA FLAVIA PERIN - Django
+- JOAO GABRIEL JARUTAIS, VITOR LUIZ MARCANTE - Node.js
+- LUIZ ALBERTO DOS PASSOS - FastAPI
+- MARCOS FELIPE ALTENHOFEN - Flutter
+- RODRIGO IZIDORO PADILHA - ???
 
 1. [Deverá ser entregue] Desenvolver uma apresentação (PPT, PDF ou Readme.MD no git) contendo uma breve apresentação do *framework*/biblioteca escolhida:
 - As vantagens e desvantagens da linguagem, *framework* e/ou plataforma. 
