@@ -17,6 +17,10 @@
 **/server/postgres-data/
 **/server/data/
 
+#Logs
+*.log
+*.gz
+
 # dependencies
 /node_modules
 
