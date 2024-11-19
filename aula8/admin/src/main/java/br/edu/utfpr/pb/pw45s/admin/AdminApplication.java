@@ -1,4 +1,4 @@
-package br.edu.utfpr.pb.pw26s.admin;
+package br.edu.utfpr.pb.pw45s.admin;
 
 import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;

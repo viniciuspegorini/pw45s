@@ -8,7 +8,7 @@
 		<version>3.3.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.edu.utfpr.pb.pw26s</groupId>
+	<groupId>br.edu.utfpr.pb.pw45s</groupId>
 	<artifactId>admin</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>admin</name>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-server</artifactId>
-			<version>3.3.5</version>
+			<version>3.3.6</version>
 		</dependency>
 
 	</dependencies>

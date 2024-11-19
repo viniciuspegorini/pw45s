@@ -109,7 +109,7 @@ O primeiro passo será permitir o acesso aos dados de permissões criando o **Au
 ```java
 package br.edu.utfpr.pb.pw26s.server.repository;
 
-import br.edu.utfpr.pb.pw26s.server.model.Authority;
+import model.br.edu.utfpr.pb.pw45s.server.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
@@ -118,13 +118,16 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 ```
 
 Agora já é possível acessar as permissões do banco de dados e associá-la um usuário, para isso basta adicionar o método ***save()*** da classe **UserService**:
+
 ```java
 package br.edu.utfpr.pb.pw26s.server.service;
-import br.edu.utfpr.pb.pw26s.server.model.User;
-import br.edu.utfpr.pb.pw26s.server.repository.AuthorityRepository;
-import br.edu.utfpr.pb.pw26s.server.repository.UserRepository;
+
+import model.br.edu.utfpr.pb.pw45s.server.User;
+import repository.br.edu.utfpr.pb.pw45s.server.AuthorityRepository;
+import repository.br.edu.utfpr.pb.pw45s.server.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.HashSet;
 
 @Service
@@ -132,16 +135,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     BCryptPasswordEncoder passwordEncoder;
-    
+
     public UserService(UserRepository userRepository, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         passwordEncoder = new BCryptPasswordEncoder();
     }
+
     public User save(User user) {
-        user.setPassword( passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setUserAuthorities(new HashSet<>());
-        user.getUserAuthorities().add( authorityRepository.findByAuthority("ROLE_USER") );
+        user.getUserAuthorities().add(authorityRepository.findByAuthority("ROLE_USER"));
         return userRepository.save(user);
     }
 }

@@ -1,7 +1,35 @@
 # Spring Framework (back-end) - Upload de arquivos utilizando MINIO
 
 ## Introdução
-Utilizando o serviço de armazenamento de objetos **Minio** será realizado o *upload* de arquivos para a API. Os arquivos armazenados serão as imagens dos produtos.
+Utilizando o serviço de armazenamento de objetos **Minio** será realizado o *upload* de arquivos para a API. Os arquivos armazenados serão as imagens dos produtos, sendo que para cada produto será possível realizar o *upload* de uma imagem.
+
+## Criando uma instância do Minio no Docker
+Para poder fazer o upload do arquivo para o Minio será necessário criar um contêiner **docker** para isso, do contrário seria necessário contratar um serviço de nuvem para o armazenamento. Na raiz da pasta do projeto **server** existe um arquivo chamado  **docker-compose.yml**, o qual possui as configurações necessárias para criar um contêiner **docker** com uma instância do **Minio**, com usuário e senha: "*minio@admin*", conforme pode ser observado no código abaixo:
+
+```yml
+version: "3.9"  
+########################### SERVICES  
+services:  
+  ########################### MINIO  
+  minio:  
+    image: minio/minio:latest  
+    container_name: minio  
+    environment:  
+	    MINIO_ROOT_USER: "minio@admin"  
+		MINIO_ROOT_PASSWORD: "minio@admin"  
+	volumes:  
+      - ./data:/data  
+	ports:  
+		- 9000:9000  
+		- 9001:9001  
+	command: server /data --console-address :9001
+```
+Com o **Docker** instalado no computador juntamente com o Docker compose, basta executar o comando:
+Para executar o  comando:
+```cmd
+docker compose up -d
+```  
+Com isso um contêiner do Minio será criado e iniciado, o próximo passo é testar esse contêiner, bastando acessar a URL: [http://127.0.0.1:9001/](http://127.0.0.1:9001/) e utilizar "*minio@admin*" como usuário e senha. Com isso a etapa inicial de configuração do Minio está concluída.
 
 ## Alterações na estrutura do projeto
 Abaixo serão listados apenas os arquivos criados e modificados em relação ao projeto **server** da **aula7**:
@@ -10,11 +38,11 @@ Abaixo serão listados apenas os arquivos criados e modificados em relação ao 
 - Classe **ProductController** no pacote *controller*.
 - Classe **ProductDto** no pacote *dto*.
 - No pacote *minio*:
-    - Classe **MinioConfig** no pacote *config*.
-    - Classe **FileResponse** no pacote *payload*.
-    - Classes **MinioService** e **MinioServiceImpl** nos pacotes *service* e *service.imp*, respectivamente.
-    - Classe **FileTypeUtils** no pacote *util*.
-    - Classe **MinioUtil** no pacote *util*.
+  - Classe **MinioConfig** no pacote *config*.
+  - Classe **FileResponse** no pacote *payload*.
+  - Classes **MinioService** e **MinioServiceImpl** nos pacotes *service* e *service.imp*, respectivamente.
+  - Classe **FileTypeUtils** no pacote *util*.
+  - Classe **MinioUtil** no pacote *util*.
 - Classe **Product** no pacote *model*.
 - Classes **ProductService** e **ProductServiceImpl** nos pacotes *service* e *service.impl*, respectivamente.
 
@@ -30,7 +58,7 @@ No arquivo **pom.xml** foram adicionadas as dependências do Minio para facilita
 		<dependency>
 			<groupId>io.minio</groupId>
 			<artifactId>minio</artifactId>
-			<version>8.5.2</version>
+			<version>8.5.13</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -39,7 +67,7 @@ No arquivo **pom.xml** foram adicionadas as dependências do Minio para facilita
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
-			<version>5.8.15</version>
+			<version>5.8.22</version>
 		</dependency>
 	</dependencies>
 	<!-- ... -->
@@ -51,8 +79,8 @@ No arquivo **application.yml** foram adicionadas as configurações para acesso 
 minio:
 	endpoint: http://127.0.0.1:9000
 	port: 9000
-	accessKey: minioadmin  #Login Account
-	secretKey: minioadmin  # Login Password
+	accessKey: minio@admin  #Login Account
+	secretKey: minio@admin  # Login Password
 	secure: false
 	bucket-name: commons  # Bucket Name
 	image-size: 10485760  # Maximum size of picture file
@@ -210,7 +238,7 @@ public  class MinioConfig {
 A classe **FileResponse** será utilizada para o retorno do objeto adicionado no serviço **Minio** contendo os campos que serão utilizados para armazenar no banco de dados da aplicação.
 
 ```java
-package br.edu.utfpr.pb.pw26s.server.minio.payload;
+package br.edu.utfpr.pb.pw45s.server.minio.payload;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -260,11 +288,11 @@ public  interface MinioService {
 ```
 O principal método utilizado neste projeto é o ***putObject()***, que recebe o arquivo, o nome do *bucket* em que o arquivo será armazenado e o tipo do arquivo. E, utilizando os métodos da classe **MinioUtil** verifica se o *bucket* existe, caso não exista é criado e então o arquivo é enviado para o serviço do **Minio**.
 ```java
-package br.edu.utfpr.pb.pw26s.server.minio.service.impl;
-import br.edu.utfpr.pb.pw26s.server.minio.config.MinioConfig;
-import br.edu.utfpr.pb.pw26s.server.minio.payload.FileResponse;
-import br.edu.utfpr.pb.pw26s.server.minio.service.MinioService;
-import br.edu.utfpr.pb.pw26s.server.minio.util.MinioUtil;
+package br.edu.utfpr.pb.pw45s.server.minio.service.impl;
+import br.edu.utfpr.pb.pw45s.server.minio.config.MinioConfig;
+import br.edu.utfpr.pb.pw45s.server.minio.payload.FileResponse;
+import br.edu.utfpr.pb.pw45s.server.minio.service.MinioService;
+import br.edu.utfpr.pb.pw45s.server.minio.util.MinioUtil;
 import io.minio.messages.Bucket;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
@@ -353,7 +381,7 @@ public  class MinioServiceImpl implements MinioService {
 
 A classe **FileTypeUtils** possui apenas um métrodo o ***getFileType()*** que recebe o arquivo e retorna o tipo de arquivo do mesmo.
 ```java
-package br.edu.utfpr.pb.pw26s.server.minio.util;
+package br.edu.utfpr.pb.pw45s.server.minio.util;
 import cn.hutool.core.io.FileTypeUtil;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -413,8 +441,8 @@ public  class FileTypeUtils {
 Já a classe **MinioUtil** é onde estão implementados os métodos de comunicação direto com a API do serviço **Minio**. Sendo o principal método o ***putObject()*** , responsável pelo upload do arquivo para o serviço de armazenamento.
 
 ```java
-package br.edu.utfpr.pb.pw26s.server.minio.util;
-import br.edu.utfpr.pb.pw26s.server.minio.config.MinioConfig;
+package br.edu.utfpr.pb.pw45s.server.minio.util;
+import br.edu.utfpr.pb.pw45s.server.minio.config.MinioConfig;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
@@ -668,4 +696,8 @@ public class MinioUtil {
     }
 }
 ```
-Com as implementações acima é possível realizar o *upload*, *download* e gerenciamento do serviço **Minio**.
+Com as implementações acima é possível realizar o *upload* e gerenciamento do serviço **Minio**, na aplicação **server** será possível realizar o *download* do arquivo também. Porém para utilizar o arquivo publicamente, é necessário alterar a configuração de visibilidade do *bucket* criado. Para isso basta acessar o console do Minio por meio da URL [http://127.0.0.1:9001/](http://127.0.0.1:9001/) navegar até o menu **buckets** > selecionar o bucket criado para aplicação, que foi o **commons**, então ir no sub-menu **Anonymous** adicionar uma nova regra, com os valores: **Prefix=*** e **Access=readonly**, assim qualquer portador da URL do arquivo carregado no Minio vai poder visualizar o arquivo, com permissão de leitura.
+
+# Referências
+
+[1] Minio, https://min.io/. Acesso em: 19/11/2024.

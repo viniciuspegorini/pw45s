@@ -23,9 +23,8 @@ public class User implements UserDetails {
     private Long id;
 
     @UniqueUsername
-    @NotNull(message = "{br.edu.utfpr.pb.pw25s.username.NotNull}")
+    @NotNull
     @Size(min = 4, max = 255)
-    @NotEmpty
     private String username;
 
     @NotNull
