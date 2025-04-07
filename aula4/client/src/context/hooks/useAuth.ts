@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../../lib/axios";
-import { AuthenticatedUser, AuthenticationResponse, UserLogin } from "../../commons/types";
+import { AuthenticatedUser, AuthenticationResponse } from "../../commons/types";
 
 export function useAuth() {
   const [authenticated, setAuthenticated] = useState(false);

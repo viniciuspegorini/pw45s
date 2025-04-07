@@ -13,7 +13,6 @@ export function ProductFormPage() {
     price: 0,
     description: "",
     category: undefined,
-    imageName: "",
   });
   const [image, setImage] = useState<any | null>(null);
   const [errors, setErrors] = useState({
@@ -44,7 +43,6 @@ export function ProductFormPage() {
                   price: response.data.price,
                   description: response.data.description,
                   category: response.data.category.id,
-                  imageName: response.data.imageName,
                 });
                 setApiError("");
               } else {
@@ -91,10 +89,6 @@ export function ProductFormPage() {
     });
   };
 
-  const onFileChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {    
-    setImage(event.target.files ? event.target.files[0] : null);
-  };
-
   const onSubmit = () => {
     const product: Product = {
       id: form.id,
@@ -104,14 +98,14 @@ export function ProductFormPage() {
       category: { id: form.category, name: "" },
     };
     setPendingApiCall(true);
-   
-    const formData = new FormData();    
-    formData.append('image', image);
+
+    const formData = new FormData();
+    formData.append("image", image);
     const blob = new Blob([JSON.stringify(product)], {
-      type: 'application/json'
+      type: "application/json",
     });
-    formData.append('product', blob);
-    ProductService.save(formData)
+    formData.append("product", blob);
+    ProductService.save(product)
       .then((response) => {
         setPendingApiCall(false);
         navigate("/products");
@@ -184,18 +178,6 @@ export function ProductFormPage() {
         </select>
         {errors.category && (
           <div className="invalid-feedback d-block">{errors.category}</div>
-        )}
-      </div>
-      <div className="col-12 mb-3">
-        <label>Imagem</label>
-        <input
-          className="form-control"
-          type="file"
-          name="image"
-          onChange={onFileChangeHandler}
-        />
-        {(form.imageName &&
-        <img style={{width:'100px', height:'100px'}} src={`http://localhost:9000/commons/${form.imageName}`} />
         )}
       </div>
       <div className="text-center">

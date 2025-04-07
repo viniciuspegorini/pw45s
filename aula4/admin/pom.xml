@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.5</version>
+		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.edu.utfpr.pb.pw45s</groupId>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-server</artifactId>
-			<version>3.3.6</version>
+			<version>3.4.5</version>
 		</dependency>
 
 	</dependencies>
@@ -54,14 +54,14 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-			<url>http://repo.spring.io/milestone</url>
+			<url>https://repo.spring.io/milestone</url>
 		</repository>
 		<repository>
 			<id>spring-snapshot</id>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
-			<url>http://repo.spring.io/snapshot</url>
+			<url>https://repo.spring.io/snapshot</url>
 		</repository>
 		<repository>
 			<id>sonatype-nexus-snapshots</id>

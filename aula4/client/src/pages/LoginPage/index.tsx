@@ -114,7 +114,7 @@ export function LoginPage() {
           </Link>
         </div>
 
-        <p className="mt-5 mb-3 text-muted">&copy; 2010–2023</p>
+        <p className="mt-5 mb-3 text-muted">&copy; 2010–2025</p>
       </form>
     </main>
   );

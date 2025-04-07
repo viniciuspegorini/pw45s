@@ -62,12 +62,18 @@ export function ProductListPageV2() {
 
   return (
     <div className="container">
-      <h1 className="fs-2 mb-4 text-center">Lista de Produto V2</h1>
+      <h1 className="fs-2 mb-4 text-center">Lista de Produto - Chakra UI</h1>
       <div className="text-center">
         <Link
           className="btn btn-success btn-icon mb-2"
           to="/product-v2/new"
           title="Novo Produto"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "200px",
+          }}
         >
           <BsPlusCircle /> <span style={{ marginLeft: 10 }}>Novo Produto</span>
         </Link>
