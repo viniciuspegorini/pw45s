@@ -58,4 +58,15 @@ spring:
       ddl-auto: create-drop
   flyway:
     locations: classpath:/db/test
-
+---
+spring:
+  config:
+    activate:
+      on-profile: dev-postgres
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/pw45s
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

@@ -4,7 +4,7 @@
 A documentação é uma parte essencial da construção de APIs REST. Neste aulas, iremos analisar o SpringDoc, que simplifica a geração e manutenção da documentação de API com base na especificação OpenAPI 3 [2] para aplicações Spring Boot 3.+ [1].
 
 ### Configurando a dependência springdoc-openapi
-O Spring Boot 3.x [1] necessita a versão 2 da biblioteca springdoc-openapi [3]. Para isso basta adicionar a dependência no arquivo **pom.xml**:
+O Spring Boot 3.x [1] necessita a versão 2 da biblioteca springdoc-openapi [3]. Para isso basta adicionar a dependência no arquivo **pom.xml**, no caso desde projeto com o Spring Boot na versão 3.4.4:
 
 ``` xml
 <!--... -->
@@ -12,7 +12,7 @@ O Spring Boot 3.x [1] necessita a versão 2 da biblioteca springdoc-openapi [3].
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.1.0</version>
+			<version>2.8.6</version>
 		</dependency>
 	</dependencies>
 <!--... -->
@@ -71,10 +71,10 @@ Esse exemplo utiliza um projeto SpringBoot utilizando o Maven para gerenciamento
 Na sequência será realizada a configuração na classe principal da aplicação **ServerApplication**.
 
 ```java
-\\...
+//...
 @SpringBootApplication
 public  class  ServerApplication {
-	\\...
+	//...
 	@Bean
 	public  static  BeanFactoryPostProcessor  dependsOnPostProcessor() {
 		return bf -> {
@@ -102,7 +102,7 @@ public  class  ServerApplication {
 		dsv.afterPropertiesSet();
 		return dsv;
 	}
-	\\...
+	//...
 }
 ```
 O próximo passo é configurar as credenciais de acesso ao banco de dados no arquivo de configuração **application.yml**. O banco de dados utilizado neste exemplo foi o H2, mas pode ser alterado para utilizar qualquer outro SGBD (PostgreSQL, MongoDB, MySQL, MariaDB, Microsoft SQL Server, entre outros). O arquivo está dividido em *profiles* sendo que o profile ativo é o **dev** cada conjunto de '- - - ' delimita um profile.

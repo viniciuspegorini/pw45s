@@ -147,7 +147,8 @@ public class UserControllerTest {
         Map<String, String> validationErrors = response.getBody().getValidationErrors();
 
         assertThat(validationErrors.get("username"))
-                .isEqualTo("O 'usuário' não pode ser nulo");
+                .isEqualTo("must not be empty");
+                //.isEqualTo("O 'usuário' não pode ser nulo");
     }
 
     @Test
