@@ -84,11 +84,11 @@ public abstract class CrudController<T, D, ID extends Serializable>{
 		return ResponseEntity.noContent().build();
 	}
 
-	protected D convertToDto(T entity) {
+	private D convertToDto(T entity) {
 		return getModelMapper().map(entity, this.typeDtoClass);
 	}
 
-	protected T convertToEntity(D entityDto) {
+	private T convertToEntity(D entityDto) {
 		return getModelMapper().map(entityDto, this.typeClass);
 	}
 

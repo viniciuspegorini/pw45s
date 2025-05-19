@@ -82,7 +82,7 @@ export function ProductFormPageV2() {
       id: entity.id,
       category: { id: data.category.id, name: "" },
     };
-    ProductService.saveProduct(product)
+    ProductService.save(product)
       .then((response) => {
         navigate("/product-v2");
       })

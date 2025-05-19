@@ -8,11 +8,11 @@
 		<version>3.3.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.edu.utfpr.pb.pw25s</groupId>
+	<groupId>br.edu.utfpr.pb.pw26s</groupId>
 	<artifactId>server</artifactId>
 	<version>0.1</version>
 	<name>server</name>
-	<description>Aula da Disciplina PW25S</description>
+	<description>Aula da Disciplina PW26S</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -86,16 +86,17 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 
-		<!-- Logger -->
+		<!-- Monitoramento dos endpoints para o Admin -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		<!-- Admin -->
+
+		<!-- Spring boot Admin Client -->
 		<dependency>
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-client</artifactId>
-			<version>2.6.6</version>
+			<version>3.3.5</version>
 		</dependency>
 
 		<!-- Google Authentication -->
@@ -117,25 +118,22 @@
 			<artifactId>minio</artifactId>
 			<version>8.5.13</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-all</artifactId>
-			<version>5.8.21</version>
+			<version>5.8.22</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>me.paulschwarz</groupId>
-			<artifactId>spring-dotenv</artifactId>
-			<version>3.0.0</version>
 		</dependency>
 	</dependencies>
 

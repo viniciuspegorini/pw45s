@@ -5,13 +5,14 @@ import br.edu.utfpr.pb.pw26s.server.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
     BCryptPasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository) {
-
         this.userRepository = userRepository;
         passwordEncoder = new BCryptPasswordEncoder();
     }

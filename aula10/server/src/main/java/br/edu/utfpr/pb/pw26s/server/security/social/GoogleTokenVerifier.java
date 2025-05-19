@@ -20,7 +20,7 @@ import java.util.Collections;
 public class GoogleTokenVerifier {
 
     private static final HttpTransport transport = new NetHttpTransport();
-    private static final JsonFactory jsonFactory = new GsonFactory().getDefaultInstance();
+    private static final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     private static final String CLIENT_ID = "310109923674-la5thl4s4t0b2ajp6acdhq7tra74dn31.apps.googleusercontent.com";
 
     public Payload verify(String idTokenString)

@@ -32,9 +32,9 @@ services:
     restart: unless-stopped
     command: server /data --console-address :9001
   ########################### SERVER
-  server:
-    image: server
-    container_name: server
+  api:
+    image: pw26s-server
+    container_name: pw26s-server
     build:
       context: ./
       dockerfile: Dockerfile

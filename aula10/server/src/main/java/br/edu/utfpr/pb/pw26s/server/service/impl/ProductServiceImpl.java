@@ -6,26 +6,22 @@ import br.edu.utfpr.pb.pw26s.server.minio.util.FileTypeUtils;
 import br.edu.utfpr.pb.pw26s.server.model.Product;
 import br.edu.utfpr.pb.pw26s.server.repository.ProductRepository;
 import br.edu.utfpr.pb.pw26s.server.service.ProductService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.List;
 
 @Service
 @Slf4j
 public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
     implements ProductService {
-
-    private static final String FILE_PATH = File.separator + "uploads";
-
     private final ProductRepository productRepository;
+
     private final MinioService minioService;
 
     public ProductServiceImpl(ProductRepository productRepository, MinioService minioService) {
@@ -60,8 +56,6 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
             response.setCharacterEncoding("UTF-8");
             // Remove bytes from InputStream Copied to the OutputStream .
             IOUtils.copy(in, response.getOutputStream());
-        } catch (UnsupportedEncodingException e) {
-
         } catch (IOException e) {
             log.error(e.getMessage());
         } finally {
@@ -73,10 +67,5 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
                 }
             }
         }
-    }
-
-    @Override
-    public List<Product> findAll(Specification specification) {
-        return productRepository.findAll(specification);
     }
 }

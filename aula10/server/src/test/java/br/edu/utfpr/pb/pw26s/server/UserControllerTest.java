@@ -32,7 +32,7 @@ public class UserControllerTest {
     UserRepository userRepository;
 
     @BeforeEach()
-    private void cleanup() {
+    public void cleanup() {
         userRepository.deleteAll();
         testRestTemplate.getRestTemplate().getInterceptors().clear();
     }
@@ -190,8 +190,8 @@ public class UserControllerTest {
                 headers);
 
         RestTemplate patchRestTemplate  = testRestTemplate.getRestTemplate();
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        patchRestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+        // HttpClient httpClient = HttpClientBuilder.create().build();
+        patchRestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
         ResponseEntity<GenericResponse> response = patchRestTemplate.exchange(
                 "/users", HttpMethod.PATCH, entity, GenericResponse.class);

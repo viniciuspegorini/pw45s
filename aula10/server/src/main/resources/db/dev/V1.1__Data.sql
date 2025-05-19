@@ -17,10 +17,10 @@ insert into tb_user(provider, display_name, username, password) values ('local',
 insert into tb_user(provider, display_name, username, password) values ('local', 'Teste', 'teste','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
 insert into tb_user(provider, display_name, username, password) values ('local', 'Other', 'other','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
 
-insert into authority (authority) values ('ROLE_USER');
-insert into authority (authority) values ('ROLE_ADMIN');
+insert into tb_authority (authority) values ('ROLE_USER');
+insert into tb_authority (authority) values ('ROLE_ADMIN');
 
-insert into users_authorities (user_id, authority_id) values (1, 2);
-insert into users_authorities (user_id, authority_id) values (2, 1);
-insert into users_authorities (user_id, authority_id) values (3, 1);
-insert into users_authorities (user_id, authority_id) values (3, 2);
+insert into tb_user_authorities (user_id, authority_id) values (1, 2);
+insert into tb_user_authorities (user_id, authority_id) values (2, 1);
+insert into tb_user_authorities (user_id, authority_id) values (3, 1);
+insert into tb_user_authorities (user_id, authority_id) values (3, 2);
