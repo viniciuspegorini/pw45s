@@ -18,6 +18,10 @@
 **/server/data/
 
 #Logs
+.env
+**/aula10/server-config/.env
+
+#Logs
 *.log
 *.gz
 
