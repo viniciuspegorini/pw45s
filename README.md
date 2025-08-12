@@ -1,29 +1,38 @@
 # Aulas da disciplina: Tópicos Avançados Em Programação Para Web - PW26S-6SI e PW45S-5SI
 
-## Back-end 
-### Softwares
-	- JDK 17 ou superior
-	- IDE:
-		- ItelliJ IDEA
-		- Spring Tools Suite 4		
-		- Eclipe for JavaEE ...
-	- SDBG:
-		- Postgresql
-	- Ferramenta para testar a API:
-		- Postman
-		- Insomnia
-	- Git
-	- Docker
-	
-## Front-end 
-### Softwares
-	- IDE:
-		- Visual Studio Code (VSCode)
-		- Web Storm
-		- Atom...
-	- Git
-	- Node.js
-	- Docker
+## API RESTful (*Back-end*)
+
+A API REST será desenvolvida utilizando o *framework* **Spring** com a linguagem de programação Java.
+
+### ⚙️ Lista de Ferramentas
+
+- <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/java.png" alt="Java" width="20" /> JDK 24
+- IDE:
+    - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/intellij.png" alt="IntelliJ" title="IntelliJ"/> [IntelliJ Idea](https://www.jetbrains.com/idea/) ou 
+    - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/eclipse.png" alt="eclipse" title="eclipse"/> [Eclipse](https://eclipseide.org/)
+- SDBG:
+    - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/postgresql.png" alt="PostgreSQL" title="PostgreSQL"/> Postgresql
+- Ferramenta para testar a API:
+    - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/postman.png" alt="Postman" title="Postman"/> Postman
+    - <img width="20" src="https://icon.icepanel.io/Technology/svg/Insomnia.svg" alt="Insomnia" title="Insomnia"/> Insomnia
+- <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/git.png" alt="Git" title="Git"/> Git
+- <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/docker.png" alt="Docker" title="Docker"/> Docker
+
+--- 
+
+## Aplicação cliente (*front-end*)
+
+O Cliente web desenvolvido utilizando a biblioteca **React** com a linguagem de programação Typescript.
+
+### ⚙️ Lista de Ferramentas
+
+- IDE:
+    - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/visual_studio_code.png" alt="Visual Studio Code" title="Visual Studio Code"/> Visual Studio Code
+    - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/webstorm.png" alt="WebStorm" title="WebStorm"/> Web Storm, etc...
+- <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/node_js.png" alt="Node.js" title="Node.js"/> Node.js
+- <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/npm.png" alt="npm" title="npm"/> npm
+- <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/git.png" alt="Git" title="Git"/> Git
+- <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/docker.png" alt="Docker" title="Docker"/> Docker
 
 ## Projetos:
 
@@ -38,7 +47,7 @@
 - Adição de permissões de usuário. Criação de uma classe para representar as permissões de usuário e associação da mesma na entidade de usuário.
 
 ### aula4
-- Autenticação e autorização com validações das permissões no lado cliente e adição da Context API.
+- Autenticação e autorização com validações das permissões no lado cliente.
 
 ### aula5
 - **Autenticação utilizando o Google - lado cliente**. Criação da conta no Google Cloud Console e uso das credenciais na aplicação cliente para autenticação (retorno do idToken pelo Google) e na aplicação servidor para validação do idToken.
@@ -64,42 +73,72 @@
 ## 1 - Seminário
 ### Escolha uma linguagem, plataforma e/ou framework para desenvolvimento Web (Java, PHP, Node.js, Perl, Ruby on Rails, .NET(C♯, VB), Python, etc.) ou Híbrido (Android, IOs):
 
-- ALEXANDRE KURPEL KUHN, FERNANDO LUIS LOFF - Nest.js
-- DANIEL KAGHOFER, TIAGO CENCI - Flask
-- LUCAS CALADO BRESOLINO - Go
-- KARINE LUCION, MATHEUS MARTARELLO GUTSTEIN - Cypres 
-- ANALICE MOSCHEN, MATHEUS DE SOUZA GUEDES - Play
-- EVERTON ROMANN - Pyramid
-- VICTOR GUILHERME CORTELETTE FERREIRA, LUAN FILIPE FINATTO - Svelte
-- GABRIEL GOTARDO ROSA, IGOR GUSTAVO MATIELLO - Vue.js
-- GUILHERME KURPEL KUHN, LUCAS VINICIUS FERREIRA BERTELLA - Ruby on rails
-- PEDRO VICTOR FERREIRA ANDREOLI - Laravel
-- VINICIUS FLYSSAK, DAVID IRUAN MARTINELLO DOS SANTOS - Angular
-- BRUNO HENRIQUE LEAO RUARO, RENAN GUSTAVO CEZAROTTO DE MATOS - Quarkus
-- GEOVANE DE CAMPOS SOARES - .NET
-- GUSTAVO HENRIQUE DE BARROS MESTRE, ANA FLAVIA PERIN - Django
-- JOAO GABRIEL JARUTAIS, VITOR LUIZ MARCANTE - Node.js
-- LUIZ ALBERTO DOS PASSOS - FastAPI
-- MARCOS FELIPE ALTENHOFEN - Flutter
-- RODRIGO IZIDORO PADILHA - ???
+- Struts2
+- GWT 
+- EXTJs 
+- MEAN 
+- Vaadin  
+- *.Net 
+- Django 
+- Ruby on Rails 
+- ZendFramework 
+- YiiFramework 
+- CakePHP
+- Symfony   
+- Grails 
+- Play 
+- Tapestry 
+- Pyramid
+- Wicket
+- TurboGears
+- Spark
+- Ionic 
+- Sails
+- Bootfaces
+- Meteor 
+- React
+- React Native
+- Angular
+- SolidJS
+- Alpine.js
+- Lit
+- Node.js
+- Quarkus
+- Quarkus + Kotling
+- Cypress
+- .Net + C#
+- Go
+- Node.js + Nest.js
+- Flask
+- Svelte
+- FastApi
+- Laravel 
+- Node.js 
+- Astro  
+- Vue.js 
+- Nest.js
+- KMM + Kotlin
 
-1. [Deverá ser entregue] Desenvolver uma apresentação (PPT, PDF ou Readme.MD no git) contendo uma breve apresentação do *framework*/biblioteca escolhida:
+
+1. [Deverá ser entregue] Desenvolver uma apresentação (PPT, PDF ou Readme.MD no git) contendo uma breve apresentação do *framework* e/ou biblioteca escolhida:
 - As vantagens e desvantagens da linguagem, *framework* e/ou plataforma. 
 - Citando as principais características. 
 - Servidores Web disponíveis. 
 - Configurações necessárias para rodar uma aplicação. 
 - Tipo de licença de software. 
 - Responsáveis pelo desenvolvimento (proprietário ou comunidade). 
-- Suas conclusões sobre o uso do framework (facilidade para encontrar materiais, qualidade deses materiais; se é de fácil configuração, etc.)
+- Suas conclusões sobre o uso do *framework* (facilidade para encontrar materiais, qualidade deses materiais; se é de fácil configuração, etc.)
 
 
-2. [Deverá ser entregue] Deverá ser criado um tutorial de configuração do framework e criação de uma aplicação exemplo. No arquivo Readme.MD do git
-	- A aplicação exemplo deve ser UM CRUD simples (não são necessários relacionamentos) para o cadastro de Pessoa ou qualquer outro tipo de entidade entidade (Pessoa, Livro, Produto, etc.).
-		- pessoa: {nome, cpf, telefone, rua, numero, complemento, bairro, cep, cidade, estado}
-
+2. [Deverá ser entregue] Deverá ser criado um tutorial de configuração do *framework* e criação de uma aplicação exemplo. 
+ - A aplicação exemplo deve ser UM CRUD simples (não são necessários relacionamentos) para o cadastro de Pessoa ou qualquer outro tipo de entidade entidade (Pessoa, Livro, Produto, etc.).
+ - Exemplo:
+`
+pessoa: {nome, cpf, telefone, rua, numero, complemento, bairro, cep, cidade, estado}
+`
 
 3. O aluno deverá apresentar o trabalho e mostrar a aplicação/código-fonte da mesma (entre 15 e 30 minutos).
 	
-## 2 - Projeto em conjunto com a disciplina de oficina (OD26S):
-	- Participação no desenvolvimento do *back-end* da aplicação
-	- Participação no desenvolvimento do *front-end* da aplicação
+## 2 - Projeto de desenvolvimento de software:
+- Desenvolvimento do *back-end* da aplicação
+- Desenvolvimento do *front-end* da aplicação
