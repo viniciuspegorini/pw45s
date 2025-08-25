@@ -1,0 +1,17 @@
+filebeat.inputs:
+  - type: log
+    paths:
+      - /usr/share/filebeat/logs/*.json
+    json.keys_under_root: true
+    json.add_error_key: true
+    json.message_key: message
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  index: "spring-api-logs-%{+yyyy.MM.dd}"
+
+setup.template.name: "spring-api-logs"
+setup.template.pattern: "spring-api-logs-*"
+
+setup.kibana:
+  host: "http://kibana:5601"
