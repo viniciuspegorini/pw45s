@@ -3,10 +3,9 @@ package br.edu.utfpr.pb.pw45s.server.controller;
 import br.edu.utfpr.pb.pw45s.server.model.User;
 import br.edu.utfpr.pb.pw45s.server.service.UserService;
 import br.edu.utfpr.pb.pw45s.server.utils.GenericResponse;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("users")

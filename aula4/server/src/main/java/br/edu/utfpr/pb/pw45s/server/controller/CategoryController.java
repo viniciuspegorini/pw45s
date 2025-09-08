@@ -5,7 +5,8 @@ import br.edu.utfpr.pb.pw45s.server.model.Category;
 import br.edu.utfpr.pb.pw45s.server.service.CategoryService;
 import br.edu.utfpr.pb.pw45s.server.service.CrudService;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("categories")

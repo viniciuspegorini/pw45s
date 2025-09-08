@@ -1,12 +1,11 @@
 package br.edu.utfpr.pb.pw45s.server.model;
 
-import lombok.*;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
-@Entity(name = "tb_category")
+@Entity
 @Getter @Setter
 @Builder
 @NoArgsConstructor

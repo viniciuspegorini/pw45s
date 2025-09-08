@@ -1,11 +1,10 @@
 package br.edu.utfpr.pb.pw45s.server.dto;
 
 import br.edu.utfpr.pb.pw45s.server.validation.UniqueUsername;
-import lombok.Data;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Data
 public class UserDto {

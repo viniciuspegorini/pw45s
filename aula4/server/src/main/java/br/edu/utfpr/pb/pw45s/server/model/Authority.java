@@ -8,9 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 @Table(name = "tb_authority")
 @Getter @Setter
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 public class Authority implements GrantedAuthority {
 
     @Id
