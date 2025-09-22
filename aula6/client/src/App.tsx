@@ -1,14 +1,12 @@
-import { AuthProvider } from "./context/AuthContext";
-import { BaseRoutes } from "./routes/BaseRoutes";
-import { ChakraProvider } from "@chakra-ui/react";
+import "./App.css";
+import { AppRoutes } from "@/routes/app-routes";
 
-export function App() {
-
+function App() {
   return (
-    <ChakraProvider >
-      <AuthProvider>
-        <BaseRoutes />
-      </AuthProvider>
-    </ChakraProvider>
+    <>
+      <AppRoutes />
+    </>
   );
 }
+
+export default App;

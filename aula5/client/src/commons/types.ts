@@ -1,17 +1,23 @@
-export interface UserLogin {
-  username: string;
-  password: string;
-}
-
-export interface User {
+export interface IUserRegister {
   displayName: string;
   username: string;
   password: string;
 }
 
-export interface AuthenticationResponse {
-  token: string;
-  user: AuthenticatedUser;
+export interface IResponse {
+  status?: number;
+  success?: boolean;
+  message?: string;
+  data?: object
+}
+
+export interface IUserLogin {
+  username: string;
+  password: string;
+}
+
+export interface Authorities {
+  authority: string;
 }
 
 export interface AuthenticatedUser {
@@ -20,21 +26,22 @@ export interface AuthenticatedUser {
   authorities: Authorities[];
 }
 
-export interface Authorities {
-  authority: string;
+export interface AuthenticationResponse {
+  token: string;
+  user: AuthenticatedUser;
 }
 
-export interface Category {
+export interface ICategory {
   id?: number;
   name: string;
 }
 
-export interface Product {
+export interface IProduct {
   id?: number;
   name: string;
   description: string;
   price: number;
-  category: Category;
+  category: ICategory;
   imageName?: string;
   contentType?: string;
 }
