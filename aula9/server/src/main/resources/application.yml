@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   profiles:
     active: dev
   datasource:
@@ -33,6 +35,14 @@ spring:
       chat.enabled: true
       embedding.enabled: true
       chat.options.model: gpt-4o
+    deepseek:
+      base-url: https://api.deepseek.com
+      api-key: ${DEEPSEEK_API_KEY}
+      chat:
+        enabled: true
+        options:
+          model: deepseek-chat
+          temperature: 0.8
 
 management:
   endpoints:
@@ -59,6 +69,7 @@ minio:
 openai:
   api:
     key: ${OPENAI_API_KEY}
+
 ---
 spring:
   config:

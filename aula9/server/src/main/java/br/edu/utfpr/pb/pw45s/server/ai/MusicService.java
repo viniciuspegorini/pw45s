@@ -40,6 +40,6 @@ public class MusicService {
         promptTemplate.add("format", outputConverter.getFormat());
 
         ChatResponse response = aiClient.call(promptTemplate.create());
-        return outputConverter.convert(response.getResult().getOutput().getText());
+        return outputConverter.convert(response.getResult().getOutput().getContent());
     }
 }

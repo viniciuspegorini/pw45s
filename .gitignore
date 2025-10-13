@@ -13,12 +13,14 @@
 **/data/
 **/pgdata/
 
+**/.env
+.env
+
 #Databases 
 **/server/postgres-data/
 **/server/data/
 
 #Logs
-.env
 **/aula10/server-config/.env
 
 #Logs

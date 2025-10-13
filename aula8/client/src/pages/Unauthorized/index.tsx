@@ -1,21 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export function Unauthorized() {
-  const navigate = useNavigate();
-  
-  const goBack = () => navigate(-1);
-
   return (
-    <section>
-      <div className="container">
-        <h1>Usuário não autorizado</h1>
-        <br />
-        <p>Permissão de acesso negada.</p>
-        <br />
-        <div className="flexGrow">
-          <button className="btn btn-dark" onClick={goBack}>Voltar</button>
-        </div>
+    <article style={{ padding: "100px" }}>
+      <h1>Oops!</h1>
+      <p>Você não tem permissão para acessar o recurso solicitado!</p>
+      <div className="flexGrow">
+        <Link to="/">Home</Link>
       </div>
-    </section>
+    </article>
   );
 }

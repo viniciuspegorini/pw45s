@@ -62,9 +62,12 @@ O Cliente web desenvolvido utilizando a biblioteca **React** com a linguagem de 
 - Upload de arquivos com armazenamento em um **sistema de armazenamento de objetos** utilizando **MINIO** (sistema de armazenamento de objetos **semelhante ao Amazon S3**).
 
 ### aula9
-- Deploy de aplicações utilizando Docker.
+- Integração da API REST com APIs de processamento de Inteligência Artificial (IA).
 
 ### aula10
+- Deploy de aplicações utilizando Docker.
+
+### aula11
 - Consultas na API com Spring Data JPA e Specification.
 
 

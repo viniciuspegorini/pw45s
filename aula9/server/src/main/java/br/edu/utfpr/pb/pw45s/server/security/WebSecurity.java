@@ -22,8 +22,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
 @EnableWebSecurity
 @Configuration
 public class WebSecurity {
@@ -58,19 +56,19 @@ public class WebSecurity {
 
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll()
-                .requestMatchers(antMatcher("/h2-console/**")).permitAll()
-                .requestMatchers(antMatcher("/error/**")).permitAll()
-                .requestMatchers(antMatcher("/actuator/**")).permitAll()
-                .requestMatchers(antMatcher("/auth-social/**")).permitAll()
-                .requestMatchers(antMatcher("/gpt/**")).permitAll()
-                .requestMatchers(antMatcher("/music/**")).permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/error/**").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers("/auth-social/**").permitAll()
+                .requestMatchers("/gpt/**").permitAll()
+                .requestMatchers("/music/**").permitAll()
 
                 // Somente usuários com permissão de admin podem acessar /products (qualquer requisição HTTP)
-                .requestMatchers(antMatcher("/products/**")).hasAnyRole("ADMIN")
-                .requestMatchers(antMatcher(HttpMethod.GET, "/categories/**")).hasAnyRole("ADMIN", "USER")
-                .requestMatchers(antMatcher("/categories/**")).hasAnyRole("USER")
-                .requestMatchers(antMatcher("/users/**")).hasAnyRole("ADMIN")
+                .requestMatchers("/products/**").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/categories/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers("/categories/**").hasAnyRole("USER")
+                .requestMatchers("/users/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
         );
         http.authenticationManager(authenticationManager)
