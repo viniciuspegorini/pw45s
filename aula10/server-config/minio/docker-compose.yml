@@ -7,8 +7,8 @@ services:
     image: minio/minio:latest
     container_name: minio
     environment:
-      - MINIO_ROOT_USER=utfpr
-      - MINIO_ROOT_PASSWORD=Utfpr@D4!NFOS
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=aula@PW45S
       - MINIO_BROWSER_REDIRECT_URL=http://minio-console.app.pb.utfpr.edu.br
     volumes:
       - ./appdata/minio/data:/data

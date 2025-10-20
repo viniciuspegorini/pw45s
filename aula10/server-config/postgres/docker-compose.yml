@@ -14,9 +14,9 @@ services:
       timeout: 5s
       retries: 6
     environment:
-      - POSTGRES_DB=postgres    
+      - POSTGRES_DB=pw45s    
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=Utfpr@D4!NFDB
+      - POSTGRES_PASSWORD=aula@PW45S
       - TZ=America/Sao_Paulo
     labels:
       - traefik.enable=true

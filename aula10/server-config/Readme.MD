@@ -1,8 +1,8 @@
 # Configurando o ambiente de produção
 
 Para apresentar uma simulação de ambiente de produção serão utilizadas as tecnologias e serviços:
-- React: Aplicação cliente
-- Spring Framework: Aplicação servidor
+- React: Aplicação cliente ([Nesse Repositório](https://github.com/viniciuspegorini/pw45s-client-deploy))
+- Spring Framework: Aplicação servidor ([Nesse Repositório](https://github.com/viniciuspegorini/pw45s-server-deploy))
 - PostgresSQL: Banco de dados
 - Registro.br: Registro do domínio
 - Cloudflare: Camada de segurança (ataques DDoS, Firewall, etc...)
@@ -12,7 +12,7 @@ Para apresentar uma simulação de ambiente de produção serão utilizadas as t
 - Jenkins: Ferramenta de CI/CD
 
 
-## 1. Configurando a Digital Ocean
+## 1. Crianco a conta e o Droplet na Digital Ocean
 
 Primeiro passo é criar uma conta [https://m.do.co/c/05bf7c48eb76](https://m.do.co/c/05bf7c48eb76).
 Preencha com:
@@ -34,10 +34,14 @@ Regular with SSD → preço mais acessível.
 Premium AMD/Intel → mais desempenho.
 Premium NVMe → muito rápido.
 Selecione o tamanho:
-1 GB / 1vCPU → ideal para testes.
-2 GB ou mais → para produção, lembrando que as aplicações serão diretamente impactadas de acordo com as configurações do droplet.
+2 GB / 1vCPU → ideal para testes.
+4 GB ou mais → para produção, lembrando que as aplicações serão diretamente impactadas de acordo com as configurações do droplet.
 
-No droplet criado iremos receber um IPV4, ele será utilizado na Cloudflare para redirecionamento do domínio.
+Agora podemos selecionar o método de autenticação. Prefira SSH Key
+
+@R0ck5mith
+
+No droplet criado iremos receber um IPV4, ele será utilizado na Cloudflare para redirecionamento do domínio no passo 3.5.
 
 ## 2. Configurando o domínio
 
@@ -65,12 +69,13 @@ Selecione o plano e continue.
 Ele listará todos os registros DNS atuais (A, CNAME, MX, etc.).
 Revise cuidadosamente.
 Se já está usando DigitalOcean, mantenha o registro A apontando para o IP público da sua Droplet, criado no final do passo Configurando a Digital Ocean. 
-
+Vamos precisar criar subdomínios para o Jenkins, Minio, Minio Console, PgAdmin e Traefik.
+Para isso criar um Registro do Tipo A apontando para o IP do Droplet na Digital Ocean.
 
 ### 3.5. Alterar os Nameservers no seu provedor de domínio
 O Cloudflare vai mostrar dois Nameservers (exemplo: alice.ns.cloudflare.com e bob.ns.cloudflare.com).
 
-Acesse o painel onde comprou o domínio (Registro.br, Namecheap etc.).
+Acesse o painel onde comprou o domínio (Registro.br, Namecheap, etc.).
 
 Localize a opção de "DNS" ou "Nameservers".
 
@@ -81,6 +86,7 @@ Substitua pelos do Cloudflare.
 ### 3.6. Verificação pelo Cloudflare
 Após a troca, volte ao painel Cloudflare.
 Clique em "Done, check nameservers".
+
 
 ## 4. Configurando os serviços e aplicações na Digital Ocean
 
@@ -97,17 +103,27 @@ Instalando o docker:
 ```cmd
 sudo apt update
 
-sudo apt install apt-transport-https ca-certificates curl software-properties-common
+sudo apt upgrade
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
 
-apt-cache policy docker-ce
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 ```
 
-### 4.1 Criando a rede `web`
+### 4.2 Criando a rede `web`
 
 Será necessário criar uma rede externa no docker para as aplicações.
 
@@ -115,7 +131,7 @@ Será necessário criar uma rede externa no docker para as aplicações.
 sudo docker network create --driver=bridge --attachable web
 ```
 
-### 4.2 Criando uma senha para o Traefik
+### 4.3 Configurações iniciais do Traefik
 
 Instalar o apache2-utils no Ubuntu:
 
@@ -132,10 +148,21 @@ Ex.:
 htpasswd -nbB admin mypassword
 ```
 
-Substituir a senha no arquivo `docker-compose.yml` ou no arquivo .env.
+Substituir a senha no arquivo `docker-compose.yml` ou no arquivo .env, lembrando de adicionar um $ a mais em cada um dos $ gerado na senha criptografada.
 
+*** IMPORTANTE:
+Aqui o próximo passo poderia ser registrar o Domínio no meu Network da Digital Ocean e ajustar os registros de DNS no local de registro (Ex. Registro.br, etc.)
 
-### 4.3 Executando o docker-compose.yml
+Agora será necessário criar o arquivo acme.json com as permissões necessárias. O arquivo acme.json é o banco de dados local em que o Traefik armazena todos os certificados, chaves privadas e metadados emitidos pelo Let's Encrypt.
+
+```cmd
+mkdir -p ./appdata/traefik
+touch ./appdata/traefik/acme.json
+chmod 600 ./appdata/traefik/acme.json
+chown root:root ./appdata/traefik/acme.json
+```
+
+### 4.4 Executando o docker-compose.yml
 
 Todos os serviços estão configurados no arquivo docker-compose.yml, para executar basta criar o arquivo no servidor e executar:
 
@@ -143,7 +170,7 @@ Todos os serviços estão configurados no arquivo docker-compose.yml, para execu
 sudo docker compose up -d --build
 ```
 
-### 4.4 Recuperar a senha inicial para o Jenkins
+### 4.5 Recuperar a senha inicial do Jenkins e configuração
 
 Para recuperar a senha inicial do Jenkins basta executar o comando abaixo no terminal do servidor:
 
@@ -157,12 +184,71 @@ Ou listar o log do conteiner do Jenkins:
 docker logs -f jenkins
 ```
 
-### 4.5 Ajustando o arquivo com os certificados SSL
+Após isso acesse `http://ip:8081` ou `https://jenkins.dominio.com.br`
 
-Caso ocorra algum problema de permissão quando o Traefik tentar armazenar os certificados SSL gerados pelo Let\`s Encrypt, criar o arquivo `acme.json` e dar permissão:
 
-```cmd
-touch acme.json
+### 5 Realizando o deploy da API
 
-chmod 600 acme.json
+Será realizado o deploy da aplicação localizada em:
+[https://github.com/viniciuspegorini/pw45s-server-deploy](https://github.com/viniciuspegorini/pw45s-server-deploy)
+
+
+Será necessário criar as variáveis de ambiente com as senhas de acesso para o Postgres, Google e Minio. No menu Manage Jenkins > Credentials > System > Globla Credentias criar uma nova chave com as configurações:
+
+##### Postgres
+```properties
+Kind=Username with password
+Scope: Global
+Username: postgres
+Password: aula@PW45S
+ID: postgres-id
+Description: Postgres
+```
+
+##### Google
+```properties
+Kind=Username with password
+Scope: Global
+Username: admin
+Password: aula@PW45S
+ID: pw45s_google_client_id
+Description: Google
+```
+
+##### Minio
+```properties
+Kind=Username with password
+Scope: Global
+Username: admin
+Password: aula@PW45S
+ID: pw45s_minio_id
+Description: Minio
+```
+#### 5.1 Criando o pipeline
+
+Na página principal do Jenkins clicar em `New Item` e após preencher os dados abaixo clicar em Save:
+
+```properties
+Name= Server
+Type=Pipeline
+Description= Server application
+Definition= Pipeline script from SCM
+SCM= Git
+Repository URL = https://github.com/viniciuspegorini/pw45s-server-deploy
+Branch Specifier: */main
+```
+
+### 6 Realizando o deploy do cliente
+
+Será realizado o deploy da aplicação localizada em:
+[https://github.com/viniciuspegorini/pw45s-client-deploy](https://github.com/viniciuspegorini/pw45s-client-deploy)
+
+```properties
+Name= Client
+Type= Pipeline
+Description= Client application
+Definition= Pipeline script from SCM
+SCM= Git
+Repository URL = https://github.com/viniciuspegorini/pw45s-client-deploy
+Branch Specifier: */main
 ```
