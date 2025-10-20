@@ -27,6 +27,8 @@ Complete o processo de verificação.
 
 Criar um projeto e informar o nome e descrição.
 Então podemos criar um droplet:
+Escolha a região (afeta a latência)
+Escolha o SO (estou utilizando o Ubuntu)
 Escolha o plano de Droplet
 Basic → ideal para pequenos projetos.
 Modelos:
@@ -38,8 +40,6 @@ Selecione o tamanho:
 4 GB ou mais → para produção, lembrando que as aplicações serão diretamente impactadas de acordo com as configurações do droplet.
 
 Agora podemos selecionar o método de autenticação. Prefira SSH Key
-
-@R0ck5mith
 
 No droplet criado iremos receber um IPV4, ele será utilizado na Cloudflare para redirecionamento do domínio no passo 3.5.
 
@@ -224,7 +224,30 @@ Password: aula@PW45S
 ID: pw45s_minio_id
 Description: Minio
 ```
-#### 5.1 Criando o pipeline
+
+#### 5.1 Criando o banco de dados
+
+O Docker-compose.yml foi configurado para criar o container do PostgreSQL, porém sem nenhum banco de dados configurado. 
+
+- Para configurar basta acessar o container:
+```bash
+docker exec -it postgres bash
+```
+
+- Conectar-se ao PostgreSQL:
+
+```bash
+psql -U postgres
+```
+
+- Criar o banco:
+
+```bash
+CREATE DATABASE pw45s;
+```
+
+
+#### 5.2 Criando o pipeline de deploy do servidor
 
 Na página principal do Jenkins clicar em `New Item` e após preencher os dados abaixo clicar em Save:
 
