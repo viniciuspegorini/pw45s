@@ -27,7 +27,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:h2:mem:pw26s-dev
+    url: jdbc:h2:mem:pw45s-dev
   jpa:
     hibernate:
       ddl-auto: none
@@ -42,7 +42,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:pw26s-dev
+    url: jdbc:h2:mem:pw45s-dev
   jpa:
     hibernate:
       ddl-auto: none

@@ -1,18 +1,18 @@
 package br.edu.utfpr.pb.pw45s.server.model;
 
-import lombok.*;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
-@Entity(name = "tb_product")
-@Getter @Setter
+@Entity
+@Table(name = "tb_product")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter @Setter
 public class Product {
 
     @Id
@@ -20,17 +20,29 @@ public class Product {
     private Long id;
 
     @NotNull
-    @Size(min = 2, max = 254)
     private String name;
 
     @NotNull
-    @Size(min = 2, max = 1024)
-    @Column(length = 1024, nullable = false)
+    @Column(length = 1024)
     private String description;
 
+    @NotNull
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
