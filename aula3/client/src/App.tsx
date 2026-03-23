@@ -1,12 +1,12 @@
-import { ChakraProvider } from '@chakra-ui/react'
-import './App.css'
-import { BaseRoutes } from './routes/BaseRoutes'
+import "./App.css";
+import { AppRoutes } from "@/routes/app-routes";
 
-export function App() {
-
+function App() {
   return (
-    <ChakraProvider>
-      <BaseRoutes />
-    </ChakraProvider>
-  )
+    <>
+      <AppRoutes />
+    </>
+  );
 }
+
+export default App;

@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   profiles:
     active: dev
   datasource:
@@ -27,6 +29,21 @@ spring:
         url: http://127.0.0.1:8081
         instance:
           service-host-type: ip
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat.enabled: true
+      embedding.enabled: true
+      chat.options.model: gpt-4o
+    deepseek:
+      base-url: https://api.deepseek.com
+      api-key: ${DEEPSEEK_API_KEY}
+      chat:
+        enabled: true
+        options:
+          model: deepseek-chat
+          temperature: 0.8
+
 management:
   endpoints:
     web:
@@ -48,13 +65,18 @@ minio:
   image-size: 10485760 #  Maximum size of picture file
   file-size: 104857600 #  Maximum file size
 
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
 ---
 spring:
   config:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:h2:mem:pw45s-dev
+    url: jdbc:h2:mem:pw26s-dev
   jpa:
     hibernate:
       ddl-auto: none
@@ -69,7 +91,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:pw45s-dev
+    url: jdbc:h2:mem:pw26s-dev
   jpa:
     hibernate:
       ddl-auto: none

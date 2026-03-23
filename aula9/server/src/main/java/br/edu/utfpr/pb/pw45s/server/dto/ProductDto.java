@@ -26,8 +26,4 @@ public class ProductDto {
 
     private CategoryDto category;
 
-    private String imageName;
-
-    private String contentType;
-
 }

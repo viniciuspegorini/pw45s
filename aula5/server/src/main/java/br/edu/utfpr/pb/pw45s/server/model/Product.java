@@ -9,7 +9,8 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @Entity(name = "tb_product")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

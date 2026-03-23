@@ -41,7 +41,7 @@ const save = async (product: IProduct): Promise<IResponse> => {
 const saveAndUpload = async (formData: FormData): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
-    const data = await api.post(`${productURL}/upload-db`, formData);
+    const data = await api.post(`${productURL}/upload`, formData);
     response = {
       status: 200,
       success: true,

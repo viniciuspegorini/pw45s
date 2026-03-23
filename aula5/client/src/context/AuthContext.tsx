@@ -13,7 +13,7 @@ interface AuthContextType {
   handleLogin: (authenticationResponse: AuthenticationResponse) => Promise<any>;
   handleLogout: () => void;
   hasPermission: (permission: string) => boolean;
-  handleLoginSocial: (idToken: string) => void;
+  handleLoginSocialServer: (token: string) => void;
 }
 
 interface AuthProviderProps {
@@ -82,17 +82,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             );
   }
 
-  const handleLoginSocial = async(idToken: string) => {    
-    api.defaults.headers.common["Auth-Id-Token"] = `Bearer ${idToken}`;
-    const response = await api.post("/auth-social");
-    console.log(response);
-    api.defaults.headers.common["Auth-Id-Token"] = "";
-    localStorage.setItem("token", JSON.stringify(response.data.token));
-    localStorage.setItem("user", JSON.stringify(response.data.user));
-    api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
-    setAuthenticatedUser(response.data.user);
+  const handleLoginSocialServer = (token: string) => {
     setAuthenticated(true);
-    navigate("/");
+    localStorage.setItem("token", JSON.stringify(token));
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    navigate("/home");
   }
 
   return (
@@ -103,7 +97,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         handleLogin,
         handleLogout,
         hasPermission,
-        handleLoginSocial,
+        handleLoginSocialServer,
       }}
     >
       {children}

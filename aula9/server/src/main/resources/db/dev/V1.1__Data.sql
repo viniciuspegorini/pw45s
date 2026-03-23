@@ -13,14 +13,5 @@ insert into tb_product (name, description, price, category_id) values ('TV LCD 7
 insert into tb_product (name, description, price, category_id) values ('Fogão 6 Bocas','Fogão 6 Bocas em aço inox, ...', 799.99,3);
 insert into tb_product (name, description, price, category_id) values ('Roteador Wi-Fi 5.4GhZ','Roteador Wi-Fi 5.4GhZ, 6 antenas...',1299.0,1);
 
-insert into tb_user(provider, display_name, username, password) values ('local', 'Administrador', 'admin','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
-insert into tb_user(provider, display_name, username, password) values ('local', 'Teste', 'teste','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
-insert into tb_user(provider, display_name, username, password) values ('local', 'Other', 'other','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
-
-insert into tb_authority (authority) values ('ROLE_USER');
-insert into tb_authority (authority) values ('ROLE_ADMIN');
-
-insert into tb_user_authorities (user_id, authority_id) values (1, 2);
-insert into tb_user_authorities (user_id, authority_id) values (2, 1);
-insert into tb_user_authorities (user_id, authority_id) values (3, 1);
-insert into tb_user_authorities (user_id, authority_id) values (3, 2);
+INSERT INTO tb_user(display_name, username, password) VALUES ('Administrador', 'admin','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
+INSERT INTO tb_user(display_name, username, password) VALUES ('Teste', 'teste','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');

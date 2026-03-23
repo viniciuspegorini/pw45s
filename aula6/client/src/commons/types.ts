@@ -44,4 +44,6 @@ export interface IProduct {
   category: ICategory;
   imageName?: string;
   contentType?: string;
+  imageFileName?: string;
+  imageFile?: string;
 }

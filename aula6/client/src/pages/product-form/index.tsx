@@ -4,7 +4,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import type { ICategory, IProduct, IResponse } from "@/commons/types";
 import { Toast } from "primereact/toast";
 import CategoryService from "@/services/category-service";
@@ -27,7 +27,9 @@ export const ProductFormPage = () => {
     defaultValues: { name: "", description: "", price: 0, category: undefined },
   });
   const { findAll } = CategoryService;
-  const { findById, save } = ProductService;
+  const { findById, saveAndUpload } = ProductService;
+
+  const [image, setImage] = useState<any | null>(null);
 
   const isEdit = !!id;
 
@@ -72,10 +74,20 @@ export const ProductFormPage = () => {
     }
   };
 
+  const onFileChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setImage(event.target.files ? event.target.files[0] : null);
+  };
+
   const onSubmit = async (data: IProduct) => {
     setLoading(true);
     try {
-      const response = await save(data);
+      const formData = new FormData();
+      formData.append("image", image);
+      const blob = new Blob([JSON.stringify(data)], {
+        type: "application/json",
+      });
+      formData.append("product", blob);
+      const response = await saveAndUpload(formData);
       if (
         (response.status === 201 || response.status === 200) &&
         response.data
@@ -191,6 +203,22 @@ export const ProductFormPage = () => {
             {errors.category && (
               <p className="text-red-500 text-sm">{errors.category.message}</p>
             )}
+          </div>
+          <div>
+            <label className="block mb-1">Imagem</label>
+              <input
+                className="form-control mb-2"
+                type="file"
+                name="image"
+                onChange={onFileChangeHandler}
+              />
+              <br />
+              {product?.imageFile && (
+                <img
+                  style={{ width: "100px", height: "100px" }}
+                  src={`data:image;base64,${product.imageFile}`}
+                />
+              )}
           </div>
 
           <div className="flex justify-end gap-2 mt-4">

@@ -47,3 +47,15 @@ export interface IProduct {
   imageFileName?: string;
   imageFile?: string;
 }
+
+export interface IMusicRequest {  
+  genre: string;
+  theme: string;
+}
+
+export interface IMusicResponse {  
+  title: string;
+  music: string;
+  genre: string;
+  theme: string;
+}

@@ -4,9 +4,13 @@ import br.edu.utfpr.pb.pw45s.server.dto.ProductDto;
 import br.edu.utfpr.pb.pw45s.server.model.Product;
 import br.edu.utfpr.pb.pw45s.server.service.CrudService;
 import br.edu.utfpr.pb.pw45s.server.service.ProductService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("products")
@@ -30,6 +34,26 @@ public class ProductController extends CrudController<Product, ProductDto, Long>
     @Override
     protected ModelMapper getModelMapper() {
         return this.modelMapper;
+    }
+
+    /* Upload de arquivo salvo no sistema de arquivos
+       formData = { product:{}, image:"arquivo"}
+    */
+    @PostMapping("upload-fs")
+    public Product save(@RequestPart("product") @Valid Product product,
+                        @RequestPart("images") MultipartFile file) {
+        getService().save(product);
+        productService.saveImage(file, product);
+        return product;
+    }
+
+    // Upload de arquivo salvo no Banco de dados
+    @PostMapping("upload-db")
+    public Product saveImageFile(@RequestPart("product") @Valid Product product,
+                                 @RequestPart("image") MultipartFile file) {
+        getService().save(product);
+        productService.saveImageFile(file, product);
+        return product;
     }
 
 }

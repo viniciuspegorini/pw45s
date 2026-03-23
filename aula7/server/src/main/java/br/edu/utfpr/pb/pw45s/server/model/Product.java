@@ -1,14 +1,17 @@
 package br.edu.utfpr.pb.pw45s.server.model;
 
-import lombok.Data;
+import lombok.*;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 
-@Entity
-@Data
+@Entity(name = "tb_product")
+@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product {
 
     @Id
@@ -31,12 +34,8 @@ public class Product {
     private Category category;
 
     @Column(name = "image_name")
-    private String imageName; // Upload no Sistema de Arquivos (disco)
+    private String imageName;
 
-    @Lob
-    @Column(name = "image_file")
-    private byte[] imageFile; // Upload no Banco de dados
-
-    @Column(name = "image_file_name")
-    private String imageFileName; // Upload no Banco de dados
+    @Column(length = 50, name = "content_type")
+    private String contentType;
 }

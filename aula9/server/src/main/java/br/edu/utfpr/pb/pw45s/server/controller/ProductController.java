@@ -4,12 +4,9 @@ import br.edu.utfpr.pb.pw45s.server.dto.ProductDto;
 import br.edu.utfpr.pb.pw45s.server.model.Product;
 import br.edu.utfpr.pb.pw45s.server.service.CrudService;
 import br.edu.utfpr.pb.pw45s.server.service.ProductService;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("products")
@@ -35,14 +32,4 @@ public class ProductController extends CrudController<Product, ProductDto, Long>
         return this.modelMapper;
     }
 
-    @PostMapping(value = "upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public Product saveProduct(@RequestPart("product") @Valid Product entity,
-                               @RequestPart("image") @Valid MultipartFile file) {
-        return productService.save(entity, file);
-    }
-
-    @GetMapping(value = "download/{id}")
-    public void downloadFile(@PathVariable("id") Long id, HttpServletResponse response) {
-        productService.downloadFile(id, response);
-    }
 }

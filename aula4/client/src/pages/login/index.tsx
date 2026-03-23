@@ -10,6 +10,8 @@ import { useAuth } from "@/context/hooks/use-auth";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
 
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+
 export const LoginPage = () => {
   const {
     control,
@@ -21,7 +23,17 @@ export const LoginPage = () => {
   const toast = useRef<Toast>(null);
   const [loading, setLoading] = useState(false);
   
-  const { handleLogin } = useAuth();
+  const { handleLogin, handleLoginSocial } = useAuth();
+
+  //Autenticação GOOGLE
+  const onSuccess = (response: CredentialResponse) => {
+    console.log(response);
+
+    if (response.credential) {
+      handleLoginSocial(response.credential);
+    }
+
+  }
 
   const onSubmit = async (userLogin: IUserLogin) => {
     setLoading(true);
@@ -121,6 +133,21 @@ export const LoginPage = () => {
             loading={loading || isSubmitting}
             disabled={loading || isSubmitting}
           />
+          <div className="mb-3">
+          <GoogleLogin
+            locale="pt-BR"
+            onSuccess={onSuccess}
+              onError={() => {
+                toast.current?.show({
+                  severity: "error",
+                  summary: "Erro",
+                  detail: "Falha ao efetuar autenticação com o Google.",
+                  life: 3000,
+                });
+                console.log("Google login failed.");
+              }}
+            />
+          </div>
         </form>
 
         <div className="text-center mt-3">

@@ -1,16 +1,30 @@
-version: "3.9"
-########################### SERVICES
 services:
-  ########################### MINIO
-  minio:
-    image: minio/minio:latest
-    container_name: minio
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
+    container_name: elasticsearch
     environment:
-      MINIO_ROOT_USER: "minio@admin"
-      MINIO_ROOT_PASSWORD: "minio@admin"
-    volumes:
-      - ./data:/data
+      - discovery.type=single-node
+      - xpack.security.enabled=false
     ports:
-      - 9000:9000
-      - 9001:9001
-    command: server /data --console-address :9001
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.1
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+
+  filebeat:
+    build: ./filebeat
+    container_name: filebeat
+    volumes:
+      - ./logs:/usr/share/filebeat/logs:ro
+    depends_on:
+      - elasticsearch
+
+volumes:
+  es_data:

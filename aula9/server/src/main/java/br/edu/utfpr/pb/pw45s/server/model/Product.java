@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -32,10 +33,4 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @Column(name = "image_name")
-    private String imageName;
-
-    @Column(length = 50, name = "content_type")
-    private String contentType;
 }

@@ -1,6 +1,8 @@
 package br.edu.utfpr.pb.pw45s.server.security;
 
 import br.edu.utfpr.pb.pw45s.server.model.User;
+import br.edu.utfpr.pb.pw45s.server.security.dto.AuthenticationResponse;
+import br.edu.utfpr.pb.pw45s.server.security.dto.UserResponseDTO;
 import br.edu.utfpr.pb.pw45s.server.service.AuthService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -57,14 +59,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = JWT.create()
                 .withSubject(authResult.getName())
                 .withExpiresAt(
-    new Date(System.currentTimeMillis()+ SecurityConstants.EXPIRATION_TIME
-    ))
+                    new Date(System.currentTimeMillis()+ SecurityConstants.EXPIRATION_TIME
+                    ))
                 .sign(Algorithm.HMAC512(SecurityConstants.SECRET));
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        User user = (User) authService.loadUserByUsername(authResult.getName());
         response.getWriter().write(new ObjectMapper().writeValueAsString(
-                new AuthenticationResponse(token)
+                new AuthenticationResponse(token, new UserResponseDTO(user))
         ));
-
-
     }
 }

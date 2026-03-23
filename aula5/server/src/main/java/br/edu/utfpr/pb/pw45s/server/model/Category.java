@@ -8,9 +8,9 @@ import jakarta.validation.constraints.Size;
 
 @Entity(name = "tb_category")
 @Getter @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Category {
 
     @Id

@@ -4,7 +4,6 @@ import lombok.Data;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDate;
 
 @Data
 public class CategoryDto {
@@ -15,5 +14,4 @@ public class CategoryDto {
     @Size(min = 2, max = 50)
     private String name;
 
-    private LocalDate testDate;
 }

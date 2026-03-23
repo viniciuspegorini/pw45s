@@ -15,7 +15,7 @@ import { Unauthorized } from "@/pages/unauthorized";
 const ROLES = {
   User: "ROLE_USER",
   Admin: "ROLE_ADMIN",
-};
+}
 
 export function AppRoutes() {
   return (
@@ -26,9 +26,7 @@ export function AppRoutes() {
         <Route path="register" element={<RegisterPage />} />
 
         {/* protected routes - Roles: User and Admin */}
-        <Route
-          element={<RequireAuth allowedRoles={[ROLES.User, ROLES.Admin]} />}
-        >
+        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.User]} />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
 
@@ -46,7 +44,7 @@ export function AppRoutes() {
           <Route path="*" element={<NotFound />} />
         </Route>
 
-        {/* protected routes - Roles: User and Admin */}
+        {/* protected routes - Roles: Admin */}
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
           <Route path="/products/show" element={<ProductShow />} />
         </Route>

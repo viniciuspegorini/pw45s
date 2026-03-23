@@ -4,23 +4,19 @@ import br.edu.utfpr.pb.pw45s.server.validation.UniqueUsername;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name = "tb_user")
+// @Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 @Getter @Setter
-@ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User implements UserDetails {
 
     @Id
@@ -28,7 +24,7 @@ public class User implements UserDetails {
     private Long id;
 
     @UniqueUsername
-    @NotNull
+    @NotNull(message = "{br.edu.utfpr.pb.pw25s.username.NotNull}")
     @Size(min = 4, max = 255)
     @NotEmpty
     private String username;
@@ -43,6 +39,10 @@ public class User implements UserDetails {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "tb_user_authorities",
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -53,6 +53,10 @@ public class User implements UserDetails {
     @Transient
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
+//        List<Authority> authorities = new ArrayList<>();
+//        authorities.addAll(userAuthorities);
+//        return authorities;
+        //ou
          return new ArrayList<>(userAuthorities);
     }
 

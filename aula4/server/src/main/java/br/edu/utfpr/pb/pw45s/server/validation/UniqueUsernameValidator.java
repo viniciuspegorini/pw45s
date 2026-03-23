@@ -1,6 +1,7 @@
 package br.edu.utfpr.pb.pw45s.server.validation;
 
 import br.edu.utfpr.pb.pw45s.server.repository.UserRepository;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

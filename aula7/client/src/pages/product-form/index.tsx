@@ -213,10 +213,10 @@ export const ProductFormPage = () => {
                 onChange={onFileChangeHandler}
               />
               <br />
-              {product?.imageFile && (
+              {product?.imageName && (
                 <img
                   style={{ width: "100px", height: "100px" }}
-                  src={`data:image;base64,${product.imageFile}`}
+                  src={`http://localhost:9000/commons/${product.imageName}`}
                 />
               )}
           </div>

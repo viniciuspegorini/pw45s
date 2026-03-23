@@ -13,8 +13,6 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Builder
-@AllArgsConstructor
 public class Authority implements GrantedAuthority {
 
     @Id

@@ -13,6 +13,7 @@ import "primeicons/primeicons.css"; //icons
 import "primeflex/primeflex.css"; //flex utilities
 
 import { AuthProvider } from "@/context/AuthContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const themeId = "theme-link";
 const themeHref =
@@ -28,9 +29,11 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <PrimeReactProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <GoogleOAuthProvider clientId="310109923674-la5thl4s4t0b2ajp6acdhq7tra74dn31.apps.googleusercontent.com">
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </GoogleOAuthProvider>
       </PrimeReactProvider>
     </BrowserRouter>
   </StrictMode>

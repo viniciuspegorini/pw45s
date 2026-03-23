@@ -43,7 +43,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "tb_user_authorities",
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id") )
@@ -53,10 +53,6 @@ public class User implements UserDetails {
     @Transient
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        List<Authority> authorities = new ArrayList<>();
-//        authorities.addAll(userAuthorities);
-//        return authorities;
-        //ou
          return new ArrayList<>(userAuthorities);
     }
 

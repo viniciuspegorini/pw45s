@@ -2,17 +2,46 @@ import type { IProduct, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
 // URL base para as requisições de produtos
-const categoryURL = "/products";
+const productURL = "/products";
+
+
+
+
+/**
+ * Função para salvar um produto
+ * @param product - Dados do produto que será salvo
+ * @returns - Retorna uma Promise com a resposta da API
+ **/
+const save = async (product: IProduct): Promise<IResponse> => {
+  let response = {} as IResponse;
+  try {
+    const data = await api.post(productURL, product);
+    response = {
+      status: 200,
+      success: true,
+      message: "Produto salvo com sucesso!",
+      data: data.data,
+    };
+  } catch (err: any) {
+    response = {
+      status: err.response.status,
+      success: false,
+      message: "Falha ao salvar produto",
+      data: err.response.data,
+    };
+  }
+  return response;
+};
 
 /**
  * Função para salvar um produto
  * @param category - Dados do produto que será salvo
  * @returns - Retorna uma Promise com a resposta da API
  **/
-const save = async (category: IProduct): Promise<IResponse> => {
+const saveAndUpload = async (formData: FormData): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
-    const data = await api.post(categoryURL, category);
+    const data = await api.post(`${productURL}/upload-db`, formData);
     response = {
       status: 200,
       success: true,
@@ -38,7 +67,7 @@ const save = async (category: IProduct): Promise<IResponse> => {
 const findAll = async (): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
-    const data = await api.get(categoryURL);
+    const data = await api.get(productURL);
     response = {
       status: 200,
       success: true,
@@ -64,7 +93,7 @@ const findAll = async (): Promise<IResponse> => {
 const remove = async (id: number): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
-    const data = await api.delete(`${categoryURL}/${id}`);
+    const data = await api.delete(`${productURL}/${id}`);
     response = {
       status: 200,
       success: true,
@@ -90,7 +119,7 @@ const remove = async (id: number): Promise<IResponse> => {
 const findById = async (id: number): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
-    const data = await api.get(`${categoryURL}/${id}`);
+    const data = await api.get(`${productURL}/${id}`);
     response = {
       status: 200,
       success: true,
@@ -111,6 +140,7 @@ const findById = async (id: number): Promise<IResponse> => {
 // Objeto que exporta todas as funções
 const ProductService = {
   save,
+  saveAndUpload,
   findAll,
   remove,
   findById,

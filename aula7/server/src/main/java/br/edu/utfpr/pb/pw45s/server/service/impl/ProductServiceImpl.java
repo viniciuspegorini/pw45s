@@ -1,28 +1,32 @@
 package br.edu.utfpr.pb.pw45s.server.service.impl;
 
+import br.edu.utfpr.pb.pw45s.server.minio.payload.FileResponse;
+import br.edu.utfpr.pb.pw45s.server.minio.service.MinioService;
+import br.edu.utfpr.pb.pw45s.server.minio.util.FileTypeUtils;
 import br.edu.utfpr.pb.pw45s.server.model.Product;
 import br.edu.utfpr.pb.pw45s.server.repository.ProductRepository;
 import br.edu.utfpr.pb.pw45s.server.service.ProductService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import java.net.URLEncoder;
 
 @Service
 @Slf4j
 public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
     implements ProductService {
-    private static final String FILE_PATH = File.separator + "uploads";
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    private final MinioService minioService;
+
+    public ProductServiceImpl(ProductRepository productRepository, MinioService minioService) {
         this.productRepository = productRepository;
+        this.minioService = minioService;
     }
 
     @Override
@@ -30,77 +34,38 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
         return this.productRepository;
     }
 
-    /* Armazena o arquivo no sistema de arquivos (disco)
-            -> O FILE_PATH está indicando para salvar em /uploads,  ou seja na raiz do disco
-            no qual está sendo executada a aplicação
-         */
-    @Override
-    public void saveImage(MultipartFile file, Product product) {
-        File dir = new File(FILE_PATH + File.separator + "images-product");
-
-        if (!dir.exists()) {
-            dir.mkdirs();
+    public Product save(Product entity, MultipartFile file) {
+        String fileType = FileTypeUtils.getFileType(file);
+        if (fileType != null) {
+            FileResponse fileResponse = minioService.putObject(file, "commons",
+                    fileType);
+            entity.setImageName(fileResponse.getFilename());
+            entity.setContentType(fileResponse.getContentType());
         }
-
-        String suffix = Objects.requireNonNull(file.getOriginalFilename()).substring( file.getOriginalFilename().lastIndexOf(".") );
-        try {
-            FileOutputStream fileOut = new FileOutputStream(
-                    new File(dir + File.separator + product.getId() + suffix)
-            );
-            BufferedOutputStream bufferedOut = new BufferedOutputStream(fileOut);
-            bufferedOut.write(file.getBytes());
-            bufferedOut.close();
-            fileOut.close();
-
-            product.setImageName(product.getId() + suffix);
-            productRepository.save(product);
-        } catch (Exception e) {
-            log.error("Error in saveImage() - " + e.getMessage());
-            throw new RuntimeException(e);
-        }
+        return super.save(entity);
     }
 
-    /* Armazena o arquivo no Banco de Dados
-     */
     @Override
-    public void saveImageFile(MultipartFile file, Product product) {
+    public void downloadFile(Long id, HttpServletResponse response) {
+        InputStream in = null;
         try {
-            String suffix = Objects.requireNonNull(file.getOriginalFilename()).substring(
-                    file.getOriginalFilename().lastIndexOf(".")
-            );
-            product.setImageFileName(product.getId() + suffix);
-            product.setImageFile(file.getBytes());
-            this.save(product);
-        } catch (Exception e) {
-            log.error("Error in saveImageFile() - " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    /* Retorna o arquivo armazenado em disco no formato Base64
-     */
-    @Override
-    public String getProductImage(Long id) {
-        try {
-            Product product = productRepository.findById(id).orElse(null);
-            if (product != null) {
-                String filename = FILE_PATH + File.separator + "images-product" +
-                        File.separator + product.getImageName();
-                return encodeFileToBase64(filename);
+            Product product = this.findOne(id);
+            in = minioService.downloadObject("commons", product.getImageName());
+            response.setHeader("Content-Disposition", "attachment;filename="
+                    + URLEncoder.encode(product.getImageName(), "UTF-8"));
+            response.setCharacterEncoding("UTF-8");
+            // Remove bytes from InputStream Copied to the OutputStream .
+            IOUtils.copy(in, response.getOutputStream());
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
             }
-        } catch (Exception e) {
-            log.error("Error in getProductImage() - " + e.getMessage());
-            throw new RuntimeException(e);
         }
-        return null;
     }
-
-    private String encodeFileToBase64(String filename) throws IOException {
-        File file = new File(filename);
-        FileInputStream stream = new FileInputStream(file);
-        byte[] encoded = Base64.encodeBase64(IOUtils.toByteArray(stream));
-        stream.close();
-        return new String(encoded, StandardCharsets.US_ASCII);
-    }
-
 }

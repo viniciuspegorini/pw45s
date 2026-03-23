@@ -1,5 +1,9 @@
 package br.edu.utfpr.pb.pw45s.server.security;
 
+import br.edu.utfpr.pb.pw45s.server.security.oauth2.CustomOAuth2UserService;
+import br.edu.utfpr.pb.pw45s.server.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import br.edu.utfpr.pb.pw45s.server.security.oauth2.OAuth2AuthenticationFailureHandler;
+import br.edu.utfpr.pb.pw45s.server.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import br.edu.utfpr.pb.pw45s.server.service.AuthService;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -30,11 +34,20 @@ public class WebSecurity {
 
     private final AuthService authService;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     public WebSecurity(AuthService authService,
-                       AuthenticationEntryPoint authenticationEntryPoint) {
+                       AuthenticationEntryPoint authenticationEntryPoint,
+                       CustomOAuth2UserService customOAuth2UserService,
+                       OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
+                       OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) {
         this.authService = authService;
         this.authenticationEntryPoint = authenticationEntryPoint;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
+        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
     }
 
 
@@ -62,7 +75,8 @@ public class WebSecurity {
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/error/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
-                .requestMatchers("/auth-social/**").permitAll()
+                .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/auth/**").permitAll()
 
                 // Somente usuários com permissão de admin podem acessar /products (qualquer requisição HTTP)
                 .requestMatchers("/products/**").hasAnyRole("ADMIN")
@@ -71,6 +85,19 @@ public class WebSecurity {
                 .requestMatchers("/users/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
         );
+
+        http.oauth2Login((oauth2Login) -> oauth2Login
+                .authorizationEndpoint((authorizationEndpoint) -> authorizationEndpoint
+                        .baseUri("/oauth2/authorize")
+                        .authorizationRequestRepository(cookieAuthorizationRequestRepository()))
+                .redirectionEndpoint( redirectionEndpoint ->
+                        redirectionEndpoint.baseUri("/oauth2/callback/*"))
+                .userInfoEndpoint(userInfoEndpoint ->
+                        userInfoEndpoint.userService(customOAuth2UserService))
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler)
+        );
+
         http.authenticationManager(authenticationManager)
                 //Filtro de Autenticação
                 .addFilter(new JWTAuthenticationFilter(authenticationManager, authService))
@@ -79,6 +106,11 @@ public class WebSecurity {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
+    }
+
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
 
     @Bean

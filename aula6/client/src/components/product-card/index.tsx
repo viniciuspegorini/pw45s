@@ -14,8 +14,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         subTitle={`R$ ${product.price.toFixed(2)}`}
         header={
           <img
-            alt={product.name}
-            src="https://primefaces.org/cdn/primereact/images/product/blue-band.jpg"
+            alt={product.name}            
+            src={product?.imageFile ? `data:image;base64,${product.imageFile}` : "https://primefaces.org/cdn/primereact/images/product/blue-band.jpg"}
             style={{ width: "100%", height: "200px", objectFit: "cover" }}
           />
         }

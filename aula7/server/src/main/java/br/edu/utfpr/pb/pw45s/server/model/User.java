@@ -11,12 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
 @Entity(name = "tb_user")
 // @Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
+@Getter @Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User implements UserDetails {
 
     @Id

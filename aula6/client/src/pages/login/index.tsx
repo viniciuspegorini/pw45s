@@ -1,38 +1,39 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { AuthenticationResponse, IUserLogin } from "@/commons/types";
 import { useAuth } from "@/context/hooks/use-auth";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
-import "./style.css";
-import googleLogo from "@/assets/google-logo.png";
+
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 export const LoginPage = () => {
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });
+  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });  
   const navigate = useNavigate();
   const { login } = AuthService;
   const toast = useRef<Toast>(null);
   const [loading, setLoading] = useState(false);
-
-  const { handleLogin, handleLoginSocialServer } = useAuth();
-  const { search } = useLocation();
+  
+  const { handleLogin, handleLoginSocial } = useAuth();
 
   //Autenticação GOOGLE
-  useEffect(() => {
-    const token = new URLSearchParams(search).get("token");
-    if (token) {
-      handleLoginSocialServer(token);
+  const onSuccess = (response: CredentialResponse) => {
+    console.log(response);
+
+    if (response.credential) {
+      handleLoginSocial(response.credential);
     }
-  }, []);
+
+  }
 
   const onSubmit = async (userLogin: IUserLogin) => {
     setLoading(true);
@@ -132,13 +133,20 @@ export const LoginPage = () => {
             loading={loading || isSubmitting}
             disabled={loading || isSubmitting}
           />
-          <div className="col text-start">
-            <a
-              className="btn btn-outline-dark social-btn"
-              href="http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:5173/login"
-            >
-              <img src={googleLogo} alt="Google" /> Login with google
-            </a>
+          <div className="mb-3">
+          <GoogleLogin
+            locale="pt-BR"
+            onSuccess={onSuccess}
+              onError={() => {
+                toast.current?.show({
+                  severity: "error",
+                  summary: "Erro",
+                  detail: "Falha ao efetuar autenticação com o Google.",
+                  life: 3000,
+                });
+                console.log("Google login failed.");
+              }}
+            />
           </div>
         </form>
 

@@ -13,6 +13,7 @@ interface AuthContextType {
   handleLogin: (authenticationResponse: AuthenticationResponse) => Promise<any>;
   handleLogout: () => void;
   hasPermission: (permission: string) => boolean;
+  handleLoginSocial: (idToken: string) => void;
 }
 
 interface AuthProviderProps {
@@ -72,21 +73,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setAuthenticatedUser(undefined);
   };
 
-  /**
-   * Verifica se o usuário tem uma determinada permissão
-   * @param user Usuário autenticado
-   * @param permission Nome da permissão a ser verificada
-   * @returns true se o usuário possuir a permissão
-   */
   const hasPermission = (permission: string): boolean => {
     if (!authenticatedUser?.authorities) {
       return false;
     }
-
     return authenticatedUser?.authorities.some(
-      (auth) => auth.authority === permission
-    );
-  };
+              (authority) => authority.authority === permission
+            );
+  }
+
+  const handleLoginSocial = async(idToken: string) => {    
+    api.defaults.headers.common["Auth-Id-Token"] = `Bearer ${idToken}`;
+    const response = await api.post("/auth-social");
+    console.log(response);
+    api.defaults.headers.common["Auth-Id-Token"] = "";
+    localStorage.setItem("token", JSON.stringify(response.data.token));
+    localStorage.setItem("user", JSON.stringify(response.data.user));
+    api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+    setAuthenticatedUser(response.data.user);
+    setAuthenticated(true);
+    navigate("/");
+  }
 
   return (
     <AuthContext.Provider
@@ -96,6 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         handleLogin,
         handleLogout,
         hasPermission,
+        handleLoginSocial,
       }}
     >
       {children}

@@ -9,10 +9,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tb_authority")
-@Getter
-@Setter
+@Getter @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Authority implements GrantedAuthority {
 
     @Id

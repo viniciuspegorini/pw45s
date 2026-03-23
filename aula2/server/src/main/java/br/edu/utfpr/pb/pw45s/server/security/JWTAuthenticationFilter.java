@@ -1,41 +1,67 @@
 package br.edu.utfpr.pb.pw45s.server.security;
 
+import br.edu.utfpr.pb.pw45s.server.dto.AuthRequestDTO;
 import br.edu.utfpr.pb.pw45s.server.model.User;
+import br.edu.utfpr.pb.pw45s.server.security.dto.AuthenticationResponse;
+import br.edu.utfpr.pb.pw45s.server.security.dto.UserResponseDTO;
 import br.edu.utfpr.pb.pw45s.server.service.AuthService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NoArgsConstructor;
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.Date;
 
+
+@NoArgsConstructor
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final AuthenticationManager authenticationManager;
-    private final AuthService authService;
+    private AuthenticationManager authenticationManager;
+    private AuthService authService;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, AuthService authService) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,
+                                   AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.authService = authService;
     }
 
     @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        try {
-            User credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);
-            User user = (User) authService.loadUserByUsername(credentials.getUsername());
+    public Authentication attemptAuthentication(HttpServletRequest request,
+                                                @NonNull HttpServletResponse response)
+                                                throws AuthenticationException {
 
+        try {
+            //HTTP.POST {"username":"admin", "password":"P4ssword"}
+            //Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON
+            //em um objeto User com esses dados.
+            AuthRequestDTO credentials = new AuthRequestDTO();
+            User user = new User();
+            //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada
+            //e o código será parado de executar nessa parte e o usuário irá receber uma resposta
+            //com falha na autenticação (classe: EntryPointUnauthorizedHandler)
+            if (request.getInputStream() != null || request.getInputStream().available() > 0) {
+                credentials = new ObjectMapper().readValue(request.getInputStream(), AuthRequestDTO.class);
+                user = (User) authService.loadUserByUsername(credentials.getUsername());
+            }
+            //Caso o usuário seja encontrado, o objeto authenticationManager encarrega-se de autenticá-lo.
+            //Como o authenticationManager foi configurado na classe WebSecurity e, foi informado o método
+            //de criptografia da senha, a senha informada durante a autenticação é criptografada e
+            //comparada com a senha armazenada no banco. Caso não esteja correta uma Exception será disparada
+            //Caso ocorra sucesso será chamado o método: successfulAuthentication dessa classe
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credentials.getUsername(),
@@ -43,28 +69,42 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                             user.getAuthorities()
                     )
             );
-        } catch (IOException e) {
+
+        } catch (StreamReadException | DatabindException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request,
+    protected void successfulAuthentication(@NonNull HttpServletRequest request,
                                             HttpServletResponse response,
-                                            FilterChain chain,
-                                            Authentication authResult)
-                                                throws IOException, ServletException {
+                                            @NonNull FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
+
+        User user = (User) authService.loadUserByUsername(authResult.getName());
+        // o método create() da classe JWT é utilizado para criação de um novo token JWT
         String token = JWT.create()
+                // o objeto authResult possui os dados do usuário autenticado, nesse caso o método getName() retorna o username do usuário foi autenticado no método attemptAuthentication.
                 .withSubject(authResult.getName())
+                //a data de validade do token é a data atual mais o valor armazenado na constante EXPIRATION_TIME, nesse caso 1 dia
                 .withExpiresAt(
-    new Date(System.currentTimeMillis()+ SecurityConstants.EXPIRATION_TIME
-    ))
+                    new Date(System.currentTimeMillis()  + SecurityConstants.EXPIRATION_TIME)
+                )
+                //Por fim é informado o algoritmo utilizado para assinar o token e por parâmetro a chave utilizada para assinatura.
+                // O Secret também pode ser alterado na classe SecurityConstants que armazena alguns dados de configuração do Spring Security
                 .sign(Algorithm.HMAC512(SecurityConstants.SECRET));
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(new ObjectMapper().writeValueAsString(
-                new AuthenticationResponse(token)
-        ));
 
+        response.setContentType("application/json");
 
+        response.getWriter().write(
+                new ObjectMapper().writeValueAsString(
+                        new AuthenticationResponse(token, new UserResponseDTO(user)))
+        );
+
+    }
+
+    @Override
+    public AuthenticationSuccessHandler getSuccessHandler() {
+        return super.getSuccessHandler();
     }
 }
