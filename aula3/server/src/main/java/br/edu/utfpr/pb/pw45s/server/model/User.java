@@ -1,98 +1,86 @@
 package br.edu.utfpr.pb.pw45s.server.model;
 
-import br.edu.utfpr.pb.pw45s.server.validation.UniqueUsername;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.proxy.HibernateProxy;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "tb_user")
+@Entity
+@Table(name = "tb_user")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter @Setter
-@ToString
-@RequiredArgsConstructor
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @UniqueUsername
     @NotNull
-    @Size(min = 4, max = 255)
-    @NotEmpty
+    @Size(min = 4, max = 50)
+    @Column(length = 50)
     private String username;
 
     @NotNull
-    @NotBlank
-    @Size(min = 4, max = 255)
+    @Size(min = 4, max = 50)
+    @Column(length = 50, name = "display_name")
     private String displayName;
 
     @NotNull
-    @Size(min = 6, max = 254)
+    @Size(min = 6)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "tb_user_authorities",
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id") )
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id") )
     private Set<Authority> userAuthorities;
 
     @Override
     @Transient
     @JsonIgnore
+    @NonNull
     public Collection<? extends GrantedAuthority> getAuthorities() {
-         return new ArrayList<>(userAuthorities);
+        return this.userAuthorities != null ? this.userAuthorities : Collections.emptyList();
     }
 
     @Override
     @Transient
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
     @Transient
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
     @Transient
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
     @Transient
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
 
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        User user = (User) o;
-        return getId() != null && Objects.equals(getId(), user.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
 }

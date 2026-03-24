@@ -29,33 +29,41 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
+
+        //Recuperar o token do Header(cabeçalho) da requisição
         String header = request.getHeader(SecurityConstants.HEADER_STRING);
+        //Verifica se o token existe no cabeçalho
         if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
-
+        //Chama o método getAuthentication e retorna o usuário autenticado para dar sequência na requisição
         UsernamePasswordAuthenticationToken authenticationToken =
                 getAuthentication(request);
+        //Adiciona o usuário autenticado no contexto do spring security
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken
-                getAuthentication(HttpServletRequest request) {
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(SecurityConstants.HEADER_STRING);
-        if (token != null) {
-            String username =
-                    JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET))
-                            .build()
-                            .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
-                            .getSubject();
-            if (username != null) {
-                User user = (User) authService.loadUserByUsername(username);
-                return new UsernamePasswordAuthenticationToken(username, null,
-                                    user.getAuthorities());
-            }
+
+        //verifica se o token é válido e retorna o username
+        String username = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET))
+                .build()
+                .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
+                .getSubject();
+
+        if (username != null) {
+            // com posse do username é verificado se ele existe na base de dados
+            User user = (User) authService.loadUserByUsername(username);
+            //caso exista o usuário é autenticado e a requisição continua a ser executada.
+            return new UsernamePasswordAuthenticationToken(
+                    user.getUsername(),
+                    null,
+                    user.getAuthorities());
         }
+        // senão é retornado null, se a url que o usuário solicitou necessita de autenticação ele vai receber erro 401 - Unauthorized
         return null;
     }
 }

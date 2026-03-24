@@ -75,16 +75,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   /**
    * Verifica se o usuário tem uma determinada permissão
    * @param user Usuário autenticado
-   * @param permission Nome da permissão a ser verificada
+   * @param authority Nome da permissão a ser verificada
    * @returns true se o usuário possuir a permissão
    */
-  const hasPermission = (permission: string): boolean => {
+  const hasPermission = (authority: string): boolean => {
     if (!authenticatedUser?.authorities) {
       return false;
     }
 
     return authenticatedUser?.authorities.some(
-      (auth) => auth.authority === permission
+      (auth) => auth.authority === authority
     );
   };
 

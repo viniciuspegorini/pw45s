@@ -5,11 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity
-@Getter @Setter
-@Builder
+@Table(name = "tb_category")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Getter @Setter
 public class Category {
 
     @Id
@@ -21,4 +24,16 @@ public class Category {
     @Column(length = 50, nullable = false)
     private String name;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(id, category.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

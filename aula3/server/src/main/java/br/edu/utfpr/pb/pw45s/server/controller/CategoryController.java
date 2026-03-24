@@ -1,35 +1,38 @@
 package br.edu.utfpr.pb.pw45s.server.controller;
 
-import br.edu.utfpr.pb.pw45s.server.dto.CategoryDto;
+import br.edu.utfpr.pb.pw45s.server.dto.CategoryDTO;
+import br.edu.utfpr.pb.pw45s.server.mapper.CategoryMapper;
 import br.edu.utfpr.pb.pw45s.server.model.Category;
-import br.edu.utfpr.pb.pw45s.server.service.CategoryService;
-import br.edu.utfpr.pb.pw45s.server.service.CrudService;
-import org.modelmapper.ModelMapper;
+import br.edu.utfpr.pb.pw45s.server.service.ICategoryService;
+import br.edu.utfpr.pb.pw45s.server.service.ICrudService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("categories")
-public class CategoryController extends CrudController<Category, CategoryDto, Long> {
+public class CategoryController extends CrudController<Category, CategoryDTO, Long> {
 
-    private final CategoryService categoryService;
-    private final ModelMapper modelMapper;
+    private final CategoryMapper categoryMapper;
 
+    public CategoryController(ICategoryService categoryService, CategoryMapper categoryMapper) {
+        this.categoryMapper = categoryMapper;
+        CategoryController.categoryService = categoryService;
+    }
 
-    public CategoryController(CategoryService categoryService, ModelMapper modelMapper) {
-        super(Category.class, CategoryDto.class);
-        this.categoryService = categoryService;
-        this.modelMapper = modelMapper;
+    private static ICategoryService categoryService;
+
+    @Override
+    protected ICrudService<Category, Long> getService() {
+        return categoryService;
     }
 
     @Override
-    protected CrudService<Category, Long> getService() {
-        return this.categoryService;
+    protected CategoryDTO toDto(Category entity) {
+        return categoryMapper.toDto(entity);
     }
 
     @Override
-    protected ModelMapper getModelMapper() {
-        return this.modelMapper;
+    protected Category toEntity(CategoryDTO dto) {
+        return categoryMapper.toEntity(dto);
     }
-
 }

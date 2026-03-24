@@ -21,34 +21,13 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:8081
-        instance:
-          service-host-type: ip
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  info:
-    env:
-      enabled: true
-
-logging:
-  file:
-    name: application.log
-
-
 ---
 spring:
   config:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:h2:mem:pw26s-dev
+    url: jdbc:h2:mem:pw45s-dev
   jpa:
     hibernate:
       ddl-auto: none
@@ -63,7 +42,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:pw26s-dev
+    url: jdbc:h2:mem:pw45s-dev
   jpa:
     hibernate:
       ddl-auto: none
@@ -79,3 +58,15 @@ spring:
       ddl-auto: create-drop
   flyway:
     locations: classpath:/db/test
+---
+spring:
+  config:
+    activate:
+      on-profile: dev-postgres
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/pw45s
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
