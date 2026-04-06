@@ -5,9 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface ProductService extends CrudService<Product, Long> {
 
-    void saveImage(MultipartFile file, Product product);
+    void saveImageFileToDisk(MultipartFile file, Product product);
 
-    void saveImageFile(MultipartFile file, Product product);
+    void saveImageFileToDatabase(MultipartFile file, Product product);
 
-    String getProductImage(Long id);
+    String getProductImageFileFromDisk(Long id);
 }

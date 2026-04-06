@@ -8,6 +8,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -31,11 +32,11 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
     }
 
     /* Armazena o arquivo no sistema de arquivos (disco)
-            -> O FILE_PATH está indicando para salvar em /uploads,  ou seja na raiz do disco
-            no qual está sendo executada a aplicação
-         */
+        -> O FILE_PATH está indicando para salvar em /uploads, ou seja na raiz do disco
+        no qual está sendo executada a aplicação
+     */
     @Override
-    public void saveImage(MultipartFile file, Product product) {
+    public void saveImageFileToDisk(MultipartFile file, Product product) {
         File dir = new File(FILE_PATH + File.separator + "images-product");
 
         if (!dir.exists()) {
@@ -63,7 +64,8 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
     /* Armazena o arquivo no Banco de Dados
      */
     @Override
-    public void saveImageFile(MultipartFile file, Product product) {
+    @Transactional
+    public void saveImageFileToDatabase(MultipartFile file, Product product) {
         try {
             String suffix = Objects.requireNonNull(file.getOriginalFilename()).substring(
                     file.getOriginalFilename().lastIndexOf(".")
@@ -72,7 +74,7 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
             product.setImageFile(file.getBytes());
             this.save(product);
         } catch (Exception e) {
-            log.error("Error in saveImageFile() - " + e.getMessage());
+            log.error("Error in saveImageFile() - {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -80,7 +82,7 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
     /* Retorna o arquivo armazenado em disco no formato Base64
      */
     @Override
-    public String getProductImage(Long id) {
+    public String getProductImageFileFromDisk(Long id) {
         try {
             Product product = productRepository.findById(id).orElse(null);
             if (product != null) {
@@ -89,7 +91,7 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
                 return encodeFileToBase64(filename);
             }
         } catch (Exception e) {
-            log.error("Error in getProductImage() - " + e.getMessage());
+            log.error("Error in getProductImage() - {}", e.getMessage());
             throw new RuntimeException(e);
         }
         return null;

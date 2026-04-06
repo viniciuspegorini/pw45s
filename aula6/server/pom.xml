@@ -92,13 +92,6 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-		<!-- Spring boot Admin Client -->
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-			<version>3.5.2</version>
-		</dependency>
-
 		<!-- Google Authentication -->
 		<dependency>
 			<groupId>com.google.api-client</groupId>

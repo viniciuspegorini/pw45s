@@ -43,7 +43,7 @@ public class ProductController extends CrudController<Product, ProductDto, Long>
     public Product save(@RequestPart("product") @Valid Product product,
                         @RequestPart("images") MultipartFile file) {
         getService().save(product);
-        productService.saveImage(file, product);
+        productService.saveImageFileToDisk(file, product);
         return product;
     }
 
@@ -52,7 +52,7 @@ public class ProductController extends CrudController<Product, ProductDto, Long>
     public Product saveImageFile(@RequestPart("product") @Valid Product product,
                                  @RequestPart("image") MultipartFile file) {
         getService().save(product);
-        productService.saveImageFile(file, product);
+        productService.saveImageFileToDatabase(file, product);
         return product;
     }
 
