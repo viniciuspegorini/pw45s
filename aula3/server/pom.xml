@@ -8,11 +8,11 @@
 		<version>4.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.edu.utfpr.pb.pw44s</groupId>
+	<groupId>br.edu.utfpr.pb.pw45s</groupId>
 	<artifactId>server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>server</name>
-	<description>Projeto da disciplina PW44S</description>
+	<description>Projeto da disciplina PW45S</description>
 	<url/>
 	<licenses>
 		<license/>

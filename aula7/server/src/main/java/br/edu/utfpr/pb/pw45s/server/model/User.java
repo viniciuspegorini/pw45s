@@ -1,6 +1,5 @@
 package br.edu.utfpr.pb.pw45s.server.model;
 
-import br.edu.utfpr.pb.pw45s.server.validation.UniqueUsername;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -24,7 +23,6 @@ public class User implements UserDetails {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @UniqueUsername
     @NotNull(message = "{br.edu.utfpr.pb.pw25s.username.NotNull}")
     @Size(min = 4, max = 255)
     @NotEmpty

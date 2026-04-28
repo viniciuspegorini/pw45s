@@ -21,23 +21,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:8081
-        instance:
-          service-host-type: ip
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  info:
-    env:
-      enabled: true
-logging:
-  file:
-    name: application.log
+
 minio:
   endpoint: http://127.0.0.1:9000
   port: 9000
