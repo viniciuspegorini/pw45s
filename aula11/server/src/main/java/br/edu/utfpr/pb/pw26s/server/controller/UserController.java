@@ -19,21 +19,22 @@ public class UserController {
     }
 
     @PostMapping
-    public GenericResponse createUser(@RequestBody @Valid User user) {
+    GenericResponse createUser(@RequestBody @Valid User user) {
         log.info("Creating new user with username: {}", user.getUsername());
         userService.save(user);
         log.info("New user created with id: {}", user.getId());
-        return new GenericResponse("Registro salvo.");
+
+        return new GenericResponse("Registro salvo");
     }
 
     @PatchMapping
-    public GenericResponse createUserPatch(@RequestBody @Valid User user) {
+    GenericResponse createUserPatch(@RequestBody @Valid User user) {
         userService.save(user);
         return new GenericResponse("Registro salvo");
     }
 
     @GetMapping
-    public String getString() {
+    String getString() {
         return "O usuário está autenticado!";
     }
 

@@ -30,17 +30,15 @@ import java.util.HashSet;
 public class AuthController {
 
     private final GoogleTokenVerifier googleTokenVerifier;
-    private final AuthService authService;
     private final UserService userService;
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
 
-    public AuthController(GoogleTokenVerifier googleTokenVerifier, AuthService authService,
+    public AuthController(GoogleTokenVerifier googleTokenVerifier,
                           UserService userService,
                           UserRepository userRepository,
                           AuthorityRepository authorityRepository) {
         this.googleTokenVerifier = googleTokenVerifier;
-        this.authService = authService;
         this.userService = userService;
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;

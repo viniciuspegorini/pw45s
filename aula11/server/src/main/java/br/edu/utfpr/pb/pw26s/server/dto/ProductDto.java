@@ -1,11 +1,13 @@
 package br.edu.utfpr.pb.pw26s.server.dto;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import lombok.*;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-@Getter @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})

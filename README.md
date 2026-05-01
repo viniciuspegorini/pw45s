@@ -37,37 +37,40 @@ O Cliente web desenvolvido utilizando a biblioteca **React** com a linguagem de 
 ## Projetos:
 
 
-### aula1
+### aula01
 - Documentação da API REST com Open API 3.0 + versionamento do Banco de Dados com Flyway.
 
-### aula2
+### aula02
 - Adição de permissões de usuário. Criação de uma classe para representar as permissões de usuário e associação da mesma na entidade de usuário.
 
-### aula3
+### aula03
 - Autenticação e autorização com validações das permissões no lado cliente.
 
-### aula4
+### aula04
 - **Autenticação utilizando o Google - lado cliente**. Criação da conta no Google Cloud Console e uso das credenciais na aplicação cliente para autenticação (retorno do idToken pelo Google) e na aplicação servidor para validação do idToken.
 
-### aula5
+### aula05
 - **Autenticação utilizando o Google - lado servidor**. Criação da conta no Google Cloud Console e uso das credenciais na aplicação servidor para autenticação (retorno do idToken pelo Google).
 
-### aula6
+### aula06
 - Upload de arquivos com armazenamento em **Banco de dados** e em Disco no **Sistema de arquivos**.
 
-### aula7
+### aula07
 - Upload de arquivos com armazenamento em um **sistema de armazenamento de objetos** utilizando **MINIO** (sistema de armazenamento de objetos **semelhante ao Amazon S3**).
 
-### aula8
-- Integração da API REST com APIs de processamento de Inteligência Artificial (IA).
-
-### aula9
+### aula08
 - Admininstração das aplicações com Spring Boot Admin e Registros de Log.
 
+### aula09
+- Admininstração das aplicações com Spring Boot Admin e Registros de Log (OpenTelemetry).
+
 ### aula10
-- Deploy de aplicações utilizando Docker.
+- Integração da API REST com APIs de processamento de Inteligência Artificial (IA).
 
 ### aula11
+- Deploy de aplicações utilizando Docker.
+
+### aula12
 - Consultas na API com Spring Data JPA e Specification.
 
 

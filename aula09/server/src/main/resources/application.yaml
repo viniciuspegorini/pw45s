@@ -1,0 +1,103 @@
+spring:
+  application:
+    name: server
+  profiles:
+    active: dev
+  datasource:
+    generate-unique-name: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
+      hibernate:
+        format_sql: true
+    show-sql: true
+  flyway:
+    baseline-on-migrate: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+minio:
+  endpoint: http://127.0.0.1:9000
+  port: 9000
+  accessKey:  minio@admin #Login Account
+  secretKey:  minio@admin # Login Password
+  secure: false
+  bucket-name: commons # Bucket Name
+  image-size: 10485760 #  Maximum size of picture file
+  file-size: 104857600 #  Maximum file size
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+  observations:
+    annotations:
+      enabled: true
+server:
+  shutdown: immediate
+logging:
+  level:
+    br.edu.utfpr.pb.pw45s.server: INFO
+    org.springframework.boot.actuator.autoconfigure.opentelemetry: DEBUG
+    org.springframework.boot.docker.compose: DEBUG
+    org.hibernate.SQL: DEBUG        # Shows the SQL
+    org.hibernate.orm.jdbc.bind: TRACE # Shows the parameters values
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:h2:mem:pw45s-dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+  h2:
+    console:
+      enabled: false
+  flyway:
+    locations: classpath:/db/prod
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:pw45s-dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    locations: classpath:/db/dev
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    locations: classpath:/db/test
+

@@ -1,12 +1,7 @@
-import { Product } from "../commons/types";
 import { api } from "../lib/axios";
 
 const save = (formData: FormData) => {
   return api.post("/products/upload", formData);
-};
-
-const saveProduct = (entity: Product) => {
-  return api.post("/products", entity);
 };
 
 const findAll = () => {
@@ -23,7 +18,6 @@ const remove = (id: number) => {
 
 const ProductService = {
   save,
-  saveProduct,
   findAll,
   findOne,
   remove,
