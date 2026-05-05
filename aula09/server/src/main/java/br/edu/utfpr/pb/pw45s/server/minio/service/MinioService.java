@@ -1,7 +1,7 @@
 package br.edu.utfpr.pb.pw45s.server.minio.service;
 
 import br.edu.utfpr.pb.pw45s.server.minio.payload.FileResponse;
-import io.minio.messages.ListAllMyBucketsResult;
+import io.minio.messages.Bucket;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -25,7 +25,7 @@ public interface MinioService {
     List<String> listBucketName();
 
     //List all buckets
-    List<ListAllMyBucketsResult.Bucket> listBuckets();
+    List<Bucket> listBuckets();
 
     // Delete Bucket by Name
     boolean removeBucket(String bucketName);
