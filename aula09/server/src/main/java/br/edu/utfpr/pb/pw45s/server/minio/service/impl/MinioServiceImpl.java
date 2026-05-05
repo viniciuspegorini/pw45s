@@ -4,7 +4,7 @@ import br.edu.utfpr.pb.pw45s.server.minio.config.MinioConfig;
 import br.edu.utfpr.pb.pw45s.server.minio.payload.FileResponse;
 import br.edu.utfpr.pb.pw45s.server.minio.service.MinioService;
 import br.edu.utfpr.pb.pw45s.server.minio.util.MinioUtil;
-import io.minio.messages.ListAllMyBucketsResult;
+import io.minio.messages.Bucket;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -76,7 +76,7 @@ public class MinioServiceImpl implements MinioService {
     }
 
     @Override
-    public List<ListAllMyBucketsResult.Bucket> listBuckets() {
+    public List<Bucket> listBuckets() {
         return minioUtil.listBuckets();
     }
 

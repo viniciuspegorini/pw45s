@@ -2,10 +2,11 @@ package br.edu.utfpr.pb.pw45s.server.minio.util;
 
 import br.edu.utfpr.pb.pw45s.server.minio.config.MinioConfig;
 import io.minio.*;
-import io.minio.messages.DeleteRequest;
-import io.minio.messages.DeleteResult;
+import io.minio.messages.Bucket;
+import io.minio.http.Method;
+import io.minio.messages.DeleteError;
+import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
-import io.minio.messages.ListAllMyBucketsResult;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class MinioUtil {
 
         minioClient.putObject(
                 PutObjectArgs.builder().bucket(bucketName).object(filename).stream(
-                        inputStream, -1, minioConfig.getFileSize())
+                                inputStream, -1L, minioConfig.getFileSize())
                         .contentType(fileType)
                         .build());
     }
@@ -81,17 +82,17 @@ public class MinioUtil {
 
     // List all buckets
     @SneakyThrows
-    public List<ListAllMyBucketsResult.Bucket> listBuckets() {
+    public List<Bucket> listBuckets() {
         return minioClient.listBuckets();
     }
 
     // List all bucket names
     @SneakyThrows
     public List<String> listBucketNames() {
-        List<ListAllMyBucketsResult.Bucket> bucketList = listBuckets();
+        List<Bucket> bucketList = listBuckets();
 
         List<String> bucketListName = new ArrayList<>();
-        for (ListAllMyBucketsResult.Bucket bucket : bucketList) {
+        for (Bucket bucket : bucketList) {
             bucketListName.add(bucket.name());
         }
         return bucketListName;
@@ -171,7 +172,7 @@ public class MinioUtil {
         if (flag) {
             url = minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
-                            .method(Http.Method.GET)
+                            .method(Method.GET)
                             .bucket(bucketName)
                             .object(objectName)
                             .expiry(2, TimeUnit.MINUTES)
@@ -215,16 +216,16 @@ public class MinioUtil {
     public boolean removeObject(String bucketName, List<String> objectNames) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            List<DeleteRequest.Object> objects = new LinkedList<>();
+            List<DeleteObject> objects = new LinkedList<>();
             for (int i = 0; i < objectNames.size(); i++) {
-                objects.add(new DeleteRequest.Object(objectNames.get(i)));
+                objects.add(new DeleteObject(objectNames.get(i)));
             }
-            Iterable<Result<DeleteResult.Error>> results =
+            Iterable<Result<DeleteError>> results =
                     minioClient.removeObjects(
                             RemoveObjectsArgs.builder().bucket(bucketName).objects(objects).build());
 
-            for (Result<DeleteResult.Error> result : results) {
-                DeleteResult.Error error = result.get();
+            for (Result<DeleteError> result : results) {
+                DeleteError error = result.get();
                 return false;
             }
         }
@@ -239,7 +240,7 @@ public class MinioUtil {
         if (flag) {
             minioClient.putObject(
                     PutObjectArgs.builder().bucket(bucketName).object(objectName).stream(
-                            inputStream, -1, minioConfig.getFileSize())
+                                    inputStream, -1L, minioConfig.getFileSize())
                             .contentType(contentType)
                             .build());
             StatObjectResponse statObject = statObject(bucketName, objectName);
