@@ -10,7 +10,7 @@ import java.util.*;
 @Service
 public class ChatGPTService {
     private final String API_URL = "https://api.openai.com/v1/chat/completions";
-    @Value("${openai.api.key}")
+    @Value("${spring.ai.openai.api-key:${openai.api.key:}}")
     private String apiKey;
 
 

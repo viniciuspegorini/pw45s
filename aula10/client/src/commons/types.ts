@@ -53,6 +53,10 @@ export interface IMusicRequest {
   theme: string;
 }
 
+export interface IOllamaRequest {
+  prompt: string;
+}
+
 export interface IMusicResponse {  
   title: string;
   music: string;

@@ -65,6 +65,7 @@ const TopMenu: React.FC = () => {
         },
         hasPermission("ROLE_ADMIN") ? { label: "Prod. Show", icon: "pi pi-search", command: () => navigate("/products/show") } : {},
         { label: "Music", icon: "pi pi-headphones", command: () => navigate("/music") },
+        { label: "Ollama", icon: "pi pi-comments", command: () => navigate("/ollama") },
       ]
     : [];
 

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class MusicService {
     public static final String BASE_MUSIC = """
@@ -21,6 +23,7 @@ public class MusicService {
     public MusicService(@Qualifier("openAiChatModel") ChatModel aiClient) {
         this.aiClient = aiClient;
     }
+
     public String getMusic() {
         return aiClient.call(BASE_MUSIC);
     }
@@ -40,6 +43,7 @@ public class MusicService {
         promptTemplate.add("format", outputConverter.getFormat());
 
         ChatResponse response = aiClient.call(promptTemplate.create());
-        return outputConverter.convert(response.getResult().getOutput().getContent());
+        return outputConverter.convert(Objects.requireNonNull(
+                Objects.requireNonNull(response.getResult()).getOutput().getText()));
     }
 }

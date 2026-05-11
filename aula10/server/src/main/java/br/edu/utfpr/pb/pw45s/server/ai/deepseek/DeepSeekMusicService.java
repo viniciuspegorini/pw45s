@@ -19,6 +19,7 @@ public class DeepSeekMusicService {
 
     private final ChatModel aiClient;
 
+    // @Qualifier("deepSeekChatModel")
     @Autowired
     public DeepSeekMusicService(@Qualifier("deepSeekChatModel") ChatModel aiClient) {
         this.aiClient = aiClient;
@@ -43,7 +44,7 @@ public class DeepSeekMusicService {
         promptTemplate.add("format", outputConverter.getFormat());
 
         ChatResponse response = aiClient.call(promptTemplate.create());
-        return outputConverter.convert(response.getResult().getOutput().getContent());
+        return outputConverter.convert(response.getResult().getOutput().getText());
     }
 }
 

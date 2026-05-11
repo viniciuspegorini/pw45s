@@ -12,6 +12,7 @@ import { NotFound } from "@/pages/not-found";
 import { ProductShow } from "@/pages/product-show";
 import { Unauthorized } from "@/pages/unauthorized";
 import { MusicFormPage } from "@/pages/music-form";
+import { OllamaFormPage } from "@/pages/ollama-form";
 
 const ROLES = {
   User: "ROLE_USER",
@@ -42,6 +43,7 @@ export function AppRoutes() {
           <Route path="/products/:id" element={<ProductFormPage />} />
 
           <Route path="/music" element={<MusicFormPage />} />
+          <Route path="/ollama" element={<OllamaFormPage />} />
           {/* catch all */}
           <Route path="*" element={<NotFound />} />
         </Route>

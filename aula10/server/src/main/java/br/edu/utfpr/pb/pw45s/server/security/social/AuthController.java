@@ -54,7 +54,7 @@ public class AuthController {
                 if (payload != null) {
                     String username = payload.getEmail();
 
-                    User user = userRepository.findByUsername(username);
+                    User user = userRepository.findUserByUsername(username);
                     if (user == null) {
                         user = new User();
                         user.setUsername(username);

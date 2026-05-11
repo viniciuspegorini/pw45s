@@ -1,3 +1,5 @@
+server:
+  port: ${SPRING_PORT:8080}
 spring:
   main:
     allow-bean-definition-overriding: true
@@ -23,27 +25,26 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:8081
-        instance:
-          service-host-type: ip
   ai:
     openai:
-      api-key: ${OPENAI_API_KEY}
-      chat.enabled: true
-      embedding.enabled: true
-      chat.options.model: gpt-4o
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        model: gpt-4o
+
     deepseek:
       base-url: https://api.deepseek.com
       api-key: ${DEEPSEEK_API_KEY}
       chat:
         enabled: true
-        options:
-          model: deepseek-chat
-          temperature: 0.8
+        model: deepseek-chat
+        temperature: 0.8
 
+    # Ollama local (https://ollama.com): instalar, rodar o serviço e p.ex. `ollama pull llama3.2`
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:llama3.2}
 management:
   endpoints:
     web:
@@ -52,9 +53,6 @@ management:
   info:
     env:
       enabled: true
-logging:
-  file:
-    name: application.log
 minio:
   endpoint: http://127.0.0.1:9000
   port: 9000
@@ -64,11 +62,9 @@ minio:
   bucket-name: commons # Bucket Name
   image-size: 10485760 #  Maximum size of picture file
   file-size: 104857600 #  Maximum file size
-
-
 openai:
   api:
-    key: ${OPENAI_API_KEY}
+    key: ${spring.ai.openai.api-key:${OPENAI_API_KEY:}}
 
 ---
 spring:
