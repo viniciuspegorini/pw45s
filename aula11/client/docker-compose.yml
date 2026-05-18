@@ -1,29 +1,23 @@
-version: "3.9"
+########################### NETWORK
+networks:
+  web:
+    external: true
+  internal:
+    external: false
 
 ########################### SERVICES
 services:
-  ########################### CLIENT
-  client:
-    image: client
-    container_name: client 
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    restart: unless-stopped   
+  pw45s-client:
+    image: react-app:latest
+    container_name: pw45s-client
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pw45s-client.rule=Host(`viniciuspegorini.com.br`)"
+      - "traefik.http.routers.pw45s-client.entrypoints=websecure"
+      - "traefik.http.routers.pw45s-client.tls.certresolver=letsencrypt"
+      - "traefik.http.services.pw45s-client.loadbalancer.server.port=80"
     ports:
-      - 8081:80
+      - 8100:80
     networks:
       - web
-
-########################### NETWORKS
-networks:
-  web:
-    name: web
-    driver: bridge
-    external: true
-    attachable: true
-  database:
-    name: database
-    driver: bridge
-    external: false
-    attachable: true

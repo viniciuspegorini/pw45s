@@ -1,57 +1,44 @@
-version: "3.9"
 ########################### SERVICES
 services:
-  ########################### POSTGRESQL
-  postgresql:
-    image: "postgres:14.2"
-    container_name: postgresql
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=${DATABASE_USERNAME}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-      - POSTGRES_DB=${DATABASE_NAME}
-    networks:
-      - database
-      - web
-    restart: unless-stopped
-  ########################### MINIO
-  minio:
-    image: minio/minio:latest
-    container_name: minio
-    environment:
-      MINIO_ROOT_USER: "minioadmin"
-      MINIO_ROOT_PASSWORD: "minioadmin"
-    volumes:
-      - ./data:/data
-    ports:
-      - 9000:9000
-      - 9001:9001
-    restart: unless-stopped
-    command: server /data --console-address :9001
-  ########################### SERVER
   api:
-    image: pw26s-server
-    container_name: pw26s-server
+    image: pw45s-server
+    container_name: pw45s-server
     build:
       context: ./
       dockerfile: Dockerfile
     environment:
+      #Server Config
       - SERVER_PORT=${SERVER_PORT}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - CLIENT_URL=${CLIENT_URL}
+      #Database
       - DATABASE_URL=${DATABASE_URL}
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      #Google Oauth
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      #Minio
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT}
+      - MINIO_PORT=${MINIO_PORT}
+      - MINIO_SECURE=${MINIO_SECURE}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+      #Time Zone
       - TZ=America/Sao_Paulo
     ports:
       - "8080:8080"
     restart: unless-stopped
+    labels:
+      # Traefik Config
+      - "traefik.enable=true"
+      - "traefik.http.routers.pw45s-server.rule=Host(`api.viniciuspegorini.com.br`)"
+      - "traefik.http.routers.pw45s-server.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.pw45s-server.entrypoints=websecure"
     networks:
       - web
-      - database    
+      - database
 
 ########################### NETWORKS
 networks:

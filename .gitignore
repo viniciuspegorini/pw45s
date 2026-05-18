@@ -14,7 +14,6 @@
 **/pgdata/
 
 **/.env
-aula10/server/.env
 .env
 
 #Databases 

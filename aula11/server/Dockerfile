@@ -1,5 +1,5 @@
 # BUILD
-FROM eclipse-temurin:17-jdk-alpine as build
+FROM eclipse-temurin:25-jdk-alpine as build
 WORKDIR /workspace/server
 
 COPY mvnw .
@@ -13,6 +13,6 @@ RUN sed -i 's/\r$//' mvnw
 RUN /bin/sh mvnw package -DskipTests
 
 # DELIVERY
-FROM openjdk:17
+FROM openjdk:25-ea-21-jdk-slim
 COPY --from=build /workspace/server/target/server-0.1.jar server.jar
 ENTRYPOINT ["java", "-jar", "server.jar"]

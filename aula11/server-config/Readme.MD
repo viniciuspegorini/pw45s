@@ -25,19 +25,24 @@ Confirme o email recebido.
 Será necessário adicionar um método de pagamento (cartão de crédito ou PayPal).
 Complete o processo de verificação.
 
-Criar um projeto e informar o nome e descrição.
-Então podemos criar um droplet:
-Escolha a região (afeta a latência)
-Escolha o SO (estou utilizando o Ubuntu)
-Escolha o plano de Droplet
-Basic → ideal para pequenos projetos.
-Modelos:
-Regular with SSD → preço mais acessível.
-Premium AMD/Intel → mais desempenho.
-Premium NVMe → muito rápido.
-Selecione o tamanho:
-2 GB / 1vCPU → ideal para testes.
-4 GB ou mais → para produção, lembrando que as aplicações serão diretamente impactadas de acordo com as configurações do droplet.
+### Iniciando a configuração do servidor:
+
+#### Criar um projeto e informar:
+    - Nome
+    - Descrição
+
+#### Então podemos criar um droplet:
+- Escolha a região (afeta a latência)
+- Escolha o SO (estou utilizando o Ubuntu)
+- Escolha o plano de Droplet
+  - Basic → ideal para pequenos projetos.
+- Modelos:
+  - Regular with SSD → preço mais acessível.
+  - Premium AMD/Intel → mais desempenho.
+  - Premium NVMe → muito rápido.
+- Selecione o tamanho:
+  - 2 GB / 1vCPU → ideal para testes.
+  - 4 GB ou mais → para produção, lembrando que as aplicações serão diretamente impactadas de acordo com as configurações do droplet.
 
 Agora podemos selecionar o método de autenticação. Prefira SSH Key
 
@@ -106,8 +111,7 @@ sudo apt update
 sudo apt upgrade
 
 # Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl
+sudo apt install ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -119,7 +123,7 @@ echo \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 ```
 
@@ -164,7 +168,7 @@ chown root:root ./appdata/traefik/acme.json
 
 ### 4.4 Executando o docker-compose.yml
 
-Todos os serviços estão configurados no arquivo docker-compose.yml, para executar basta criar o arquivo no servidor e executar:
+Todos os serviços estão configurados no arquivo docker-compose.yml, para executar basta criar o arquivo no servidorm junto com o Dockerfile e o arquivo .env com as variáveis de ambiente e executar:
 
 ```cmd
 sudo docker compose up -d --build
@@ -201,7 +205,7 @@ Kind=Username with password
 Scope: Global
 Username: postgres
 Password: aula@PW45S
-ID: postgres-id
+ID: postgres_id
 Description: Postgres
 ```
 
@@ -231,7 +235,7 @@ O Docker-compose.yml foi configurado para criar o container do PostgreSQL, poré
 
 - Para configurar basta acessar o container:
 ```bash
-docker exec -it postgres bash
+docker exec -it postgresql bash
 ```
 
 - Conectar-se ao PostgreSQL:
@@ -255,6 +259,8 @@ Na página principal do Jenkins clicar em `New Item` e após preencher os dados 
 Name= Server
 Type=Pipeline
 Description= Server application
+# Não marca nada no primeiro conjunto de checkbox
+Triggers = [x] GitHub hook trigger for GITScm polling
 Definition= Pipeline script from SCM
 SCM= Git
 Repository URL = https://github.com/viniciuspegorini/pw45s-server-deploy
@@ -270,6 +276,8 @@ Será realizado o deploy da aplicação localizada em:
 Name= Client
 Type= Pipeline
 Description= Client application
+# Não marca nada no primeiro conjunto de checkbox
+Triggers = [x] GitHub hook trigger for GITScm polling
 Definition= Pipeline script from SCM
 SCM= Git
 Repository URL = https://github.com/viniciuspegorini/pw45s-client-deploy

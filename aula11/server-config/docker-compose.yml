@@ -6,7 +6,7 @@ services:
   # It automatically discovers services and configures itself to route traffic to them.
   traefik:
     container_name: traefik
-    image: traefik:v3.4
+    image: traefik:v3.6
     command: # CLI arguments
       # Basic configs
       - "--entrypoints.web.address=:80" # HTTP
@@ -96,7 +96,7 @@ services:
   # MinIO is a high-performance, S3-compatible object storage service that is designed for large-scale data storage.
   # It is ideal for storing unstructured data such as photos, videos, log files, backups, and container images.
   minio:
-    image: minio/minio:latest
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
     container_name: minio
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}

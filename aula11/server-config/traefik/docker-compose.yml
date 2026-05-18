@@ -3,7 +3,7 @@ services:
   ############################# TRAEFIK 
   traefik:
     container_name: traefik
-    image: traefik:v3.4
+    image: traefik:v3.6
     command: # CLI arguments
       # Basic configs
       - "--entrypoints.web.address=:80" # HTTP

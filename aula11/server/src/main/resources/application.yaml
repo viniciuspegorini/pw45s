@@ -1,0 +1,69 @@
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: immediate
+spring:
+  application:
+    name: server
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  jpa:
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
+      hibernate:
+        format_sql: false
+    show-sql: true
+
+minio:
+  endpoint: ${MINIO_ENDPOINT:http://127.0.0.1:9000}
+  port: ${MINIO_PORT:9000}
+  accessKey: ${MINIO_ACCESS_KEY:minio@admin} #Login Account
+  secretKey: ${MINIO_SECRET_KEY:minio@admin} # Login Password
+  secure: ${MINIO_SECURE:false}
+  bucket-name: ${MINIO_BUCKET_NAME:pw45s} # Bucket Name
+  image-size: 10485760 #  Maximum size of picture file
+  file-size: 104857600 #  Maximum file size
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://postgresql:5432/pw45s}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    locations: classpath:/db/prod
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/pw45s}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    locations: classpath:/db/dev
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    locations: classpath:/db/test
+

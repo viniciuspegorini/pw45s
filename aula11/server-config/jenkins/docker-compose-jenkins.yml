@@ -12,7 +12,7 @@ services:
       - "--prefix=/jenkins"
     labels: # Configs for traefik
       - "traefik.enable=true"      
-      - "traefik.http.routers.jenkins.rule=Host(`jenkins.app.pb.utfpr.edu.br`)"
+      - "traefik.http.routers.jenkins.rule=Host(`jenkins.viniciuspegorini.com.br`)"
       - "traefik.http.routers.jenkins.entrypoints=websecure"
       - "traefik.http.routers.jenkins.tls.certresolver=letsencrypt"
     ports:

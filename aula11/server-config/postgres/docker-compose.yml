@@ -21,7 +21,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=web
-      - traefik.tcp.routers.postgresql.rule=HostSNI(`app.pb.utfpr.edu.br`)
+      - traefik.tcp.routers.postgresql.rule=HostSNI(`viniciuspegorini.com.br`)
       - traefik.tcp.routers.postgresql.tls=true
       - traefik.tcp.routers.postgresql.entrypoints=postgresql
       - traefik.tcp.routers.postgresql.tls.certresolver=letsencrypt
