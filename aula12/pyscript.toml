@@ -1,0 +1,6 @@
+# Configuração global (espelhada em <py-config> no index.html).
+# Uma única config por página é obrigatória no PyScript 2026.
+
+packages = ["numpy", "matplotlib", "pyjokes", "mini-auspex", "micropip"]
+
+debug = false

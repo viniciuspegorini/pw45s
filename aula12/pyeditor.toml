@@ -1,0 +1,13 @@
+# Configuração exclusiva do PyEditor (não usa <py-config> da página).
+# Mapeamento HTTP → filesystem virtual do Pyodide.
+
+sync_main_only = true
+
+packages = ["numpy", "matplotlib", "pyjokes", "mini-auspex", "micropip"]
+
+[files]
+"./data/SDH40mmPA_FMC_Contact.civa/root.xml" = "./data/SDH40mmPA_FMC_Contact.civa/root.xml"
+"./data/SDH40mmPA_FMC_Contact.civa/proc0/model.xml" = "./data/SDH40mmPA_FMC_Contact.civa/proc0/model.xml"
+
+# Pacote completo (descomente e remova as linhas acima para evitar duplicata):
+# "./data/SDH40mmPA_FMC_Contact.civa.zip" = "./data/*"

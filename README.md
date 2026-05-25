@@ -71,7 +71,7 @@ O Cliente web desenvolvido utilizando a biblioteca **React** com a linguagem de 
 - Deploy de aplicações utilizando Docker.
 
 ### aula12
-- Consultas na API com Spring Data JPA e Specification.
+- Python no navegador com PyScript + Pyodide.
 
 
 # Avaliações da disciplina:

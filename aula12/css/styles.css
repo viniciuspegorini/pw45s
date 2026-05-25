@@ -1,0 +1,618 @@
+/* Seminário PyScript — paleta institucional UTFPR (utfpr.edu.br) */
+
+:root {
+  /* Cores oficiais / site UTFPR */
+  --utfpr-blue: #005db7;
+  --utfpr-blue-dark: #003366;
+  --utfpr-blue-light: #1a75c9;
+  --utfpr-yellow: #ffbe00;
+  --utfpr-gray: #7f7f7f;
+  --utfpr-gray-light: #ededed;
+
+  --bg: #fafdfd;
+  --surface: #ffffff;
+  --surface-hover: #fff9eb;
+  --border: #ededed;
+  --text: #2e3132;
+  --text-muted: #7f7f7f;
+  --accent: var(--utfpr-yellow);
+  --accent-dark: #e6a800;
+  --accent-link: #9a7300;
+  --accent-soft: rgba(255, 190, 0, 0.18);
+  --accent-border: rgba(255, 190, 0, 0.45);
+  --highlight: var(--utfpr-blue);
+  --highlight-soft: rgba(0, 93, 183, 0.1);
+  --success: #007a3d;
+  --warning: #e6a800;
+  --danger: #c0392b;
+  --output-bg: #fffef6;
+  --output-border: #f0e4c4;
+  --radius: 12px;
+  --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Cascadia Code", "Fira Code", Consolas, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header — barra amarela institucional */
+.site-header {
+  background: linear-gradient(
+    135deg,
+    var(--utfpr-yellow) 0%,
+    var(--accent-dark) 100%
+  );
+  border-bottom: 4px solid var(--utfpr-blue-dark);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  color: var(--text);
+}
+
+.site-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.site-header .subtitle {
+  margin: 0;
+  color: rgba(46, 49, 50, 0.82);
+  font-size: 1rem;
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text);
+  border: 1px solid rgba(46, 49, 50, 0.12);
+}
+
+.badge:first-of-type {
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  border-color: rgba(0, 51, 102, 0.2);
+}
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 0;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 1.25rem 1rem;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.sidebar h2 {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem 0.5rem;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a:focus {
+  background: var(--accent-soft);
+  color: var(--accent-link);
+}
+
+.demo-section .lead a {
+  color: var(--accent-link);
+  font-weight: 600;
+}
+
+.demo-section .lead a:hover {
+  color: var(--utfpr-blue-dark);
+}
+
+main {
+  padding: 1.5rem 2rem 3rem;
+  min-width: 0;
+}
+
+/* Sections */
+.demo-section {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.demo-section:last-child {
+  border-bottom: none;
+}
+
+.demo-section h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.35rem;
+  color: var(--text);
+}
+
+.demo-section .lead {
+  margin: 0 0 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.demo-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  overflow: hidden;
+}
+
+.demo-card h3 {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.joke-quote {
+  margin: 0 0 0.75rem;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--accent);
+  background: var(--surface-hover);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text);
+}
+
+.joke-meta {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.joke-controls label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.joke-controls select {
+  flex: 1;
+  min-width: 10rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+/* Overlay global — carregamento Pyodide */
+.pyodide-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(46, 49, 50, 0.55);
+  backdrop-filter: blur(6px);
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.pyodide-loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pyodide-loader__panel {
+  text-align: center;
+  max-width: 420px;
+  padding: 2rem 2.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+}
+
+.pyodide-loader__spinner {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1.25rem;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: py-spin 0.85s linear infinite;
+}
+
+@keyframes py-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pyodide-loader__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.pyodide-loader__status {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  min-height: 1.4em;
+}
+
+.pyodide-loader__bar {
+  width: 100%;
+  height: 6px;
+  border: none;
+  border-radius: 999px;
+  overflow: hidden;
+  accent-color: var(--accent);
+  background: var(--surface-hover);
+}
+
+.pyodide-loader__hint {
+  margin: 0.85rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.pyodide-loader__dismiss {
+  margin-top: 1.25rem;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Demos bloqueados até py:all-done */
+.demo-card.is-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.demo-card.is-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  background: rgba(255, 190, 0, 0.08);
+}
+
+body.pyscript-ready .demo-card.is-loading {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+body.pyscript-ready .demo-card.is-loading::after {
+  display: none;
+}
+
+/* PyScript output areas — fundo claro para melhor leitura */
+.py-output {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  background: var(--output-bg);
+  color: var(--text);
+  border: 1px solid var(--output-border);
+  border-radius: 8px;
+  padding: 1rem;
+  min-height: 2.5rem;
+  margin-top: 0.75rem;
+  position: relative;
+}
+
+.py-output[data-loading="true"] {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.py-output[data-loading="true"]::before {
+  content: "";
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--output-border);
+  border-top-color: var(--accent-dark);
+  border-radius: 50%;
+  animation: py-spin 0.75s linear infinite;
+}
+
+.py-output[data-loading="true"]::after {
+  content: attr(data-loading-text);
+}
+
+/* Quando display() preenche a saída, esconde o estado de loading */
+.py-output:not(:empty) {
+  display: block;
+  font-style: normal;
+  color: var(--text);
+}
+
+.py-output:not(:empty)::before,
+.py-output:not(:empty)::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--text);
+}
+
+.btn-primary:hover {
+  background: var(--accent-dark);
+  filter: none;
+}
+
+.btn-secondary {
+  background: var(--surface-hover);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Counter */
+.counter-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0.5rem 0;
+}
+
+/* Form */
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.input-row input {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.5rem 0.75rem;
+  font-family: inherit;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.input-row input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* Matplotlib */
+.plot-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.plot-container img {
+  max-width: 100%;
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* Tic-tac-toe */
+.ttt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  grid-template-rows: repeat(3, 72px);
+  gap: 6px;
+  margin: 1rem 0;
+}
+
+.ttt-cell {
+  width: 72px;
+  height: 72px;
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--font);
+  background: var(--surface-hover);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.ttt-cell:hover:not(:disabled) {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.ttt-cell:disabled {
+  cursor: default;
+  opacity: 0.95;
+}
+
+.ttt-cell.x {
+  color: var(--accent-dark);
+}
+
+.ttt-cell.o {
+  color: var(--utfpr-blue);
+}
+
+.ttt-status {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.ttt-status.win {
+  color: var(--success);
+}
+
+.ttt-status.draw {
+  color: var(--warning);
+}
+
+/* Lista de tarefas */
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+}
+
+.task-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.task-list li:last-child {
+  border-bottom: none;
+}
+
+.task-list .done {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.85rem;
+  border-top: 4px solid var(--utfpr-yellow);
+  background: var(--utfpr-blue-dark);
+}
+
+#dom-message.highlight {
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* PyEditor */
+.pyeditor-container {
+  min-height: 280px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.pyeditor-container .cm-editor {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.demo-section kbd {
+  padding: 0.1rem 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.85em;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+}
+
+/* PyScript default overrides */
+py-script,
+script[type="py"] {
+  display: block;
+}

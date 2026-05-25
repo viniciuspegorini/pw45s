@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PW45S - Aula12 - PyScript</title>
+    <meta
+      name="description"
+      content="Exemplos práticos de PyScript 2026.3.1 com Pyodide."
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- PyEditor usa worker; mini-coi habilita SharedArrayBuffer sem configurar o servidor -->
+    <script src="js/mini-coi.js" scope="."></script>
+    <link
+      rel="stylesheet"
+      href="https://pyscript.net/releases/2026.3.1/core.css"
+    />
+    <script
+      type="module"
+      src="https://pyscript.net/releases/2026.3.1/core.js"
+    ></script>    
+    <py-config>
+      packages = ["numpy", "matplotlib", "pyjokes", "mini-auspex", "micropip"]
+    </py-config>
+  </head>
+  <body>
+    <div
+      id="pyodide-loader"
+      class="pyodide-loader"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="Carregando Pyodide"
+    >
+      <div class="pyodide-loader__panel">
+        <div class="pyodide-loader__spinner" aria-hidden="true"></div>
+        <p class="pyodide-loader__title">Carregando Pyodide</p>
+        <p class="pyodide-loader__status" id="pyodide-status">
+          Iniciando runtime Python no navegador…
+        </p>
+        <progress
+          id="pyodide-progress"
+          class="pyodide-loader__bar"
+          max="100"
+          value="5"
+        >
+          5%
+        </progress>
+        <p class="pyodide-loader__hint">
+          Na primeira visita o Pyodide pode levar 1–2 minutos;
+        </p>
+        <button type="button" class="btn btn-secondary pyodide-loader__dismiss" id="pyodide-dismiss">
+          Continuar sem aguardar
+        </button>
+      </div>
+    </div>
+
+    <header class="site-header">
+      <h1>PW45S - Aula12 - PyScript</h1>
+      <p class="subtitle">
+        Python no navegador com PyScript 2026.3.1 e Pyodide
+      </p>
+      <div class="badge-row">
+        <span class="badge">PyScript 2026.3.1</span>
+        <span class="badge">Pyodide</span>
+        <span class="badge">Sem backend</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>Exemplos</h2>
+        <nav>
+          <a href="#intro">Introdução</a>
+          <a href="#hello">1. Hello World</a>
+          <a href="#dom">2. DOM e eventos</a>
+          <a href="#counter">3. Contador</a>
+          <a href="#numpy">4. NumPy</a>
+          <a href="#plot">5. Gráficos</a>
+          <a href="#tictactoe">6. Jogo da velha</a>
+          <a href="#todo">7. Lista de tarefas</a>
+          <a href="#pyjokes">8. PyJokes</a>
+          <a href="#pyeditor">9. PyEditor</a>
+        </nav>
+      </aside>
+
+      <main>
+        <section id="intro" class="demo-section">
+          <h2>Introdução</h2>
+          <p class="lead">
+            Este projeto demonstra o
+            <a href="https://pyscript.net/" target="_blank" rel="noopener">PyScript</a>
+            executando Python diretamente no navegador via
+            <a href="https://pyodide.org/" target="_blank" rel="noopener">Pyodide</a>. 
+            Abra esta página com um servidor HTTP local (veja o README) —
+            a primeira carga exibe o progresso do Pyodide (pode levar alguns
+            minutos).
+          </p>
+          <div class="demo-card">
+            <p>
+              Cada seção carrega um arquivo <code>examples/*.py</code> com
+              <code>&lt;script type="py"&gt;</code> ou, no exemplo 9,
+              <code>&lt;script type="py-editor"&gt;</code>. NumPy, Matplotlib e
+              pyjokes são baixados sob demanda nos exemplos 4, 5 e 8;
+              a janela modal mostra o progresso do download e inicialização do Pyodide.
+            </p>
+          </div>
+        </section>
+
+        <!-- 1. Hello World -->
+        <section id="hello" class="demo-section">
+          <h2>1. Hello World</h2>
+          <p class="lead">
+            Uso básico de <code>display()</code> e informações do interpretador
+            Python embutido.
+          </p>
+          <div class="demo-card" data-py-demo>
+            <h3>Saída</h3>
+            <div
+              id="out-hello"
+              class="py-output"
+              data-loading="true"
+              data-loading-text="Aguardando Pyodide…"
+            ></div>
+            <script
+              type="py"
+              src="./examples/01_hello.py"
+              target="out-hello"
+            ></script>
+          </div>
+        </section>
+
+        <!-- 2. DOM e eventos -->
+        <section id="dom" class="demo-section">
+          <h2>2. DOM e eventos (@when)</h2>
+          <p class="lead">
+            O decorador <code>@when</code> conecta funções Python a eventos do
+            navegador (cliques, teclado (KeyPress, KeyDown, KeyUp), etc.).
+          </p>
+          <div class="demo-card" data-py-demo>
+            <div class="btn-row">
+              <button type="button" class="btn btn-primary" id="btn-greet">
+                Teste de Clique com @when
+              </button>
+              <button type="button" class="btn btn-secondary" id="btn-reset-dom">
+                Limpar
+              </button>
+            </div>
+            <p id="dom-message">
+              Clique no botão para testar o decorador @when.
+            </p>
+            <div
+              id="out-dom"
+              class="py-output"
+              data-loading="true"
+              data-loading-text="Aguardando Pyodide…"
+            ></div>
+            <script
+              type="py"
+              src="./examples/02_dom_events.py"
+              target="out-dom"
+            ></script>
+          </div>
+        </section>
+
+        <!-- 3. Contador -->
+        <section id="counter" class="demo-section">
+          <h2>3. Contador interativo</h2>
+          <p class="lead">
+            Estado em Python atualizando elementos da página com
+            <code>pyscript.web</code>.
+          </p>
+          <div class="demo-card" data-py-demo>
+            <p class="counter-value" id="counter-value">0</p>
+            <div class="btn-row">
+              <button type="button" class="btn btn-secondary" id="btn-dec">
+                −
+              </button>
+              <button type="button" class="btn btn-primary" id="btn-inc">
+                +
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="btn-reset-counter"
+              >
+                Zerar
+              </button>
+            </div>
+            <script type="py" src="./examples/03_counter.py"></script>
+          </div>
+        </section>
+
+        <!-- 4. NumPy -->
+        <section id="numpy" class="demo-section">
+          <h2>4. NumPy</h2>
+          <p class="lead">
+            Pacotes do PyPI instalados via micropip no Pyodide (primeira execução
+            faz download do wheel).
+          </p>
+          <div class="demo-card" data-py-demo>
+            <h3>Saída</h3>
+            <div
+              id="out-numpy"
+              class="py-output"
+              data-loading="true"
+              data-loading-text="Instalando NumPy…"
+            ></div>
+            <script
+              type="py"
+              src="./examples/04_numpy.py"
+              target="out-numpy"
+            ></script>
+          </div>
+        </section>
+
+        <!-- 5. Gráficos -->
+        <section id="plot" class="demo-section">
+          <h2>5. Gráficos com Matplotlib</h2>
+          <p class="lead">
+            Figuras matplotlib renderizadas como imagem PNG via
+            <code>display(fig)</code>.
+          </p>
+          <div class="demo-card" data-py-demo>
+            <div class="plot-container">
+              <div>
+                <h3>Linha</h3>
+                <div id="plot-line"></div>
+              </div>
+              <div>
+                <h3>Barras</h3>
+                <div id="plot-bar"></div>
+              </div>
+            </div>
+            <script type="py" src="./examples/05_plot.py"></script>
+          </div>
+        </section>
+
+        <!-- 6. Jogo da velha -->
+        <section id="tictactoe" class="demo-section">
+          <h2>6. Jogo da velha</h2>
+          <p class="lead">
+            Tabuleiro HTML com lógica de jogo em Python — clique nas células
+            para jogar.
+          </p>
+          <div class="demo-card" data-py-demo>
+            <p class="ttt-status" id="ttt-status">Vez do jogador X</p>
+            <div id="ttt-board" class="ttt-grid">
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="0"
+                aria-label="Célula 1"
+              ></button>
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="1"
+                aria-label="Célula 2"
+              ></button>
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="2"
+                aria-label="Célula 3"
+              ></button>
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="3"
+                aria-label="Célula 4"
+              ></button>
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="4"
+                aria-label="Célula 5"
+              ></button>
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="5"
+                aria-label="Célula 6"
+              ></button>
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="6"
+                aria-label="Célula 7"
+              ></button>
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="7"
+                aria-label="Célula 8"
+              ></button>
+              <button
+                type="button"
+                class="ttt-cell"
+                data-index="8"
+                aria-label="Célula 9"
+              ></button>
+            </div>
+            <button type="button" class="btn btn-secondary" id="btn-ttt-reset">
+              Nova partida
+            </button>
+            <script type="py" src="./examples/06_tictactoe.py"></script>
+          </div>
+        </section>
+
+        <!-- 7. Lista de tarefas -->
+        <section id="todo" class="demo-section">
+          <h2>7. Lista de tarefas</h2>
+          <p class="lead">
+            Criação dinâmica de elementos com <code>pyscript.web</code> e
+            eventos de formulário.
+          </p>
+          <div class="demo-card" data-py-demo>
+            <div class="input-row">
+              <input
+                type="text"
+                id="task-input"
+                placeholder="Nova tarefa…"
+                autocomplete="off"
+              />
+              <button type="button" class="btn btn-primary" id="btn-add-task">
+                Adicionar
+              </button>
+            </div>
+            <ul id="task-list" class="task-list"></ul>
+            <script type="py" src="./examples/07_todo.py"></script>
+          </div>
+        </section>
+
+        <!-- 8. PyJokes -->
+        <section id="pyjokes" class="demo-section">
+          <h2>8. PyJokes</h2>
+          <p class="lead">
+            O pacote
+            <a href="https://pypi.org/project/pyjokes/" target="_blank" rel="noopener">pyjokes</a>
+            é instalado no Pyodide via micropip. Piadas de programador com
+            <code>get_joke()</code> e eventos <code>@when</code>.
+          </p>
+          <div class="demo-card" data-py-demo>
+            <blockquote id="joke-text" class="joke-quote">
+              Aguardando Pyodide…
+            </blockquote>
+            <p id="joke-meta" class="joke-meta"></p>
+            <div class="input-row joke-controls">
+              <label for="joke-category">Categoria</label>
+              <select id="joke-category">
+                <option value="neutral" selected>Neutras (programador)</option>
+                <option value="chuck">Chuck Norris</option>
+                <option value="all">Todas</option>
+              </select>
+              <button type="button" class="btn btn-primary" id="btn-joke">
+                Nova piada
+              </button>
+            </div>
+            <script type="py" src="./examples/08_pyjokes.py"></script>
+          </div>
+        </section>
+
+        <!-- 9. PyEditor -->
+        <section id="pyeditor" class="demo-section">
+          <h2>9. PyEditor</h2>
+          <p class="lead">
+            O
+            <a href="https://docs.pyscript.net/2026.3.1/user-guide/editor/" target="_blank" rel="noopener">PyEditor</a>
+            roda em worker isolado com configuração própria em
+            <code>pyeditor.toml</code>. A pasta <code>data/</code> é baixada
+            para o filesystem virtual do Pyodide via opção
+            <code>[files]</code> — clique em <strong>Run</strong> ou
+            <kbd>Ctrl</kbd>+<kbd>Enter</kbd>.
+          </p>
+          <div class="demo-card">
+            <script
+              type="py-editor"
+              id="pyeditor-demo"       
+              config="./pyeditor.toml"
+            >
+base = 5
+altura = 10
+area = (base * altura) / 2
+print(f"Triângulo — base: {base}, altura: {altura}")
+print(f"Área: {area:.4f}")
+            </script>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      UTFPR — PW45S · Aula 12 · PyScript 2026.3.1
+    </footer>
+    <script type="module" src="js/loading.js"></script>
+  </body>
+</html>
