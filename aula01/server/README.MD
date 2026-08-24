@@ -25,11 +25,7 @@ Após adicionada a biblioteca no arquivo pom.xml basta executar a aplicação. A
 ```plaintext
 http://localhost:8080/v3/api-docs
 ```
-A documentação OpenAPI por padrão está no formato JSON. Para visualizar no formato _yaml_ basta acessar a url:
-```plaintext
-http://localhost:8080/v3/api-docs.yml
-``` 
-É possível ainda mudar a url da documentação _springdoc.api-docs_, alterando suas um parâmetro no arquivo de propriedades do projeto. No caso do projeto server as propriedades estão no arquivo **application.yml**:
+É possível ainda mudar a url da documentação _springdoc.api-docs_, alterando o parâmetro `path` no arquivo de propriedades do projeto. No caso do projeto server as propriedades estão no arquivo **application.yml**:
 
 ```yml
 springdoc:
