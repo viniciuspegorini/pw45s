@@ -238,4 +238,4 @@ O componente **GoogleLogin** renderiza o botão padrão do Google (a propriedade
 6. O cliente armazena o JWT e o usuário no `localStorage`, configura o *header* `Authorization` do Axios e redireciona para a página inicial.
 7. A partir daqui, o controle de acesso segue exatamente como na aula03: o **RequireAuth** valida as *roles* de cada rota e o **TopMenu** exibe os itens de acordo com `hasPermission`.
 
-Dessa forma, a aplicação passa a oferecer duas formas de autenticação (usuário/senha e conta Google), ambas convergindo para o mesmo mecanismo de autenticação e autorização baseado no JWT emitido pela API.
+Assim, a aplicação passa a oferecer duas formas de autenticação (usuário/senha e conta Google), ambas convergindo para o mesmo mecanismo de autenticação e autorização baseado no JWT emitido pela API.

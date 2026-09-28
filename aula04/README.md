@@ -9,7 +9,7 @@ Os dois projetos partem do código da pasta **aula03** (API com Spring Boot 4, J
 
 ## 🧭 Visão geral do fluxo
 
-A estratégia utilizada é a de **validação do ID Token no back-end**: quem autentica o usuário é o Google, a nossa API apenas confere se o *token* recebido é legítimo e, a partir dele, cadastra (se necessário) o usuário e gera um JWT próprio.
+A estratégia utilizada é a de **validação do ID Token no back-end**: quem autentica o usuário é o Google, a API apenas confere se o *token* recebido é legítimo e, a partir dele, cadastra (se necessário) o usuário e gera um JWT próprio.
 
 ```mermaid
 sequenceDiagram
