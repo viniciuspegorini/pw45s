@@ -2,15 +2,15 @@ package br.edu.utfpr.pb.pw45s.server.service.impl;
 
 import br.edu.utfpr.pb.pw45s.server.model.Product;
 import br.edu.utfpr.pb.pw45s.server.repository.ProductRepository;
-import br.edu.utfpr.pb.pw45s.server.service.ProductService;
+import br.edu.utfpr.pb.pw45s.server.service.IProductService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
-    implements ProductService {
+        implements IProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -18,7 +18,7 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long>
 
     @Override
     protected JpaRepository<Product, Long> getRepository() {
-        return this.productRepository;
+        return productRepository;
     }
 
 }
