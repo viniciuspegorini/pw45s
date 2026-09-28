@@ -22,33 +22,16 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-  boot:
-    admin:
-      client:
-        url: http://127.0.0.1:8081
-        instance:
-          service-host-type: ip
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  info:
-    env:
-      enabled: true
-
-logging:
-  file:
-    name: application.log
-
-
+# Client ID OAuth 2.0 criado no Google Cloud Console (deve ser o mesmo configurado no front-end)
+google:
+  client-id: ${GOOGLE_CLIENT_ID:310109923674-la5thl4s4t0b2ajp6acdhq7tra74dn31.apps.googleusercontent.com}
 ---
 spring:
   config:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:h2:mem:pw45s
+    url: jdbc:h2:mem:pw45s-dev
   jpa:
     hibernate:
       ddl-auto: none
@@ -63,7 +46,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:pw45s
+    url: jdbc:h2:mem:pw45s-dev
   jpa:
     hibernate:
       ddl-auto: none
@@ -79,3 +62,15 @@ spring:
       ddl-auto: create-drop
   flyway:
     locations: classpath:/db/test
+---
+spring:
+  config:
+    activate:
+      on-profile: dev-postgres
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/pw45s
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
