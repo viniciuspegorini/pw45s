@@ -1,76 +1,67 @@
 package br.edu.utfpr.pb.pw45s.server.security.oauth2;
 
+import br.edu.utfpr.pb.pw45s.server.config.AppProperties;
 import br.edu.utfpr.pb.pw45s.server.utils.CookieUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.util.Optional;
 
 import static br.edu.utfpr.pb.pw45s.server.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
+/**
+ * Executado quando o usuário se autentica com sucesso no Google: gera o token JWT da API e
+ * redireciona o usuário para o front-end, enviando o token como parâmetro na URL.
+ */
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final TokenProvider tokenProvider;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final AppProperties appProperties;
 
-    private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
-
-    @Autowired
-    OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider,
-                                       HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
+    public OAuth2AuthenticationSuccessHandler(TokenProvider tokenProvider,
+                                              HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
+                                              AppProperties appProperties) {
         this.tokenProvider = tokenProvider;
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
+        this.appProperties = appProperties;
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String targetUrl = determineTargetUrl(request, response, authentication);
-
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
         if (response.isCommitted()) {
             return;
         }
 
+        String redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+                .map(Cookie::getValue)
+                .orElse(appProperties.defaultRedirectUri());
+
         clearAuthenticationAttributes(request, response);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
-    }
 
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue);
-        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            //throw new RuntimeException("Desculpe! Temos uma Unauthorized Redirect URI a autenticação não poderá ser processada.");
-            throw new RuntimeException("Desculpe! Ocorreu um erro ao autentincar-se.");
+        // O token só é enviado para endereços cadastrados em app.oauth2.authorized-redirect-uris
+        if (!appProperties.isAuthorizedRedirectUri(redirectUri)) {
+            response.sendError(HttpStatus.BAD_REQUEST.value(),
+                    "Endereço de redirecionamento não autorizado.");
+            return;
         }
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String token = tokenProvider.createToken(authentication);
-        return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", token)
+        String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
+                .queryParam("token", tokenProvider.createToken(authentication))
                 .build().toUriString();
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
-    }
-
-    private boolean isAuthorizedRedirectUri(String uri) {
-        URI clientRedirectUri = URI.create(uri);
-        URI authorizedURI = URI.create("http://localhost:5173/login");
-        if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                && authorizedURI.getPort() == clientRedirectUri.getPort()) {
-            return true;
-        }
-        return false;
     }
 }

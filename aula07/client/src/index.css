@@ -6,6 +6,9 @@
 
 body {
   margin: 0;
+  /* cores definidas pelo tema do PrimeReact (claro ou escuro) */
+  background-color: var(--surface-ground);
+  color: var(--text-color);
   display: flex;
   place-items: center;
   min-height: 100vh;

@@ -2,85 +2,45 @@ package br.edu.utfpr.pb.pw45s.server.security.oauth2;
 
 import br.edu.utfpr.pb.pw45s.server.model.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
-public class UserPrincipal implements OAuth2User, UserDetails {
-    private Long id;
-    private String email;
-    private String password;
-    private Collection<? extends GrantedAuthority> authorities;
-    private Map<String, Object> attributes;
+/**
+ * Representa o usuário autenticado por meio de uma rede social.
+ * Une as informações do usuário da aplicação (username e permissões, armazenados no banco de dados)
+ * com os atributos retornados pelo provedor OAuth2 (Google).
+ */
+public class UserPrincipal implements OAuth2User {
 
-    public UserPrincipal(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    private final Long id;
+    private final String username;
+    private final Collection<? extends GrantedAuthority> authorities;
+    private final Map<String, Object> attributes;
+
+    private UserPrincipal(Long id, String username,
+                          Collection<? extends GrantedAuthority> authorities,
+                          Map<String, Object> attributes) {
         this.id = id;
-        this.email = email;
-        this.password = password;
+        this.username = username;
         this.authorities = authorities;
-    }
-
-    public static UserPrincipal create(User user) {
-        List<GrantedAuthority> authorities = Collections.
-                singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-
-        return new UserPrincipal(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                authorities
-        );
+        this.attributes = attributes;
     }
 
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
-        userPrincipal.setAttributes(attributes);
-        return userPrincipal;
+        return new UserPrincipal(user.getId(), user.getUsername(), user.getAuthorities(), attributes);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
+    // As permissões são as do usuário cadastrado no banco (ROLE_USER, ROLE_ADMIN, ...)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -91,12 +51,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         return attributes;
     }
 
-    public void setAttributes(Map<String, Object> attributes) {
-        this.attributes = attributes;
-    }
-
     @Override
     public String getName() {
-        return String.valueOf(id);
+        return username;
     }
 }

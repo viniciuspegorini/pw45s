@@ -58,7 +58,7 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-start pt-30 px-4 bg-gray-100 dark:bg-gray-900">
+    <div className="flex justify-center items-start pt-30 px-4 surface-ground">
       <Toast ref={toast} />
       <Card title="Registrar Conta" className="w-full max-w-md">
         <form onSubmit={handleSubmit(onSubmit)} className="p-fluid space-y-4">

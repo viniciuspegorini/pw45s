@@ -518,7 +518,7 @@ export const RegisterPage = () => {
     }
   };
   return (
-    <div className="flex justify-center items-start pt-30 px-4 bg-gray-100 dark:bg-gray-900">
+    <div className="flex justify-center items-start pt-30 px-4 surface-ground">
       <Toast ref={toast} />
       <Card title="Registrar Conta" className="w-full max-w-md">
         <form onSubmit={handleSubmit(onSubmit)} className="p-fluid space-y-4">
@@ -1121,6 +1121,51 @@ Para melhorar a navegação e usabilidade da aplicação será criado um menu su
 #### 9.1 Componente TopMenu
 
 O componente TopMenu irá conter o menu superior da aplicação com os links para os diferentes componentes (Home, Lista e Cadastro de Categoria, Lista e Cadastro de Produtos. Além de exibir a possibilidade de troca de tema (claro, escuro).
+
+Antes do componente, será criado o arquivo **src/commons/theme.ts**, responsável por aplicar o tema do PrimeReact (claro ou escuro) na página. Os temas são carregados do próprio pacote **primereact** instalado no projeto: o sufixo `?url` faz o Vite retornar o endereço do arquivo CSS, que é utilizado em um elemento `<link>` no `<head>` da página. Dessa forma o tema sempre tem a mesma versão dos componentes e não depende de um servidor externo (CDN).
+
+```ts
+// O sufixo "?url" faz o Vite retornar o endereço do arquivo CSS (em vez de aplicá-lo na página).
+// Os temas vêm do pacote primereact instalado, garantindo a mesma versão dos componentes.
+import lightThemeUrl from "primereact/resources/themes/lara-light-blue/theme.css?url";
+import darkThemeUrl from "primereact/resources/themes/lara-dark-blue/theme.css?url";
+
+export type Theme = "light" | "dark";
+
+const THEME_LINK_ID = "theme-link";
+const THEME_STORAGE_KEY = "theme";
+
+/**
+ * Retorna o tema salvo no localStorage. Caso o usuário ainda não tenha escolhido um tema,
+ * utiliza a preferência do sistema operacional.
+ */
+export const getSavedTheme = (): Theme => {
+  const saved = localStorage.getItem(THEME_STORAGE_KEY);
+  if (saved === "light" || saved === "dark") {
+    return saved;
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+};
+
+/**
+ * Aplica o tema na página, alterando o <link> do tema do PrimeReact, e salva a escolha no localStorage.
+ */
+export const applyTheme = (theme: Theme) => {
+  let link = document.getElementById(THEME_LINK_ID) as HTMLLinkElement | null;
+  if (!link) {
+    link = document.createElement("link");
+    link.id = THEME_LINK_ID;
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+  }
+  link.href = theme === "dark" ? darkThemeUrl : lightThemeUrl;
+  localStorage.setItem(THEME_STORAGE_KEY, theme);
+};
+```
+
+> ⚠️ Não utilize endereços de CDN sem versão, como `https://unpkg.com/primereact/resources/themes/...`: eles apontam sempre para a última versão publicada da biblioteca. A partir do PrimeReact 11 os temas deixaram de existir nessa pasta, e esses endereços passaram a retornar erro 404, fazendo com que a troca de tema deixasse de funcionar.
+
+O componente **TopMenu** utiliza as funções `getSavedTheme` e `applyTheme` para exibir e alterar o tema:
 ```jsx
 import React, { useEffect, useState } from "react";
 import { Menubar } from "primereact/menubar";
@@ -1130,21 +1175,16 @@ import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/hooks/use-auth";
 import { InputSwitch } from "primereact/inputswitch";
+import { applyTheme, getSavedTheme } from "@/commons/theme";
 
 const TopMenu: React.FC = () => {
   const navigate = useNavigate();
   const user = "user@email.com";
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
+  const [darkMode, setDarkMode] = useState<boolean>(() => getSavedTheme() === "dark");
   const { authenticated, handleLogout } = useAuth();
 
   useEffect(() => {
-    const themeLink = document.getElementById("theme-link") as HTMLLinkElement;
-    themeLink.href = darkMode
-      ? "https://unpkg.com/primereact/resources/themes/lara-dark-blue/theme.css"
-      : "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
+    applyTheme(darkMode ? "dark" : "light");
   }, [darkMode]);
 
   const handleLogoutClick = () => {
@@ -1233,7 +1273,7 @@ const TopMenu: React.FC = () => {
 export default TopMenu;
 ```
 
-Agora é necessário ajustar o *link* para o tema CSS no arquivo *main.tsx*, que vai ficar com o seguinte conteúdo:
+Agora é necessário ajustar o arquivo *main.tsx*: o *import* fixo do tema (`lara-light-indigo`) é removido, e o tema salvo pelo usuário é aplicado antes de a aplicação ser renderizada, para que todas as páginas (inclusive as que não exibem o menu, como a de *login*) utilizem o tema escolhido. O arquivo vai ficar com o seguinte conteúdo:
 ```jsx
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -1244,20 +1284,14 @@ import App from "@/App.tsx";
 import { PrimeReactProvider } from "primereact/api";
 import { BrowserRouter } from "react-router-dom";
 
-import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
 import "primeflex/primeflex.css"; //flex utilities
+import { applyTheme, getSavedTheme } from "@/commons/theme";
 import { AuthProvider } from "@/context/AuthContext";
 
-const themeId = "theme-link";
-const themeHref =
-  "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
-const link = document.createElement("link");
-link.id = themeId;
-link.rel = "stylesheet";
-link.href = themeHref;
-document.head.appendChild(link);
+// O tema (claro ou escuro) é aplicado antes de renderizar a aplicação, em todas as páginas
+applyTheme(getSavedTheme());
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -1270,6 +1304,19 @@ createRoot(document.getElementById("root")!).render(
     </BrowserRouter>
   </StrictMode>
 );
+```
+
+Por fim, para que o fundo da página e a cor do texto também acompanhem o tema, no arquivo *index.css* o elemento `body` utiliza as variáveis CSS definidas pelos temas do PrimeReact:
+```css
+body {
+  margin: 0;
+  /* cores definidas pelo tema do PrimeReact (claro ou escuro) */
+  background-color: var(--surface-ground);
+  color: var(--text-color);
+  display: flex;
+  place-items: center;
+  min-height: 100vh;
+}
 ```
 
 #### 9.2 Componente Layout

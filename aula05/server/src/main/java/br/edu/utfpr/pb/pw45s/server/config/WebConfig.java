@@ -1,15 +1,9 @@
 package br.edu.utfpr.pb.pw45s.server.config;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@EnableConfigurationProperties(AppProperties.class)
 public class WebConfig {
-
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
 }

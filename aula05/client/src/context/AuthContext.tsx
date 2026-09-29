@@ -13,7 +13,7 @@ interface AuthContextType {
   handleLogin: (authenticationResponse: AuthenticationResponse) => Promise<any>;
   handleLogout: () => void;
   hasPermission: (permission: string) => boolean;
-  handleLoginSocialServer: (token: string) => void;
+  handleLoginSocialServer: (token: string) => Promise<boolean>;
 }
 
 interface AuthProviderProps {
@@ -82,12 +82,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             );
   }
 
-  const handleLoginSocialServer = (token: string) => {
-    setAuthenticated(true);
-    localStorage.setItem("token", JSON.stringify(token));
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    navigate("/home");
-  }
+  const handleLoginSocialServer = async (token: string): Promise<boolean> => {
+    try {
+      // A API devolve apenas o token na URL, então os dados do usuário (e suas permissões)
+      // são buscados em /auth/user-info, enviando o token recebido
+      const response = await api.get<AuthenticatedUser>("/auth/user-info", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // A partir daqui, o processo é o mesmo do login com usuário e senha
+      await handleLogin({ token, user: response.data });
+      navigate("/");
+      return true;
+    } catch {
+      handleLogout();
+      return false;
+    }
+  };
 
   return (
     <AuthContext.Provider

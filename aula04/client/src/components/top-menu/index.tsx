@@ -6,21 +6,16 @@ import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/hooks/use-auth";
 import { InputSwitch } from "primereact/inputswitch";
+import { applyTheme, getSavedTheme } from "@/commons/theme";
 
 const TopMenu: React.FC = () => {
   const navigate = useNavigate();
   const user = "user@email.com";
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
+  const [darkMode, setDarkMode] = useState<boolean>(() => getSavedTheme() === "dark");
   const { authenticated, handleLogout, hasPermission } = useAuth();
 
   useEffect(() => {
-    const themeLink = document.getElementById("theme-link") as HTMLLinkElement;
-    themeLink.href = darkMode
-      ? "https://unpkg.com/primereact/resources/themes/lara-dark-blue/theme.css"
-      : "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
+    applyTheme(darkMode ? "dark" : "light");
   }, [darkMode]);
 
   const handleLogoutClick = () => {

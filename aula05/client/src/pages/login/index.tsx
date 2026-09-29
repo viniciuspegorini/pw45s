@@ -9,8 +9,15 @@ import type { AuthenticationResponse, IUserLogin } from "@/commons/types";
 import { useAuth } from "@/context/hooks/use-auth";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
+import { api } from "@/lib/axios";
 import "./style.css";
 import googleLogo from "@/assets/google-logo.png";
+
+// URL da API que inicia a autenticação com o Google. O parâmetro redirect_uri informa para qual
+// endereço do front-end a API deve redirecionar o usuário (com o token) após a autenticação.
+const GOOGLE_AUTH_URL = `${api.defaults.baseURL}/oauth2/authorize/google?redirect_uri=${encodeURIComponent(
+  `${window.location.origin}/login`
+)}`;
 
 export const LoginPage = () => {
   const {
@@ -25,14 +32,36 @@ export const LoginPage = () => {
 
   const { handleLogin, handleLoginSocialServer } = useAuth();
   const { search } = useLocation();
+  // evita processar o token duas vezes (o StrictMode executa o useEffect duas vezes em desenvolvimento)
+  const socialLoginProcessed = useRef(false);
 
-  //Autenticação GOOGLE
+  const showGoogleError = (detail = "Falha ao efetuar autenticação com o Google.") => {
+    toast.current?.show({ severity: "error", summary: "Erro", detail, life: 5000 });
+  };
+
+  //Autenticação GOOGLE - retorno da API: /login?token=... ou /login?error=...
   useEffect(() => {
-    const token = new URLSearchParams(search).get("token");
-    if (token) {
-      handleLoginSocialServer(token);
+    const params = new URLSearchParams(search);
+    const token = params.get("token");
+    const error = params.get("error");
+    if ((!token && !error) || socialLoginProcessed.current) {
+      return;
     }
-  }, []);
+    socialLoginProcessed.current = true;
+    // remove o token/erro da URL (e do histórico do navegador)
+    navigate("/login", { replace: true });
+
+    if (error) {
+      showGoogleError(error);
+    } else if (token) {
+      handleLoginSocialServer(token).then((success) => {
+        if (!success) {
+          showGoogleError();
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   const onSubmit = async (userLogin: IUserLogin) => {
     setLoading(true);
@@ -132,14 +161,12 @@ export const LoginPage = () => {
             loading={loading || isSubmitting}
             disabled={loading || isSubmitting}
           />
-          <div className="col text-start">
-            <a
-              className="btn btn-outline-dark social-btn"
-              href="http://localhost:8080/oauth2/authorize/google?redirect_uri=http://localhost:5173/login"
-            >
-              <img src={googleLogo} alt="Google" /> Login with google
-            </a>
-          </div>
+          <a
+            className="p-button p-button-outlined p-button-secondary w-full social-btn"
+            href={GOOGLE_AUTH_URL}
+          >
+            <img src={googleLogo} alt="Google" /> Entrar com o Google
+          </a>
         </form>
 
         <div className="text-center mt-3">
