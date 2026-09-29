@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: dev
+  # Carrega as variáveis do arquivo .env da pasta do projeto (se existir), no formato CHAVE=valor.
+  # Os valores podem ser utilizados como ${CHAVE}. Variáveis de ambiente do sistema têm precedência.
+  config:
+    import: optional:file:.env[.properties]
   datasource:
     generate-unique-name: false
   h2:
@@ -21,10 +25,30 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  # Autenticação com redes sociais - o Spring Security atua como cliente OAuth2 do Google
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            # Credenciais criadas no Google Cloud Console. O client-secret é um SEGREDO:
+            # informe-o na variável de ambiente GOOGLE_CLIENT_SECRET, nunca no código-fonte.
+            client-id: ${GOOGLE_CLIENT_ID:310109923674-la5thl4s4t0b2ajp6acdhq7tra74dn31.apps.googleusercontent.com}
+            client-secret: ${GOOGLE_CLIENT_SECRET:}
+            # URL da API para a qual o Google redireciona após a autenticação
+            # (deve estar cadastrada em "URIs de redirecionamento autorizados" no Google Cloud Console)
+            redirect-uri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
 
-# Client ID OAuth 2.0 criado no Google Cloud Console (deve ser o mesmo configurado no front-end)
-google:
-  client-id: ${GOOGLE_CLIENT_ID:310109923674-la5thl4s4t0b2ajp6acdhq7tra74dn31.apps.googleusercontent.com}
+app:
+  oauth2:
+    # Endereços do front-end para os quais a API pode redirecionar o usuário após a autenticação
+    authorized-redirect-uris:
+      - http://localhost:5173/login
+    # Chave utilizada para assinar o cookie que armazena a requisição de autorização OAuth2
+    cookie-secret: ${OAUTH2_COOKIE_SECRET:utfpr-pw45s-cookie-secret-altere-em-producao}
 ---
 spring:
   config:

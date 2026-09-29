@@ -7,23 +7,16 @@ import App from "@/App.tsx";
 import { PrimeReactProvider } from "primereact/api";
 import { BrowserRouter } from "react-router-dom";
 
-import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
 import "primeflex/primeflex.css"; //flex utilities
+import { applyTheme, getSavedTheme } from "@/commons/theme";
 
 import { AuthProvider } from "@/context/AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const themeId = "theme-link";
-const themeHref =
-  "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
-
-const link = document.createElement("link");
-link.id = themeId;
-link.rel = "stylesheet";
-link.href = themeHref;
-document.head.appendChild(link);
+// O tema (claro ou escuro) é aplicado antes de renderizar a aplicação, em todas as páginas
+applyTheme(getSavedTheme());
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

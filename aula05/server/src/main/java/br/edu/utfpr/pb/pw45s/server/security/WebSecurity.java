@@ -1,5 +1,9 @@
 package br.edu.utfpr.pb.pw45s.server.security;
 
+import br.edu.utfpr.pb.pw45s.server.security.oauth2.CustomOAuth2UserService;
+import br.edu.utfpr.pb.pw45s.server.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import br.edu.utfpr.pb.pw45s.server.security.oauth2.OAuth2AuthenticationFailureHandler;
+import br.edu.utfpr.pb.pw45s.server.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import br.edu.utfpr.pb.pw45s.server.service.AuthService;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -30,10 +34,24 @@ public class WebSecurity {
     private final AuthService authService;
     // Objeto responsável por realizar o tratamento de exceção quando o usuário informar credenciais incorretas ao autenticar-se.
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    // Objetos utilizados na autenticação com redes sociais (OAuth2)
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-    public WebSecurity(AuthService authService, AuthenticationEntryPoint authenticationEntryPoint) {
+    public WebSecurity(AuthService authService,
+                       AuthenticationEntryPoint authenticationEntryPoint,
+                       CustomOAuth2UserService customOAuth2UserService,
+                       HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository,
+                       OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler,
+                       OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) {
         this.authService = authService;
         this.authenticationEntryPoint = authenticationEntryPoint;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.cookieAuthorizationRequestRepository = cookieAuthorizationRequestRepository;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
+        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
     }
 
     @Bean
@@ -67,8 +85,8 @@ public class WebSecurity {
                 .requestMatchers("/error/**").permitAll()
                 //permite que a rota "/h2-console" seja acessada por qualquer requisição mesmo o usuário não estando autenticado
                 .requestMatchers("/h2-console/**").permitAll()
-                //permite que a rota "/auth-social" (login com o Google) seja acessada sem o usuário estar autenticado
-                .requestMatchers("/auth-social/**").permitAll()
+                //permite que as rotas do fluxo OAuth2 (login com o Google) sejam acessadas sem o usuário estar autenticado
+                .requestMatchers("/oauth2/**").permitAll()
 
                 //documentação da API (Swagger)
                 .requestMatchers("/v3/**").permitAll()
@@ -83,6 +101,25 @@ public class WebSecurity {
 
                 //as demais rotas da aplicação só podem ser acessadas se o usuário estiver autenticado
                 .anyRequest().authenticated()
+        );
+
+        // Autenticação com redes sociais: a API atua como cliente OAuth2 do Google
+        http.oauth2Login(oauth2Login -> oauth2Login
+                // URL que inicia a autenticação: /oauth2/authorize/{registrationId}, ex.: /oauth2/authorize/google
+                .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
+                        .baseUri("/oauth2/authorize")
+                        // a API é stateless, então a requisição de autorização é armazenada em um cookie
+                        .authorizationRequestRepository(cookieAuthorizationRequestRepository))
+                // URL para a qual o Google redireciona após a autenticação: /oauth2/callback/{registrationId}
+                .redirectionEndpoint(redirectionEndpoint -> redirectionEndpoint
+                        .baseUri("/oauth2/callback/*"))
+                // busca os dados do usuário no Google e cadastra/atualiza o usuário no banco de dados
+                .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                        .userService(customOAuth2UserService))
+                // gera o token JWT e redireciona para o front-end
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                // redireciona para o front-end com a mensagem de erro
+                .failureHandler(oAuth2AuthenticationFailureHandler)
         );
         http.authenticationManager(authenticationManager)
                 //Filtro da Autenticação - sobrescreve o método padrão do Spring Security para Autenticação.

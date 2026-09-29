@@ -118,11 +118,10 @@
 			<version>3.0.2</version>
 		</dependency>
 
-		<!-- Autenticação com o Google - validação do ID Token -->
+		<!-- Autenticação com redes sociais (Google) - OAuth2 Client do Spring Security -->
 		<dependency>
-			<groupId>com.google.api-client</groupId>
-			<artifactId>google-api-client</artifactId>
-			<version>2.6.0</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security-oauth2-client</artifactId>
 		</dependency>
 	</dependencies>
 

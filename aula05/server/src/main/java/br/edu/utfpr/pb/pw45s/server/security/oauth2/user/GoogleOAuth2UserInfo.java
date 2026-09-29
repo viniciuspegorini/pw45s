@@ -24,6 +24,11 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
     }
 
     @Override
+    public boolean isEmailVerified() {
+        return Boolean.TRUE.equals(attributes.get("email_verified"));
+    }
+
+    @Override
     public String getImageUrl() {
         return (String) attributes.get("picture");
     }

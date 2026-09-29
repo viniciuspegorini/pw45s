@@ -8,41 +8,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+/**
+ * Gera o token JWT da API para o usuário autenticado com a rede social.
+ * O token é gerado com os mesmos SECRET, EXPIRATION_TIME e algoritmo do JWTAuthenticationFilter,
+ * assim ele é validado pelo JWTAuthorizationFilter sem nenhuma alteração.
+ */
 @Service
 public class TokenProvider {
+
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        String token = JWT.create()
-                .withSubject(userPrincipal.getEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis() +
-                        SecurityConstants.EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()));
-        return  token;
+        return JWT.create()
+                // o subject do token é o username do usuário (o e-mail da conta Google)
+                .withSubject(userPrincipal.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .sign(Algorithm.HMAC512(SecurityConstants.SECRET));
     }
-
-    public String getUsernameFromToken(String token) {
-        String username = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()))
-                .build()
-                .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
-                .getSubject();
-        return username;
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            String username = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET.getBytes()))
-                    .build()
-                    .verify(token.replace(SecurityConstants.TOKEN_PREFIX, ""))
-                    .getSubject();
-            if (username == null) {
-                return false;
-            }
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
-    }
-
 }
