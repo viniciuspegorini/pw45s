@@ -1,27 +1,29 @@
 package br.edu.utfpr.pb.pw45s.server.dto;
 
-import br.edu.utfpr.pb.pw45s.server.validation.UniqueUsername;
-import lombok.Data;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class UserDto {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserDTO {
 
-    private long id;
-
-    @UniqueUsername
-    @NotNull(message = "{br.edu.utfpr.pb.pw25s.username}")
-    @Size(min = 4, max = 255)
+    @NotNull
+    @Size(min = 4, max = 50)
     private String username;
 
     @NotNull
+    @Size(min = 4, max = 50)
     private String displayName;
 
     @NotNull
-    @Size(min = 6, max = 254)
+    @Size(min = 6)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
 

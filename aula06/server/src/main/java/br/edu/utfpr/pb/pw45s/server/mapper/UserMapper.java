@@ -1,0 +1,18 @@
+package br.edu.utfpr.pb.pw45s.server.mapper;
+
+import br.edu.utfpr.pb.pw45s.server.dto.UserDTO;
+import br.edu.utfpr.pb.pw45s.server.model.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface UserMapper {
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "provider", ignore = true)          // definido no UserService
+    @Mapping(target = "userAuthorities", ignore = true)   // definido no UserService
+    User toEntity(UserDTO dto);
+
+    UserDTO toDto(User entity);
+}
