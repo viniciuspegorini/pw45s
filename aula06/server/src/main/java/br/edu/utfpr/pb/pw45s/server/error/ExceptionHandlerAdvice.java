@@ -38,6 +38,15 @@ public class ExceptionHandlerAdvice {
                 request.getServletPath(), null);
     }
 
+    // Erros de validação lançados pelos services, ex.: arquivo de imagem inválido no upload
+    @ExceptionHandler({IllegalArgumentException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handlerValidationException(IllegalArgumentException exception,
+                                               HttpServletRequest request) {
+        return new ApiError(HttpStatus.BAD_REQUEST.value(), exception.getMessage(),
+                request.getServletPath(), null);
+    }
+
     @ExceptionHandler({HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handlerValidationException(HttpMessageNotReadableException exception,

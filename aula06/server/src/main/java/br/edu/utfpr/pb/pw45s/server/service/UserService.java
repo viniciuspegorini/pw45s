@@ -8,6 +8,7 @@ import br.edu.utfpr.pb.pw45s.server.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +25,9 @@ public class UserService {
         this.authorityRepository = authorityRepository;
     }
 
+    // @Transactional: a busca da permissão e o cadastro do usuário ocorrem na mesma transação,
+    // evitando o erro "Detached entity passed to persist" ao salvar fora de uma requisição do Spring MVC
+    @Transactional
     public void save(User user) {
         user.setPassword( passwordEncoder.encode(user.getPassword()) );
 

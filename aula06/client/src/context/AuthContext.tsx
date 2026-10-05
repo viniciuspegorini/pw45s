@@ -13,7 +13,7 @@ interface AuthContextType {
   handleLogin: (authenticationResponse: AuthenticationResponse) => Promise<any>;
   handleLogout: () => void;
   hasPermission: (permission: string) => boolean;
-  handleLoginSocial: (idToken: string) => void;
+  handleLoginSocial: (idToken: string) => Promise<boolean>;
 }
 
 interface AuthProviderProps {
@@ -82,18 +82,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             );
   }
 
-  const handleLoginSocial = async(idToken: string) => {    
-    api.defaults.headers.common["Auth-Id-Token"] = `Bearer ${idToken}`;
-    const response = await api.post("/auth-social");
-    console.log(response);
-    api.defaults.headers.common["Auth-Id-Token"] = "";
-    localStorage.setItem("token", JSON.stringify(response.data.token));
-    localStorage.setItem("user", JSON.stringify(response.data.user));
-    api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
-    setAuthenticatedUser(response.data.user);
-    setAuthenticated(true);
-    navigate("/");
-  }
+  const handleLoginSocial = async (idToken: string): Promise<boolean> => {
+    try {
+      // O ID Token do Google é enviado apenas nesta requisição
+      const response = await api.post<AuthenticationResponse>(
+        "/auth-social",
+        null,
+        { headers: { "Auth-Id-Token": `Bearer ${idToken}` } }
+      );
+      await handleLogin(response.data);
+      navigate("/");
+      return true;
+    } catch {
+      handleLogout();
+      return false;
+    }
+  };
 
   return (
     <AuthContext.Provider

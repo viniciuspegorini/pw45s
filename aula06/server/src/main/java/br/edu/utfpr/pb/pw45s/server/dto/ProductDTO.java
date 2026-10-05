@@ -23,4 +23,10 @@ public class ProductDTO {
     private BigDecimal price;
 
     private CategoryDTO category;
+
+    private String imageName; // Upload no Sistema de Arquivos (disco)
+
+    private byte[] imageFile; // Upload no Banco de dados (enviado no JSON em Base64)
+
+    private String imageFileName; // Upload no Banco de dados
 }

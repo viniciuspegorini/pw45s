@@ -33,6 +33,16 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
+    @Column(name = "image_name")
+    private String imageName; // Upload no Sistema de Arquivos (disco)
+
+    @Lob
+    @Column(name = "image_file")
+    private byte[] imageFile; // Upload no Banco de dados
+
+    @Column(name = "image_file_name")
+    private String imageFileName; // Upload no Banco de dados
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

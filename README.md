@@ -2,11 +2,11 @@
 
 ## API RESTful (*Back-end*)
 
-A API REST será desenvolvida utilizando o *framework* **Spring** com a linguagem de programação Java.
+A API REST será desenvolvida utilizando o *framework* **Spring** (Spring Boot 4) com a linguagem de programação Java.
 
 ### ⚙️ Lista de Ferramentas
 
-- <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/java.png" alt="Java" width="20" /> JDK 24
+- <img src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/java.png" alt="Java" width="20" /> JDK 25
 - IDE:
     - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/intellij.png" alt="IntelliJ" title="IntelliJ"/> [IntelliJ Idea](https://www.jetbrains.com/idea/) ou 
     - <img width="20" src="https://raw.githubusercontent.com/marwin1991/profile-technology-icons/refs/heads/main/icons/eclipse.png" alt="eclipse" title="eclipse"/> [Eclipse](https://eclipseide.org/)
@@ -50,10 +50,10 @@ O Cliente web desenvolvido utilizando a biblioteca **React** com a linguagem de 
 - **Autenticação utilizando o Google - lado cliente**. Criação da conta no Google Cloud Console e uso das credenciais na aplicação cliente para autenticação (retorno do idToken pelo Google) e na aplicação servidor para validação do idToken.
 
 ### aula05
-- **Autenticação utilizando o Google - lado servidor**. Criação da conta no Google Cloud Console e uso das credenciais na aplicação servidor para autenticação (retorno do idToken pelo Google).
+- **Autenticação utilizando o Google - lado servidor**. Criação da conta no Google Cloud Console e uso das credenciais (*client id* e *client secret*) na aplicação servidor, que realiza toda a autenticação com o Google utilizando o fluxo *Authorization Code* do OAuth 2.0 (Spring Security OAuth2 Client) e retorna o token JWT da API para a aplicação cliente.
 
 ### aula06
-- Upload de arquivos com armazenamento em **Banco de dados** e em Disco no **Sistema de arquivos**.
+- Upload de arquivos com armazenamento em **Banco de dados** (Base64/BLOB) e em Disco no **Sistema de arquivos**, com validação do arquivo enviado.
 
 ### aula07
 - Upload de arquivos com armazenamento em um **sistema de armazenamento de objetos** utilizando **MINIO** (sistema de armazenamento de objetos **semelhante ao Amazon S3**).

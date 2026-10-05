@@ -25,15 +25,21 @@ export const LoginPage = () => {
   
   const { handleLogin, handleLoginSocial } = useAuth();
 
+  const showGoogleError = () => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Erro",
+      detail: "Falha ao efetuar autenticação com o Google.",
+      life: 3000,
+    });
+  };
+
   //Autenticação GOOGLE
-  const onSuccess = (response: CredentialResponse) => {
-    console.log(response);
-
-    if (response.credential) {
-      handleLoginSocial(response.credential);
+  const onSuccess = async (response: CredentialResponse) => {
+    if (!response.credential || !(await handleLoginSocial(response.credential))) {
+      showGoogleError();
     }
-
-  }
+  };
 
   const onSubmit = async (userLogin: IUserLogin) => {
     setLoading(true);
@@ -134,18 +140,10 @@ export const LoginPage = () => {
             disabled={loading || isSubmitting}
           />
           <div className="mb-3">
-          <GoogleLogin
-            locale="pt-BR"
-            onSuccess={onSuccess}
-              onError={() => {
-                toast.current?.show({
-                  severity: "error",
-                  summary: "Erro",
-                  detail: "Falha ao efetuar autenticação com o Google.",
-                  life: 3000,
-                });
-                console.log("Google login failed.");
-              }}
+            <GoogleLogin
+              locale="pt-BR"
+              onSuccess={onSuccess}
+              onError={showGoogleError}
             />
           </div>
         </form>

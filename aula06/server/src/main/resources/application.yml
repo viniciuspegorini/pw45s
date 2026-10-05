@@ -21,6 +21,17 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  # Tamanho máximo dos arquivos enviados no upload (o padrão do Spring Boot é 1MB)
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+app:
+  upload:
+    # Pasta em que as imagens enviadas no upload para o sistema de arquivos são armazenadas.
+    # Caminho relativo à pasta em que a aplicação é executada (ou absoluto, ex.: /uploads)
+    directory: ${UPLOAD_DIRECTORY:uploads}
 
 # Client ID OAuth 2.0 criado no Google Cloud Console (deve ser o mesmo configurado no front-end)
 google:

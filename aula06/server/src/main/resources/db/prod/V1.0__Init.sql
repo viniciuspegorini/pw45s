@@ -12,6 +12,8 @@ create table tb_product (
                             content_type varchar(100),
                             price double not null,
                             category_id bigint,
+                            image_file_name varchar(255),
+                            image_file blob,
                             primary key (id)
 );
 create table tb_user (

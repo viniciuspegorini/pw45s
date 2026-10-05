@@ -42,8 +42,7 @@ export interface IProduct {
   description: string;
   price: number;
   category: ICategory;
-  imageName?: string;
-  contentType?: string;
-  imageFileName?: string;
-  imageFile?: string;
+  imageName?: string;     // nome do arquivo armazenado no sistema de arquivos (disco)
+  imageFileName?: string; // nome do arquivo armazenado no banco de dados
+  imageFile?: string;     // conteúdo da imagem armazenada no banco de dados, em Base64
 }

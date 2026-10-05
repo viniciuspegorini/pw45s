@@ -27,9 +27,9 @@ export const ProductFormPage = () => {
     defaultValues: { name: "", description: "", price: 0, category: undefined },
   });
   const { findAll } = CategoryService;
-  const { findById, saveAndUpload } = ProductService;
+  const { findById, save, saveAndUpload } = ProductService;
 
-  const [image, setImage] = useState<any | null>(null);
+  const [image, setImage] = useState<File | null>(null);
 
   const isEdit = !!id;
 
@@ -81,13 +81,21 @@ export const ProductFormPage = () => {
   const onSubmit = async (data: IProduct) => {
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append("image", image);
-      const blob = new Blob([JSON.stringify(data)], {
-        type: "application/json",
-      });
-      formData.append("product", blob);
-      const response = await saveAndUpload(formData);
+      let response: IResponse;
+      if (image) {
+        // Uma nova imagem foi selecionada: envia o produto e a imagem (multipart/form-data)
+        const formData = new FormData();
+        formData.append("image", image);
+        const blob = new Blob([JSON.stringify(data)], {
+          type: "application/json",
+        });
+        formData.append("product", blob);
+        response = await saveAndUpload(formData);
+      } else {
+        // Nenhuma imagem selecionada (ex.: edição apenas dos dados): salva somente o produto,
+        // mantendo a imagem atual, que já está em data.imageFile
+        response = await save(data);
+      }
       if (
         (response.status === 201 || response.status === 200) &&
         response.data
@@ -210,6 +218,7 @@ export const ProductFormPage = () => {
                 className="form-control mb-2"
                 type="file"
                 name="image"
+                accept="image/png, image/jpeg, image/gif, image/webp"
                 onChange={onFileChangeHandler}
               />
               <br />

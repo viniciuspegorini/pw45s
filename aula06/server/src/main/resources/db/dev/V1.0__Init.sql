@@ -10,6 +10,9 @@ create table tb_product (
                          name varchar(100) not null,
                          price double not null,
                          category_id bigint,
+                         image_name varchar(255),
+                         image_file_name varchar(255),
+                         image_file blob,
                          primary key (id)
 );
 create table tb_user (
