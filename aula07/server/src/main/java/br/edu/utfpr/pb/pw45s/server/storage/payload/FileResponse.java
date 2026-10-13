@@ -1,4 +1,4 @@
-package br.edu.utfpr.pb.pw45s.server.minio.payload;
+package br.edu.utfpr.pb.pw45s.server.storage.payload;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

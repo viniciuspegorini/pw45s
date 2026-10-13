@@ -19,6 +19,7 @@
 #Databases 
 **/server/postgres-data/
 **/server/data/
+**/server/rustfs-data/
 
 #Logs
 **/aula10/server-config/.env

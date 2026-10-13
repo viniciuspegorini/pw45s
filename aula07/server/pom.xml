@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>25</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
+		<awssdk.version>2.55.11</awssdk.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -131,17 +132,10 @@
 			<version>1.34.1</version>
 		</dependency>
 
-		<!-- File Storage com MINIO -->
+		<!-- File Storage compatível com S3 (RustFS) -->
 		<dependency>
-			<groupId>io.minio</groupId>
-			<artifactId>minio</artifactId>
-			<version>9.0.0</version>
-		</dependency>
-		<!-- Mesma versão do POM do minio 9.0.0; garante okhttp3 no classpath de compilação -->
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>okhttp</artifactId>
-			<version>5.2.1</version>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
 		</dependency>
 
 		<dependency>
@@ -155,6 +149,18 @@
 			<version>5.8.40</version>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>software.amazon.awssdk</groupId>
+				<artifactId>bom</artifactId>
+				<version>${awssdk.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

@@ -1,10 +1,10 @@
-package br.edu.utfpr.pb.pw45s.server.minio.service.impl;
+package br.edu.utfpr.pb.pw45s.server.storage.service.impl;
 
-import br.edu.utfpr.pb.pw45s.server.minio.config.MinioConfig;
-import br.edu.utfpr.pb.pw45s.server.minio.payload.FileResponse;
-import br.edu.utfpr.pb.pw45s.server.minio.service.MinioService;
-import br.edu.utfpr.pb.pw45s.server.minio.util.MinioUtil;
-import io.minio.messages.ListAllMyBucketsResult;
+import br.edu.utfpr.pb.pw45s.server.storage.config.StorageConfig;
+import br.edu.utfpr.pb.pw45s.server.storage.payload.FileResponse;
+import br.edu.utfpr.pb.pw45s.server.storage.service.StorageService;
+import br.edu.utfpr.pb.pw45s.server.storage.util.StorageUtil;
+import software.amazon.awssdk.services.s3.model.Bucket;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class MinioServiceImpl implements MinioService {
+public class StorageServiceImpl implements StorageService {
 
-    private final MinioUtil minioUtil;
-    private final MinioConfig minioProperties;
+    private final StorageUtil storageUtil;
+    private final StorageConfig storageProperties;
 
-    public MinioServiceImpl(MinioUtil minioUtil, MinioConfig minioProperties) {
-        this.minioUtil = minioUtil;
-        this.minioProperties = minioProperties;
+    public StorageServiceImpl(StorageUtil storageUtil, StorageConfig storageProperties) {
+        this.storageUtil = storageUtil;
+        this.storageProperties = storageProperties;
     }
 
     @SneakyThrows
@@ -32,7 +32,7 @@ public class MinioServiceImpl implements MinioService {
                                   String bucketName,
                                   String fileType) {
         try {
-            bucketName = StringUtils.isNotBlank(bucketName) ? bucketName : minioProperties.getBucketName();
+            bucketName = StringUtils.isNotBlank(bucketName) ? bucketName : storageProperties.getBucketName();
             if (!this.bucketExists(bucketName)) {
                 this.makeBucket(bucketName);
             }
@@ -41,7 +41,7 @@ public class MinioServiceImpl implements MinioService {
             String objectName = UUID.randomUUID().toString().replaceAll("-", "")
                     + fileName.substring(fileName.lastIndexOf("."));
             LocalDateTime createdTime = LocalDateTime.now();
-            minioUtil.putObject(bucketName, multipartFile, objectName,fileType);
+            storageUtil.putObject(bucketName, multipartFile, objectName,fileType);
 
             return FileResponse.builder()
                     .filename(objectName)
@@ -57,51 +57,51 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public InputStream downloadObject(String bucketName, String objectName) {
-        return minioUtil.getObject(bucketName,objectName);
+        return storageUtil.getObject(bucketName,objectName);
     }
 
     @Override
     public boolean bucketExists(String bucketName) {
-        return minioUtil.bucketExists(bucketName);
+        return storageUtil.bucketExists(bucketName);
     }
 
     @Override
     public void makeBucket(String bucketName) {
-        minioUtil.makeBucket(bucketName);
+        storageUtil.makeBucket(bucketName);
     }
 
     @Override
     public List<String> listBucketName() {
-        return minioUtil.listBucketNames();
+        return storageUtil.listBucketNames();
     }
 
     @Override
-    public List<ListAllMyBucketsResult.Bucket> listBuckets() {
-        return minioUtil.listBuckets();
+    public List<Bucket> listBuckets() {
+        return storageUtil.listBuckets();
     }
 
     @Override
     public boolean removeBucket(String bucketName) {
-        return minioUtil.removeBucket(bucketName);
+        return storageUtil.removeBucket(bucketName);
     }
 
     @Override
     public List<String> listObjectNames(String bucketName) {
-        return minioUtil.listObjectNames(bucketName);
+        return storageUtil.listObjectNames(bucketName);
     }
 
     @Override
     public boolean removeObject(String bucketName, String objectName) {
-        return minioUtil.removeObject(bucketName, objectName);
+        return storageUtil.removeObject(bucketName, objectName);
     }
 
     @Override
     public boolean removeListObject(String bucketName, List<String> objectNameList) {
-        return minioUtil.removeObject(bucketName,objectNameList);
+        return storageUtil.removeObject(bucketName,objectNameList);
     }
 
     @Override
     public String getObjectUrl(String bucketName, String objectName) {
-        return minioUtil.getObjectUrl(bucketName, objectName);
+        return storageUtil.getObjectUrl(bucketName, objectName);
     }
 }
