@@ -1,13 +1,13 @@
-package br.edu.utfpr.pb.pw45s.server.minio.service;
+package br.edu.utfpr.pb.pw45s.server.storage.service;
 
-import br.edu.utfpr.pb.pw45s.server.minio.payload.FileResponse;
-import io.minio.messages.ListAllMyBucketsResult;
+import br.edu.utfpr.pb.pw45s.server.storage.payload.FileResponse;
+import software.amazon.awssdk.services.s3.model.Bucket;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.List;
 
-public interface MinioService {
+public interface StorageService {
 
     // Upload files in the bucket
     FileResponse putObject(MultipartFile multipartFile, String bucketName, String fileType);
@@ -25,7 +25,7 @@ public interface MinioService {
     List<String> listBucketName();
 
     //List all buckets
-    List<ListAllMyBucketsResult.Bucket> listBuckets();
+    List<Bucket> listBuckets();
 
     // Delete Bucket by Name
     boolean removeBucket(String bucketName);

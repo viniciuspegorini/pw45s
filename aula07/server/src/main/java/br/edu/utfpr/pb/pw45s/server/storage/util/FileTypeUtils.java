@@ -1,4 +1,4 @@
-package br.edu.utfpr.pb.pw45s.server.minio.util;
+package br.edu.utfpr.pb.pw45s.server.storage.util;
 
 import cn.hutool.core.io.FileTypeUtil;
 import org.springframework.web.multipart.MultipartFile;

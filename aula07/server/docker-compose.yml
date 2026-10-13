@@ -1,16 +1,18 @@
-version: "3.9"
 ########################### SERVICES
 services:
-  ########################### MINIO
-  minio:
-    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
-    container_name: minio
+  ########################### RUSTFS
+  rustfs:
+    image: rustfs/rustfs:1.0.1
+    container_name: rustfs
     environment:
-      MINIO_ROOT_USER: "minio@admin"
-      MINIO_ROOT_PASSWORD: "minio@admin"
+      RUSTFS_ACCESS_KEY: "rustfsadmin"
+      RUSTFS_SECRET_KEY: "rustfsadmin"
+      RUSTFS_VOLUMES: "/data"
+      RUSTFS_ADDRESS: "0.0.0.0:9000"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_ADDRESS: "0.0.0.0:9001"
     volumes:
-      - ./data:/data
+      - ./rustfs-data:/data
     ports:
-      - 9000:9000
-      - 9001:9001
-    command: server /data --console-address :9001
+      - 9000:9000 # API S3
+      - 9001:9001 # Console web

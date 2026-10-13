@@ -1,39 +1,48 @@
-package br.edu.utfpr.pb.pw45s.server.minio.util;
+package br.edu.utfpr.pb.pw45s.server.storage.util;
 
-import br.edu.utfpr.pb.pw45s.server.minio.config.MinioConfig;
-import io.minio.*;
-import io.minio.messages.DeleteRequest;
-import io.minio.messages.DeleteResult;
-import io.minio.messages.Item;
-import io.minio.messages.ListAllMyBucketsResult;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class MinioUtil {
-    private final MinioClient minioClient;
-    private final MinioConfig minioConfig;
+public class StorageUtil {
+    private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
+
+    // Bucket policy that allows anonymous read (GET) of the objects, used by the client to display the images
+    private static final String PUBLIC_READ_POLICY = """
+            {
+              "Version": "2012-10-17",
+              "Statement": [{
+                "Effect": "Allow",
+                "Principal": {"AWS": ["*"]},
+                "Action": ["s3:GetObject"],
+                "Resource": ["arn:aws:s3:::%s/*"]
+              }]
+            }""";
 
     // Upload Files
     @SneakyThrows
     public void putObject(String bucketName, MultipartFile multipartFile, String filename, String fileType) {
-        InputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
-
-        minioClient.putObject(
-                PutObjectArgs.builder().bucket(bucketName).object(filename).stream(
-                        inputStream, -1, minioConfig.getFileSize())
+        s3Client.putObject(
+                PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(filename)
                         .contentType(fileType)
-                        .build());
+                        .build(),
+                RequestBody.fromBytes(multipartFile.getBytes()));
     }
 
     // Get a file object as a stream from the specified bucket
@@ -41,12 +50,12 @@ public class MinioUtil {
     public InputStream getObject(String bucketName, String objectName) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            StatObjectResponse statObject = statObject(bucketName, objectName);
-            if (statObject != null && statObject.size() > 0) {
-                return minioClient.getObject(
-                        GetObjectArgs.builder()
+            HeadObjectResponse statObject = statObject(bucketName, objectName);
+            if (statObject != null && statObject.contentLength() > 0) {
+                return s3Client.getObject(
+                        GetObjectRequest.builder()
                                 .bucket(bucketName)
-                                .object(objectName)
+                                .key(objectName)
                                 .build());
             }
         }
@@ -56,22 +65,33 @@ public class MinioUtil {
     // Check if bucket name exists
     @SneakyThrows
     public boolean bucketExists(String bucketName) {
-
-        return minioClient.bucketExists(
-                BucketExistsArgs.builder().
-                        bucket(bucketName).
-                        build());
+        try {
+            s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
+            return true;
+        } catch (NoSuchBucketException e) {
+            return false;
+        } catch (S3Exception e) {
+            if (e.statusCode() == 404) {
+                return false;
+            }
+            throw e;
+        }
     }
 
-    // Create bucket name
+    // Create bucket name (with public read access to its objects)
     @SneakyThrows
     public boolean makeBucket(String bucketName) {
         boolean flag = bucketExists(bucketName);
 
         if (!flag) {
-            minioClient.makeBucket(
-                    MakeBucketArgs.builder()
+            s3Client.createBucket(
+                    CreateBucketRequest.builder()
                             .bucket(bucketName)
+                            .build());
+            s3Client.putBucketPolicy(
+                    PutBucketPolicyRequest.builder()
+                            .bucket(bucketName)
+                            .policy(PUBLIC_READ_POLICY.formatted(bucketName))
                             .build());
             return true;
         } else {
@@ -81,17 +101,17 @@ public class MinioUtil {
 
     // List all buckets
     @SneakyThrows
-    public List<ListAllMyBucketsResult.Bucket> listBuckets() {
-        return minioClient.listBuckets();
+    public List<Bucket> listBuckets() {
+        return s3Client.listBuckets().buckets();
     }
 
     // List all bucket names
     @SneakyThrows
     public List<String> listBucketNames() {
-        List<ListAllMyBucketsResult.Bucket> bucketList = listBuckets();
+        List<Bucket> bucketList = listBuckets();
 
         List<String> bucketListName = new ArrayList<>();
-        for (ListAllMyBucketsResult.Bucket bucket : bucketList) {
+        for (Bucket bucket : bucketList) {
             bucketListName.add(bucket.name());
         }
         return bucketListName;
@@ -99,11 +119,11 @@ public class MinioUtil {
 
     // List all objects from the specified bucket
     @SneakyThrows
-    public Iterable<Result<Item>> listObjects(String bucketName) {
+    public Iterable<S3Object> listObjects(String bucketName) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            return minioClient.listObjects(
-                    ListObjectsArgs.builder().bucket(bucketName).build());
+            return s3Client.listObjectsV2Paginator(
+                    ListObjectsV2Request.builder().bucket(bucketName).build()).contents();
         }
         return null;
     }
@@ -113,10 +133,9 @@ public class MinioUtil {
     public boolean removeBucket(String bucketName) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            Iterable<Result<Item>> myObjects = listObjects(bucketName);
+            Iterable<S3Object> myObjects = listObjects(bucketName);
 
-            for (Result<Item> result : myObjects) {
-                Item item = result.get();
+            for (S3Object item : myObjects) {
                 //  Delete failed when There are object files in bucket
                 if (item.size() > 0) {
                     return false;
@@ -124,7 +143,7 @@ public class MinioUtil {
             }
 
             //  Delete bucket when bucket is empty
-            minioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
+            s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(bucketName).build());
             flag = bucketExists(bucketName);
 
             return !flag;
@@ -139,10 +158,9 @@ public class MinioUtil {
         boolean flag = bucketExists(bucketName);
 
         if (flag) {
-            Iterable<Result<Item>> myObjects = listObjects(bucketName);
-            for (Result<Item> result : myObjects) {
-                Item item = result.get();
-                listObjectNames.add(item.objectName());
+            Iterable<S3Object> myObjects = listObjects(bucketName);
+            for (S3Object item : myObjects) {
+                listObjectNames.add(item.key());
             }
         } else {
             listObjectNames.add("Bucket does not exist");
@@ -156,8 +174,8 @@ public class MinioUtil {
     public boolean removeObject(String bucketName, String objectName) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            minioClient.removeObject(
-                    RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
+            s3Client.deleteObject(
+                    DeleteObjectRequest.builder().bucket(bucketName).key(objectName).build());
             return true;
         }
         return false;
@@ -169,24 +187,26 @@ public class MinioUtil {
         boolean flag = bucketExists(bucketName);
         String url = "";
         if (flag) {
-            url = minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Http.Method.GET)
-                            .bucket(bucketName)
-                            .object(objectName)
-                            .expiry(2, TimeUnit.MINUTES)
-                            .build());
+            url = s3Presigner.presignGetObject(
+                    GetObjectPresignRequest.builder()
+                            .signatureDuration(Duration.ofMinutes(2))
+                            .getObjectRequest(GetObjectRequest.builder()
+                                    .bucket(bucketName)
+                                    .key(objectName)
+                                    .build())
+                            .build())
+                    .url().toString();
         }
         return url;
     }
 
     // Get metadata of the object from the specified bucket
     @SneakyThrows
-    public StatObjectResponse statObject(String bucketName, String objectName) {
+    public HeadObjectResponse statObject(String bucketName, String objectName) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            return minioClient.statObject(
-                    StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
+            return s3Client.headObject(
+                    HeadObjectRequest.builder().bucket(bucketName).key(objectName).build());
         }
         return null;
     }
@@ -196,14 +216,13 @@ public class MinioUtil {
     public InputStream getObject(String bucketName, String objectName, long offset, Long length) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            StatObjectResponse statObject = statObject(bucketName, objectName);
-            if (statObject != null && statObject.size() > 0) {
-                return minioClient.getObject(
-                        GetObjectArgs.builder()
+            HeadObjectResponse statObject = statObject(bucketName, objectName);
+            if (statObject != null && statObject.contentLength() > 0) {
+                return s3Client.getObject(
+                        GetObjectRequest.builder()
                                 .bucket(bucketName)
-                                .object(objectName)
-                                .offset(offset)
-                                .length(length)
+                                .key(objectName)
+                                .range("bytes=" + offset + "-" + (offset + length - 1))
                                 .build());
             }
         }
@@ -215,18 +234,17 @@ public class MinioUtil {
     public boolean removeObject(String bucketName, List<String> objectNames) {
         boolean flag = bucketExists(bucketName);
         if (flag) {
-            List<DeleteRequest.Object> objects = new LinkedList<>();
-            for (int i = 0; i < objectNames.size(); i++) {
-                objects.add(new DeleteRequest.Object(objectNames.get(i)));
+            List<ObjectIdentifier> objects = new ArrayList<>();
+            for (String objectName : objectNames) {
+                objects.add(ObjectIdentifier.builder().key(objectName).build());
             }
-            Iterable<Result<DeleteResult.Error>> results =
-                    minioClient.removeObjects(
-                            RemoveObjectsArgs.builder().bucket(bucketName).objects(objects).build());
+            DeleteObjectsResponse response = s3Client.deleteObjects(
+                    DeleteObjectsRequest.builder()
+                            .bucket(bucketName)
+                            .delete(Delete.builder().objects(objects).build())
+                            .build());
 
-            for (Result<DeleteResult.Error> result : results) {
-                DeleteResult.Error error = result.get();
-                return false;
-            }
+            return response.errors().isEmpty();
         }
         return true;
     }
@@ -237,13 +255,15 @@ public class MinioUtil {
         boolean flag = bucketExists(bucketName);
 
         if (flag) {
-            minioClient.putObject(
-                    PutObjectArgs.builder().bucket(bucketName).object(objectName).stream(
-                            inputStream, -1, minioConfig.getFileSize())
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(objectName)
                             .contentType(contentType)
-                            .build());
-            StatObjectResponse statObject = statObject(bucketName, objectName);
-            if (statObject != null && statObject.size() > 0) {
+                            .build(),
+                    RequestBody.fromBytes(inputStream.readAllBytes()));
+            HeadObjectResponse statObject = statObject(bucketName, objectName);
+            if (statObject != null && statObject.contentLength() > 0) {
                 return true;
             }
         }
