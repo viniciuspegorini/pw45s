@@ -39,10 +39,17 @@ management:
   tracing:
     sampling:
       probability: 1.0
+  metrics:
+    distribution:
+      # Publica os buckets do histograma de latência HTTP, permitindo calcular percentis (p95, p99) no Grafana
+      percentiles-histogram:
+        http.server: true
   otlp:
     metrics:
       export:
         url: http://localhost:4318/v1/metrics
+        # Intervalo de envio das métricas (padrão 1 minuto). Valor menor para os gráficos reagirem rápido em aula
+        step: 10s
   opentelemetry:
     tracing:
       export:

@@ -12,7 +12,7 @@ Para configurar o servidor é necessário criar um novo projeto Spring Boot Web 
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-starter-server</artifactId>
-    <version>2.4.1</version>
+    <version>4.0.4</version>
 </dependency>
 ```
 Agora é possível acessar a anotação _@EnableAdminServer_, que deve ser adicionada na classe principal da aplicação: 
@@ -20,9 +20,9 @@ Agora é possível acessar a anotação _@EnableAdminServer_, que deve ser adici
 ```java
 @EnableAdminServer
 @SpringBootApplication
-public class AdminApplication(exclude = AdminServerHazelcastAutoConfiguration.class) {
+public class AdminApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootAdminServerApplication.class, args);
+        SpringApplication.run(AdminApplication.class, args);
     }
 }
 ```
@@ -44,7 +44,7 @@ A aplicação que será utilizada como cliente nesse exemplo é o projeto **serv
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-starter-client</artifactId>
-    <version>2.4.1</version>
+    <version>4.0.4</version>
 </dependency>
 ```
 Depois de adicionada a dependência é necessário configurar no cliente o endereço do servidor **admin**. Para isso , deve ser adicionada nas propriedades do projeto **server** as configurações:

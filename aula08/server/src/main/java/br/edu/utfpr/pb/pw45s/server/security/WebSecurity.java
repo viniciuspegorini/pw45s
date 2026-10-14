@@ -115,7 +115,9 @@ public class WebSecurity {
                 "Access-Control-Allow-Headers", "Origin",
                 "Accept", "X-Requested-With", "Content-Type",
                 "Access-Control-Request-Method",
-                "Access-Control-Request-Headers", "Auth-Id-Token"));
+                "Access-Control-Request-Headers", "Auth-Id-Token", "X-Request-Id"));
+        // Permite que a aplicação cliente leia o ID de correlação da requisição (gerado no CrudLogFilter)
+        configuration.setExposedHeaders(List.of("X-Request-Id"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

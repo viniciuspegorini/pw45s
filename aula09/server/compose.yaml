@@ -1,21 +1,27 @@
 services:
   ########################### GRAFANA
   grafana-lgtm:
-    image: 'grafana/otel-lgtm:latest'
+    image: 'grafana/otel-lgtm:0.26.0'
     ports:
       - '3000:3000'
       - '4317'
       - '4318'
-  ########################### MINIO
-  minio:
-    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
-    container_name: minio
-    environment:
-      MINIO_ROOT_USER: "minio@admin"
-      MINIO_ROOT_PASSWORD: "minio@admin"
     volumes:
-      - ./data:/data
+      # Dashboard "API - Observabilidade (aula09)" provisionado automaticamente
+      - ./grafana/dashboards.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/aula09.yaml:ro
+      - ./grafana/dashboards:/otel-lgtm/dashboards-aula09:ro
+  ########################### RUSTFS
+  rustfs:
+    image: rustfs/rustfs:1.0.1
+    environment:
+      RUSTFS_ACCESS_KEY: "rustfsadmin"
+      RUSTFS_SECRET_KEY: "rustfsadmin"
+      RUSTFS_VOLUMES: "/data"
+      RUSTFS_ADDRESS: "0.0.0.0:9000"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_ADDRESS: "0.0.0.0:9001"
+    volumes:
+      - ./rustfs-data:/data
     ports:
-      - 9000:9000
-      - 9001:9001
-    command: server /data --console-address :9001
+      - 9000:9000 # API S3
+      - 9001:9001 # Console web

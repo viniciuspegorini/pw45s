@@ -56,10 +56,15 @@ management:
 logging:
   level:
     root: INFO
-    org.springframework.web: DEBUG
     br.edu.utfpr.pb.pw45s.server: DEBUG
+  # Arquivo de log lido pelo Filebeat e exibido na aba "Logfile" do Spring Boot Admin
   file:
-    name: logs/server.log
+    name: logs/app.json
+  # Log estruturado nativo do Spring Boot: o arquivo é gravado em JSON no formato ECS (Elastic Common Schema),
+  # enquanto o console continua no formato texto padrão. Os campos do MDC (requestId, crudOperation...) são incluídos.
+  structured:
+    format:
+      file: ecs
 
 ---
 spring:
@@ -67,7 +72,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:h2:mem:pw45s-dev
+    url: jdbc:h2:mem:pw45s-dev;DB_CLOSE_DELAY=-1
   jpa:
     hibernate:
       ddl-auto: none
@@ -82,7 +87,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:pw45s-dev
+    url: jdbc:h2:mem:pw45s-dev;DB_CLOSE_DELAY=-1
   jpa:
     hibernate:
       ddl-auto: none
