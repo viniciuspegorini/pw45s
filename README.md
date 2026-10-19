@@ -56,7 +56,7 @@ O Cliente web desenvolvido utilizando a biblioteca **React** com a linguagem de 
 - Upload de arquivos com armazenamento em **Banco de dados** (Base64/BLOB) e em Disco no **Sistema de arquivos**, com validação do arquivo enviado.
 
 ### aula07
-- Upload de arquivos com armazenamento em um **sistema de armazenamento de objetos** utilizando **MINIO** (sistema de armazenamento de objetos **semelhante ao Amazon S3**).
+- Upload de arquivos com armazenamento em um **sistema de armazenamento de objetos** utilizando **RustFS** (sistema de armazenamento de objetos **compatível com o Amazon S3**).
 
 ### aula08
 - Admininstração das aplicações com Spring Boot Admin e Registros de Log.

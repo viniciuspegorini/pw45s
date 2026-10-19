@@ -1,0 +1,105 @@
+spring:
+  application:
+    name: server
+  profiles:
+    active: dev
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:8081
+        instance:
+          service-host-type: ip
+  datasource:
+    generate-unique-name: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
+      hibernate:
+        format_sql: false
+    show-sql: true
+  flyway:
+    baseline-on-migrate: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+storage:
+  endpoint: http://127.0.0.1:9000
+  port: 9000
+  accessKey:  rustfsadmin #Login Account
+  secretKey:  rustfsadmin # Login Password
+  secure: false
+  region: us-east-1 # Region exigida pelo SDK S3 (o RustFS não a utiliza)
+  bucket-name: commons # Bucket Name
+  image-size: 10485760 #  Maximum size of picture file
+  file-size: 104857600 #  Maximum file size
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    br.edu.utfpr.pb.pw45s.server: DEBUG
+  # Arquivo de log lido pelo Filebeat e exibido na aba "Logfile" do Spring Boot Admin
+  file:
+    name: logs/app.json
+  # Log estruturado nativo do Spring Boot: o arquivo é gravado em JSON no formato ECS (Elastic Common Schema),
+  # enquanto o console continua no formato texto padrão. Os campos do MDC (requestId, crudOperation...) são incluídos.
+  structured:
+    format:
+      file: ecs
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:h2:mem:pw45s-dev;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: none
+  h2:
+    console:
+      enabled: false
+  flyway:
+    locations: classpath:/db/prod
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:pw45s-dev;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    locations: classpath:/db/dev
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    locations: classpath:/db/test

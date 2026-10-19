@@ -51,7 +51,7 @@ O **Spring Boot Actuator** é a abordagem tradicional do Spring para observabili
 
 ## Pré-requisitos
 
-- Java 17+
+- Java 25
 - Maven
 - Docker (para o Grafana LGTM)
 
@@ -135,7 +135,61 @@ Execute a aplicação, que como está configurada com o Spring Boot Docker Compo
 
 - No Grafana, acessar **Explore**
 - Selecionar **Prometheus** como data source
-- Query for metrics like `http_server_requests_seconds_count`
+- Consultar métricas como `http_server_request_duration_milliseconds_count` (quantidade de requisições por `http_route` e `http_response_status_code`). O nome segue a convenção semântica do OpenTelemetry, configurada na classe `OpenTelemetryConfiguration`
+
+## Dashboard pronto no Grafana
+
+O arquivo `compose.yaml` monta no container `grafana/otel-lgtm` a pasta `grafana/`, que contém:
+
+- `grafana/dashboards.yaml`: *provider* de provisionamento, que carrega os arquivos JSON da pasta `grafana/dashboards`;
+- `grafana/dashboards/api-observabilidade.json`: o dashboard **API - Observabilidade (aula09)**.
+
+Ao iniciar a aplicação (o Spring Boot Docker Compose sobe o container), basta acessar http://localhost:3000 > **Dashboards** > pasta **Aula09** > **API - Observabilidade (aula09)**. O período padrão é de 15 minutos, com atualização a cada 10 segundos.
+
+| Seção | Painéis | Fonte |
+|-------|---------|-------|
+| Visão geral (RED) | Requisições por segundo, taxa de erro (5xx), latência p95, tempo no ar, requisições e latência p95 por rota, requisições por status HTTP, *heatmap* da latência | Prometheus |
+| JVM | Memória *heap*, uso de CPU, *threads* por estado | Prometheus |
+| Banco de dados | Pool de conexões (HikariCP), chamadas aos repositórios do Spring Data | Prometheus |
+| Logs e traces | Logs por nível, requisições mais lentas (> 300 ms), logs de WARN e ERROR | Loki e Tempo |
+
+Exemplos de consultas utilizadas:
+
+```promql
+# Requisições por segundo, por rota
+sum by (http_request_method, http_route) (rate(http_server_request_duration_milliseconds_count{service_name="server"}[$__rate_interval]))
+
+# Latência p95 por rota
+histogram_quantile(0.95, sum by (le, http_route) (rate(http_server_request_duration_milliseconds_bucket{service_name="server"}[$__rate_interval])))
+```
+
+```logql
+# Quantidade de logs por nível
+sum by (detected_level) (count_over_time({service_name="server"} [$__auto]))
+```
+
+```traceql
+# Requisições com duração maior que 300 ms
+{resource.service.name="server" && duration > 300ms}
+```
+
+Para que o percentil (p95) possa ser calculado, a aplicação publica os *buckets* do histograma de latência HTTP. O intervalo de envio das métricas também foi reduzido para 10 segundos, fazendo os gráficos reagirem rapidamente durante a aula (`application.yml`):
+
+```yaml
+management:
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server: true
+  otlp:
+    metrics:
+      export:
+        step: 10s
+```
+
+**Sugestão de roteiro:** chamar algumas vezes o endpoint `GET /slow` e observar o aumento da latência p95 da rota `/slow`. Na tabela "Requisições mais lentas", clicar no *Trace ID* para abrir o *trace* no Tempo e, a partir do *span*, visualizar os logs daquela requisição no Loki.
+
+O dashboard pode ser editado no Grafana (`allowUiUpdates: true`). Para manter as alterações, exporte o JSON (**Share** > **Export** > **Save to file**) e substitua o arquivo `grafana/dashboards/api-observabilidade.json`. Após alterar o arquivo, reinicie o container do Grafana (`docker compose restart grafana-lgtm`) para que a nova versão seja carregada.
 
 ## Endpoints
 
@@ -145,7 +199,10 @@ Executar os diferentes *endpoits* da API:
 |----------|-------------|
 | `GET /categories` | Lista de categorias |
 | `GET /products` | Lista de Produtos |
-| `POST /user` | Cadastro de um novo usuário |
+| `POST /users` | Cadastro de um novo usuário |
+| `GET /` | Endpoint de demonstração com span customizado (`@Observed`) |
+| `GET /greet/{name}` | Endpoint de demonstração com log e processamento simulado |
+| `GET /slow` | Endpoint de demonstração com resposta lenta (500 ms) |
 
 
 ## O que você obtém automaticamente
@@ -189,7 +246,7 @@ O contexto de rastreamento (*trace context*) aparece como `[traceId-spanId]` (ex
 ### Example: Multi-Span Request
 
 ```
-Request: POST /user
+Request: POST /users
 ├── Span A (controller) ─── *logs* exibe o ID do span A
 │   └── Span B (service) ─── *logs* exibe o ID do span C
 ```

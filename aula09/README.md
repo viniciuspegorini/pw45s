@@ -1,4 +1,4 @@
-# Admininstração das aplicações com Spring Boot Admin e log.
+# Observabilidade com OpenTelemetry (métricas, traces e logs).
 
 Os conteúdos das aplicações cliente, servidor e admin estão nas respectivas pastas, descritos no arquivo README.md de cada uma.
-Em relação aos projetos da pasta aula1 foi alterada apenas a aplicação **server** e foi adicionada a aplicação **admin**.
+Em relação aos projetos da pasta aula07 foi alterada apenas a aplicação **server**, sendo adicionado o `spring-boot-starter-opentelemetry` com exportação via OTLP para a stack Grafana LGTM.

@@ -1,0 +1,111 @@
+spring:
+  application:
+    name: server
+  profiles:
+    active: dev
+  datasource:
+    generate-unique-name: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
+      hibernate:
+        format_sql: false
+    show-sql: true
+  flyway:
+    baseline-on-migrate: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+storage:
+  endpoint: http://127.0.0.1:9000
+  port: 9000
+  accessKey:  rustfsadmin #Login Account
+  secretKey:  rustfsadmin # Login Password
+  secure: false
+  region: us-east-1 # Region exigida pelo SDK S3 (o RustFS não a utiliza)
+  bucket-name: commons # Bucket Name
+  image-size: 10485760 #  Maximum size of picture file
+  file-size: 104857600 #  Maximum file size
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    distribution:
+      # Publica os buckets do histograma de latência HTTP, permitindo calcular percentis (p95, p99) no Grafana
+      percentiles-histogram:
+        http.server: true
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
+        # Intervalo de envio das métricas (padrão 1 minuto). Valor menor para os gráficos reagirem rápido em aula
+        step: 10s
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+  observations:
+    annotations:
+      enabled: true
+server:
+  shutdown: immediate
+logging:
+  level:
+    br.edu.utfpr.pb.pw45s.server: INFO
+    org.springframework.boot.actuator.autoconfigure.opentelemetry: DEBUG
+    org.springframework.boot.docker.compose: DEBUG
+    org.hibernate.SQL: DEBUG        # Shows the SQL
+    org.hibernate.orm.jdbc.bind: TRACE # Shows the parameters values
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:h2:mem:pw45s-dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+  h2:
+    console:
+      enabled: false
+  flyway:
+    locations: classpath:/db/prod
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:pw45s-dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    locations: classpath:/db/dev
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    locations: classpath:/db/test

@@ -1,4 +1,23 @@
+########################### SERVICES
 services:
+  ########################### RUSTFS
+  rustfs:
+    image: rustfs/rustfs:1.0.1
+    container_name: rustfs
+    environment:
+      RUSTFS_ACCESS_KEY: "rustfsadmin"
+      RUSTFS_SECRET_KEY: "rustfsadmin"
+      RUSTFS_VOLUMES: "/data"
+      RUSTFS_ADDRESS: "0.0.0.0:9000"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_ADDRESS: "0.0.0.0:9001"
+    volumes:
+      - ./rustfs-data:/data
+    ports:
+      - 9000:9000 # API S3
+      - 9001:9001 # Console web
+
+  ########################### ELASTICSEARCH
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
     container_name: elasticsearch
@@ -10,6 +29,7 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
 
+  ########################### KIBANA
   kibana:
     image: docker.elastic.co/kibana/kibana:8.14.1
     container_name: kibana
@@ -17,7 +37,28 @@ services:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
       - "5601:5601"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:5601/api/status | grep -q '\"level\":\"available\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
 
+  ########################### KIBANA SETUP
+  # Importa o data view e o dashboard "API - Observabilidade (aula08)" (kibana/dashboard.ndjson)
+  # assim que o Kibana estiver disponível. O container executa uma única vez e é encerrado.
+  kibana-setup:
+    image: curlimages/curl:8.11.1
+    container_name: kibana-setup
+    volumes:
+      - ./kibana:/kibana:ro
+    command: >
+      -s -X POST "http://kibana:5601/api/saved_objects/_import?overwrite=true"
+      -H "kbn-xsrf: true" --form file=@/kibana/dashboard.ndjson
+    depends_on:
+      kibana:
+        condition: service_healthy
+
+  ########################### FILEBEAT
   filebeat:
     build: ./filebeat
     container_name: filebeat
