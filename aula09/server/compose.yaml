@@ -4,8 +4,8 @@ services:
     image: 'grafana/otel-lgtm:0.26.0'
     ports:
       - '3000:3000'
-      - '4317'
-      - '4318'
+      - '4317:4317' # OTLP gRPC (porta fixa: não muda ao reiniciar o container)
+      - '4318:4318' # OTLP HTTP
     volumes:
       # Dashboard "API - Observabilidade (aula09)" provisionado automaticamente
       - ./grafana/dashboards.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/aula09.yaml:ro

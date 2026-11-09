@@ -62,10 +62,10 @@ O Cliente web desenvolvido utilizando a biblioteca **React** com a linguagem de 
 - Admininstração das aplicações com Spring Boot Admin e Registros de Log.
 
 ### aula09
-- Admininstração das aplicações com Spring Boot Admin e Registros de Log (OpenTelemetry).
+- Observabilidade com **OpenTelemetry** (métricas, *traces* e logs) e visualização no Grafana (stack LGTM).
 
 ### aula10
-- Integração da API REST com APIs de processamento de Inteligência Artificial (IA).
+- Integração da API REST com APIs de processamento de Inteligência Artificial (IA) utilizando o **Spring AI**: OpenAI, DeepSeek e modelos locais com o **Ollama**.
 
 ### aula11
 - Deploy de aplicações utilizando Docker.
