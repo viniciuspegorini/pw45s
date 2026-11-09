@@ -1,11 +1,18 @@
 import { useState, useRef } from "react";
 import { Toast } from "primereact/toast";
-import type { IMusicRequest, IMusicResponse } from "@/commons/types";
+import type { AIProvider, IMusicRequest, IMusicResponse } from "@/commons/types";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import AIService from "@/services/ai-service";
 import { Card } from "primereact/card";
+
+const AI_OPTIONS: { label: string; value: AIProvider }[] = [
+  { label: "OpenAI", value: "OPENAI" },
+  { label: "DeepSeek", value: "DEEPSEEK" },
+  { label: "Ollama (local)", value: "OLLAMA" },
+];
 
 export const MusicFormPage = () => {
   const [loading, setLoading] = useState(false);
@@ -15,7 +22,7 @@ export const MusicFormPage = () => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<IMusicRequest>({
-    defaultValues: { theme: "", genre: "" },
+    defaultValues: { theme: "", genre: "", ai: "OPENAI" },
   });
   const toast = useRef<Toast>(null);
   const { getMusicWithParameters } = AIService;
@@ -24,7 +31,7 @@ export const MusicFormPage = () => {
   const onSubmit = async (data: IMusicRequest) => {
     setLoading(true);
     try {
-      const response = await getMusicWithParameters(data.genre, data.theme);
+      const response = await getMusicWithParameters(data.genre, data.theme, data.ai);
       if (
         (response.status === 201 || response.status === 200) &&
         response.data
@@ -41,7 +48,7 @@ export const MusicFormPage = () => {
         toast.current?.show({
           severity: "error",
           summary: "Erro",
-          detail: "Não foi possível salvar o registro.",
+          detail: "Não foi possível gerar a música.",
           life: 3000,
         });
       }
@@ -49,12 +56,12 @@ export const MusicFormPage = () => {
       toast.current?.show({
         severity: "error",
         summary: "Erro",
-        detail: "Não foi possível salvar o registro.",
+        detail: "Não foi possível gerar a música.",
         life: 3000,
       });
     } finally {
       setLoading(false);
-      reset();
+      reset({ genre: "", theme: "", ai: data.ai });
     }
   };
 
@@ -105,6 +112,24 @@ export const MusicFormPage = () => {
           {errors.theme && (
             <small className="p-error">{errors.theme.message}</small>
           )}
+        </div>
+
+        <div>
+          <label htmlFor="ai" className="block mb-2">
+            Provedor de IA
+          </label>
+          <Controller
+            name="ai"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                id="ai"
+                value={field.value}
+                options={AI_OPTIONS}
+                onChange={(e) => field.onChange(e.value)}
+              />
+            )}
+          />
         </div>
 
         <div className="flex justify-end gap-2 mt-4">

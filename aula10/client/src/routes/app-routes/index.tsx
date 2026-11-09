@@ -44,6 +44,7 @@ export function AppRoutes() {
 
           <Route path="/music" element={<MusicFormPage />} />
           <Route path="/ollama" element={<OllamaFormPage />} />
+
           {/* catch all */}
           <Route path="*" element={<NotFound />} />
         </Route>

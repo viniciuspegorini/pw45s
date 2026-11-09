@@ -1,41 +1,48 @@
 package br.edu.utfpr.pb.pw45s.server.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * Exemplo de chamada à API de chat da OpenAI SEM o Spring AI: a requisição HTTP é montada manualmente
+ * com o RestClient, para comparar com a abordagem do Spring AI (MusicService).
+ */
 @Service
 public class ChatGPTService {
-    private final String API_URL = "https://api.openai.com/v1/chat/completions";
-    @Value("${spring.ai.openai.api-key:${openai.api.key:}}")
-    private String apiKey;
+    private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
+    private final RestClient restClient;
+    private final String model;
 
+    public ChatGPTService(@Value("${spring.ai.openai.api-key}") String apiKey,
+                          @Value("${spring.ai.openai.chat.options.model}") String model) {
+        this.model = model;
+        this.restClient = RestClient.builder()
+                .baseUrl(API_URL)
+                .defaultHeaders(headers -> headers.setBearerAuth(apiKey))
+                .build();
+    }
 
+    @SuppressWarnings("unchecked")
     public String ask(String userMessage) {
-        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> request = Map.of(
+                "model", model,
+                "messages", List.of(Map.of("role", "user", "content", userMessage)));
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(apiKey);
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> response = restClient.post()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(request)
+                .retrieve()
+                .body(Map.class);
 
-        Map<String, Object> request = new HashMap<>();
-        request.put("model", "gpt-3.5-turbo");
-
-        List<Map<String, String>> messages = new ArrayList<>();
-        messages.add(Map.of("role", "user", "content", userMessage));
-        request.put("messages", messages);
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
-
-        ResponseEntity<Map> response = restTemplate.postForEntity(API_URL, entity, Map.class);
-        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
+        // Estrutura da resposta: { "choices": [ { "message": { "role": "assistant", "content": "..." } } ] }
+        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
         Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
-
         return (String) message.get("content");
     }
 }
-

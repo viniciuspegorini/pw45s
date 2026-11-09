@@ -76,6 +76,11 @@ public class WebSecurity {
                 .requestMatchers("/api-docs/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
 
+                //endpoints de demonstração da observabilidade (HomeController) e health check do Actuator
+                .requestMatchers(HttpMethod.GET, "/", "/greet/**", "/slow").permitAll()
+                .requestMatchers("/actuator/health").permitAll()
+
+                //exemplo com o Ollama (modelo local) liberado para testes sem autenticação
                 .requestMatchers(HttpMethod.GET, "/ai/ollama/**").permitAll()
 
                 .anyRequest().authenticated()

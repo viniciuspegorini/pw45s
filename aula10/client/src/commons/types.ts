@@ -48,18 +48,22 @@ export interface IProduct {
   imageFile?: string;
 }
 
-export interface IMusicRequest {  
+// Provedores de IA disponíveis na API para a geração de músicas (OLLAMA = modelo local)
+export type AIProvider = "OPENAI" | "DEEPSEEK" | "OLLAMA";
+
+export interface IMusicRequest {
+  genre: string;
+  theme: string;
+  ai: AIProvider;
+}
+
+export interface IMusicResponse {
+  title: string;
+  music: string;
   genre: string;
   theme: string;
 }
 
 export interface IOllamaRequest {
   prompt: string;
-}
-
-export interface IMusicResponse {  
-  title: string;
-  music: string;
-  genre: string;
-  theme: string;
 }

@@ -4,6 +4,7 @@ import br.edu.utfpr.pb.pw45s.server.dto.UserDTO;
 import br.edu.utfpr.pb.pw45s.server.mapper.UserMapper;
 import br.edu.utfpr.pb.pw45s.server.service.UserService;
 import br.edu.utfpr.pb.pw45s.server.utils.GenericResponse;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
