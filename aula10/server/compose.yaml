@@ -1,0 +1,27 @@
+services:
+  ########################### GRAFANA
+  grafana-lgtm:
+    image: 'grafana/otel-lgtm:0.26.0'
+    ports:
+      - '3000:3000'
+      - '4317:4317' # OTLP gRPC (porta fixa: não muda ao reiniciar o container)
+      - '4318:4318' # OTLP HTTP
+    volumes:
+      # Dashboard "API - Observabilidade e IA (aula10)" provisionado automaticamente
+      - ./grafana/dashboards.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/aula10.yaml:ro
+      - ./grafana/dashboards:/otel-lgtm/dashboards-aula10:ro
+  ########################### RUSTFS
+  rustfs:
+    image: rustfs/rustfs:1.0.1
+    environment:
+      RUSTFS_ACCESS_KEY: "rustfsadmin"
+      RUSTFS_SECRET_KEY: "rustfsadmin"
+      RUSTFS_VOLUMES: "/data"
+      RUSTFS_ADDRESS: "0.0.0.0:9000"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_ADDRESS: "0.0.0.0:9001"
+    volumes:
+      - ./rustfs-data:/data
+    ports:
+      - 9000:9000 # API S3
+      - 9001:9001 # Console web

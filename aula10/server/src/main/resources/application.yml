@@ -1,8 +1,29 @@
-server:
-  port: ${SPRING_PORT:8080}
 spring:
-  main:
-    allow-bean-definition-overriding: true
+  application:
+    name: server
+  # Lê as chaves de API do arquivo .env (na pasta server), sem bibliotecas extras. Se o arquivo não existir, é ignorado.
+  # Variáveis de ambiente do sistema têm precedência sobre os valores do .env.
+  config:
+    import: optional:file:.env[.properties]
+  ai:
+    openai:
+      # Sem chave a aplicação inicia normalmente, mas as chamadas à OpenAI retornam erro de autenticação
+      api-key: ${OPENAI_API_KEY:sem-chave}
+      chat:
+        options:
+          model: ${OPENAI_MODEL:gpt-4o-mini}
+    deepseek:
+      api-key: ${DEEPSEEK_API_KEY:sem-chave}
+      chat:
+        options:
+          model: deepseek-chat
+          temperature: 0.8
+    # Ollama local (https://ollama.com): instalar, iniciar o serviço e baixar o modelo (ollama pull llama3.2)
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:llama3.2}
   profiles:
     active: dev
   datasource:
@@ -25,46 +46,55 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  ai:
-    openai:
-      api-key: ${OPENAI_API_KEY:}
-      chat:
-        model: gpt-4o
 
-    deepseek:
-      base-url: https://api.deepseek.com
-      api-key: ${DEEPSEEK_API_KEY}
-      chat:
-        enabled: true
-        model: deepseek-chat
-        temperature: 0.8
-
-    # Ollama local (https://ollama.com): instalar, rodar o serviço e p.ex. `ollama pull llama3.2`
-    ollama:
-      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
-      chat:
-        options:
-          model: ${OLLAMA_MODEL:llama3.2}
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  info:
-    env:
-      enabled: true
-minio:
+storage:
   endpoint: http://127.0.0.1:9000
   port: 9000
-  accessKey:  minio@admin #Login Account
-  secretKey:  minio@admin # Login Password
+  accessKey:  rustfsadmin #Login Account
+  secretKey:  rustfsadmin # Login Password
   secure: false
+  region: us-east-1 # Region exigida pelo SDK S3 (o RustFS não a utiliza)
   bucket-name: commons # Bucket Name
   image-size: 10485760 #  Maximum size of picture file
   file-size: 104857600 #  Maximum file size
-openai:
-  api:
-    key: ${spring.ai.openai.api-key:${OPENAI_API_KEY:}}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    distribution:
+      # Publica os buckets do histograma de latência HTTP, permitindo calcular percentis (p95, p99) no Grafana
+      percentiles-histogram:
+        http.server: true
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
+        # Intervalo de envio das métricas (padrão 1 minuto). Valor menor para os gráficos reagirem rápido em aula
+        step: 10s
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+  observations:
+    annotations:
+      enabled: true
+server:
+  port: ${SPRING_PORT:8080}
+  shutdown: immediate
+logging:
+  level:
+    br.edu.utfpr.pb.pw45s.server: INFO
+    org.springframework.boot.actuator.autoconfigure.opentelemetry: DEBUG
+    org.springframework.boot.docker.compose: DEBUG
+    org.hibernate.SQL: DEBUG        # Shows the SQL
+    org.hibernate.orm.jdbc.bind: TRACE # Shows the parameters values
 
 ---
 spring:
@@ -72,7 +102,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:h2:mem:pw26s-dev
+    url: jdbc:h2:mem:pw45s-dev
   jpa:
     hibernate:
       ddl-auto: none
@@ -87,7 +117,7 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:pw26s-dev
+    url: jdbc:h2:mem:pw45s-dev
   jpa:
     hibernate:
       ddl-auto: none

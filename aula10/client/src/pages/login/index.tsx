@@ -17,12 +17,12 @@ export const LoginPage = () => {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });  
+  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });
   const navigate = useNavigate();
   const { login } = AuthService;
   const toast = useRef<Toast>(null);
   const [loading, setLoading] = useState(false);
-  
+
   const { handleLogin, handleLoginSocial } = useAuth();
 
   //Autenticação GOOGLE
@@ -124,27 +124,29 @@ export const LoginPage = () => {
               <small className="p-error">{errors.password.message}</small>
             )}
           </div>
-
-          <Button
-            type="submit"
-            label="Entrar"
-            icon="pi pi-sign-in"
-            className="w-full"
-            loading={loading || isSubmitting}
-            disabled={loading || isSubmitting}
-          />
           <div className="mb-3">
-          <GoogleLogin
-            locale="pt-BR"
-            onSuccess={onSuccess}
+            <Button
+              type="submit"
+              label="Entrar"
+              icon="pi pi-sign-in"
+              className="w-full"
+              loading={loading || isSubmitting}
+              disabled={loading || isSubmitting}
+            />
+          </div>
+          <div className="flex justify-content-center mb-3">
+            <GoogleLogin
+              locale="pt-BR"
+              onSuccess={onSuccess}
+              type="standard"              
+              size="large"
               onError={() => {
                 toast.current?.show({
                   severity: "error",
                   summary: "Erro",
                   detail: "Falha ao efetuar autenticação com o Google.",
                   life: 3000,
-                });
-                console.log("Google login failed.");
+                });                
               }}
             />
           </div>

@@ -1,0 +1,12 @@
+# Provisionamento do dashboard da aula10 no Grafana do container grafana/otel-lgtm.
+# Os arquivos JSON da pasta grafana/dashboards são carregados automaticamente na pasta "Aula10".
+apiVersion: 1
+
+providers:
+  - name: "Aula10"
+    folder: "Aula10"
+    type: file
+    allowUiUpdates: true
+    options:
+      path: /otel-lgtm/dashboards-aula10
+      foldersFromFilesStructure: false

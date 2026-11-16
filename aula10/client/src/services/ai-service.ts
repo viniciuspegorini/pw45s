@@ -1,31 +1,37 @@
-import { IResponse } from "@/commons/types";
+import type { AIProvider, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
-// URL base para as requisições de produtos
+// URLs base para as requisições de IA
 const musicURL = "/music";
 const ollamaURL = "/ai/ollama";
 
-const getMusicWithParameters = async (genre: string, theme: string): Promise<IResponse> => {
+// Gera uma música com o gênero e o tema informados, utilizando o provedor de IA escolhido (OpenAI, DeepSeek ou Ollama)
+const getMusicWithParameters = async (
+  genre: string,
+  theme: string,
+  ai: AIProvider = "OPENAI"
+): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
-    const data = await api.get(`${musicURL}/parameters?genre=${genre}&theme=${theme}`);
+    const data = await api.get(`${musicURL}/parameters`, { params: { genre, theme, ai } });
     response = {
       status: 200,
       success: true,
-      message: "Musica gerada com sucesso!",
+      message: "Música gerada com sucesso!",
       data: data.data,
     };
   } catch (err: any) {
     response = {
-      status: err.response.status,
+      status: err.response?.status,
       success: false,
-      message: "Falha ao salvar produto",
-      data: err.response.data,
+      message: "Falha ao gerar a música",
+      data: err.response?.data,
     };
   }
   return response;
 };
 
+// Gera uma música com o prompt fixo definido na API
 const getMusic = async (): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
@@ -33,20 +39,21 @@ const getMusic = async (): Promise<IResponse> => {
     response = {
       status: 200,
       success: true,
-      message: "Musica gerada com sucesso!",
+      message: "Música gerada com sucesso!",
       data: data.data,
     };
   } catch (err: any) {
     response = {
-      status: err.response.status,
+      status: err.response?.status,
       success: false,
-      message: "Falha ao salvar produto",
-      data: err.response.data,
+      message: "Falha ao gerar a música",
+      data: err.response?.data,
     };
   }
   return response;
 };
 
+// Envia um prompt para o modelo local executado pelo Ollama
 const askOllama = async (prompt: string): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
@@ -67,7 +74,6 @@ const askOllama = async (prompt: string): Promise<IResponse> => {
   }
   return response;
 };
-
 
 // Objeto que exporta todas as funções
 const AIService = {
