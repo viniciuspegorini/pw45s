@@ -15,7 +15,7 @@ flowchart LR
   Nginx --> Traefik[Traefik :443]
   Traefik --> User[Usuário]
   Nginx -.->|VITE_SERVER_URL| API[API Spring]
-  Nginx -.->|VITE_STORAGE_URL| S3[MinIO / S3]
+  Nginx -.->|VITE_STORAGE_URL| S3[RustFS / S3]
 ```
 
 1. Push na branch `main` dispara o pipeline (webhook ou polling).
@@ -63,7 +63,7 @@ location / {
 | Variável | `.env.development` | `.env.production` | Uso |
 |----------|--------------------|-------------------|-----|
 | `VITE_SERVER_URL` | `http://localhost:8080` | `https://api.viniciuspegorini.com.br` | URL base da API (`src/lib/axios.ts`) |
-| `VITE_STORAGE_URL` | `http://localhost:9000/pw45s` | `https://minio.viniciuspegorini.com.br/pw45s` | URL pública do bucket com as imagens dos produtos |
+| `VITE_STORAGE_URL` | `http://localhost:9000/pw45s` | `https://rustfs.viniciuspegorini.com.br/pw45s` | URL pública do bucket com as imagens dos produtos |
 | `VITE_GOOGLE_CLIENT_ID` | Client ID do curso | Client ID do curso | Login com o Google (`src/main.tsx`); deve ser o mesmo `GOOGLE_CLIENT_ID` da API |
 
 Uso no código:
@@ -76,7 +76,7 @@ baseURL: import.meta.env.VITE_SERVER_URL
 src={`${import.meta.env.VITE_STORAGE_URL}/${product.imageName}`}
 ```
 
-Antes do deploy, ajuste o `.env.production` para os subdomínios reais da API e do MinIO (os mesmos hosts configurados no Traefik). No Google Cloud Console, adicione o domínio do cliente em **Authorized JavaScript origins** do Client ID.
+Antes do deploy, ajuste o `.env.production` para os subdomínios reais da API e do RustFS (os mesmos hosts configurados no Traefik). No Google Cloud Console, adicione o domínio do cliente em **Authorized JavaScript origins** do Client ID.
 
 ## docker-compose.yml
 
@@ -142,7 +142,7 @@ Acesse via Traefik: `https://<seu-dominio>` ou diretamente: `http://<IP>:8100`.
 |---------|------------------|
 | **Traefik** | Termina TLS e roteia o domínio do frontend para o container Nginx |
 | **API Spring** | Backend REST; URL definida em `VITE_SERVER_URL` |
-| **MinIO (S3)** | Imagens dos produtos, lidas diretamente pelo navegador em `VITE_STORAGE_URL` |
+| **RustFS (S3)** | Imagens dos produtos, lidas diretamente pelo navegador em `VITE_STORAGE_URL` |
 | **PostgreSQL** | Usado apenas pela API; o cliente não conecta ao banco |
 | **Jenkins** | Automatiza o build e a publicação da imagem `pw45s-client` |
 
@@ -150,7 +150,7 @@ Ordem sugerida no primeiro deploy:
 
 1. Infraestrutura (`server-config`)
 2. Banco `pw45s` + deploy da **API** (`server/`)
-3. Ajustar `.env.production` com as URLs públicas da API e do MinIO
+3. Ajustar `.env.production` com as URLs públicas da API e do RustFS
 4. Deploy do **cliente** (este projeto)
 
 ## Desenvolvimento local

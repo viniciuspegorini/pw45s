@@ -1,10 +1,10 @@
 # PW45S — API Spring Boot (deploy)
 
-API REST em **Spring Boot 4.0** / **Java 25** que persiste dados no **PostgreSQL**, armazena arquivos em um serviço de **armazenamento de objetos compatível com o Amazon S3** (RustFS em desenvolvimento, MinIO no servidor de produção) e é publicada em produção via **Jenkins**, atrás do **Traefik** (HTTPS e roteamento por subdomínio).
+API REST em **Spring Boot 4.0** / **Java 25** que persiste dados no **PostgreSQL**, armazena arquivos em um serviço de **armazenamento de objetos compatível com o Amazon S3** (**RustFS**, em desenvolvimento e em produção) e é publicada em produção via **Jenkins**, atrás do **Traefik** (HTTPS e roteamento por subdomínio).
 
 O código-fonte é o mesmo da [API da aula09](../../aula09/server/README.MD): autenticação JWT e Google, CRUD de categorias e produtos, upload de imagens com o AWS SDK (S3) e observabilidade com OpenTelemetry. Nesta aula foram adicionados os arquivos de deploy e a configuração por **variáveis de ambiente**.
 
-A infraestrutura base (Traefik, Jenkins, PostgreSQL, MinIO, pgAdmin) é provisionada na pasta [`../server-config/`](../server-config/). Este documento descreve o deploy **desta aplicação** e como ela se integra a esses serviços.
+A infraestrutura base (Traefik, Jenkins, PostgreSQL, RustFS, pgAdmin) é provisionada na pasta [`../server-config/`](../server-config/). Este documento descreve o deploy **desta aplicação** e como ela se integra a esses serviços.
 
 ## Visão geral do fluxo
 
@@ -14,7 +14,7 @@ flowchart LR
   Git -->|webhook / polling| Jenkins[Jenkins]
   Jenkins -->|docker compose build| API[pw45s-server]
   API --> DB[(PostgreSQL)]
-  API --> S3[(MinIO / S3)]
+  API --> S3[(RustFS / S3)]
   User[Usuário] --> Traefik[Traefik :443]
   Traefik --> API
   Traefik --> Client[Cliente React]
@@ -162,15 +162,15 @@ O [`Jenkinsfile`](Jenkinsfile) define o ambiente do pipeline:
 | `DATABASE_URL` | `jdbc:postgresql://postgresql:5432/pw45s` (rede `database`) |
 | `DATABASE_USERNAME`, `DATABASE_PASSWORD` | Credencial Jenkins `postgres_id` |
 | `GOOGLE_CLIENT_ID` | Credencial `pw45s_google_client_id` (campo *Username*) |
-| `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY` | Credencial `pw45s_storage_id` (usuário e senha do MinIO) |
-| `STORAGE_ENDPOINT` | `https://minio.<dominio>` (porta `443`, `STORAGE_SECURE=true`) |
+| `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY` | Credencial `pw45s_storage_id` (usuário e senha do RustFS) |
+| `STORAGE_ENDPOINT` | `https://rustfs.<dominio>` (porta `443`, `STORAGE_SECURE=true`) |
 | `OTLP_ENABLED` | `false` |
 
 Credenciais no Jenkins: **Manage Jenkins → Credentials → System → Global credentials** (detalhes em [`../server-config/Readme.MD`](../server-config/Readme.MD)).
 
 ## Pipeline Jenkins
 
-1. Subir a infraestrutura em `server-config` (Traefik, Jenkins, PostgreSQL, MinIO).
+1. Subir a infraestrutura em `server-config` (Traefik, Jenkins, PostgreSQL, RustFS).
 2. Configurar credenciais globais (`postgres_id`, `pw45s_google_client_id`, `pw45s_storage_id`).
 3. Criar item **Pipeline** (*New Item*) apontando para este repositório:
    - Definition: *Pipeline script from SCM*
@@ -200,7 +200,7 @@ docker compose up -d --build
 
 ## Integração com o armazenamento (S3) e o Traefik
 
-- **Armazenamento**: a API utiliza o cliente S3 do AWS SDK (`software.amazon.awssdk:s3`) com *path-style* (`https://host/bucket/objeto`), funcionando com qualquer serviço compatível com o S3. Em produção, `STORAGE_ENDPOINT` usa HTTPS no subdomínio do MinIO exposto pelo Traefik (`minio.<dominio>`). Bucket padrão: `pw45s`.
+- **Armazenamento**: a API utiliza o cliente S3 do AWS SDK (`software.amazon.awssdk:s3`) com *path-style* (`https://host/bucket/objeto`), funcionando com qualquer serviço compatível com o S3. Em produção, `STORAGE_ENDPOINT` usa HTTPS no subdomínio do RustFS exposto pelo Traefik (`rustfs.<dominio>`). Bucket padrão: `pw45s`.
 - **Traefik**: apenas encaminha HTTPS; não altera variáveis da API. Garanta Traefik **v3.6+** se o Docker Engine for 29+ (ver [`../server-config/traefik/README.md`](../server-config/traefik/README.md)).
 
 ## Checklist pós-deploy
@@ -209,7 +209,7 @@ docker compose up -d --build
 - [ ] Banco `pw45s` criado e Flyway aplicado (`docker logs pw45s-server`)
 - [ ] `https://api.<dominio>/actuator/health` responde `{"status":"UP"}` (certificado válido no Traefik)
 - [ ] Cadastro de usuário e login funcionando
-- [ ] Upload de imagem de produto funcionando (bucket `pw45s` criado no MinIO)
+- [ ] Upload de imagem de produto funcionando (bucket `pw45s` criado no RustFS)
 
 ## Referências
 

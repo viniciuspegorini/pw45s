@@ -14,7 +14,7 @@ pipeline {
         GOOGLE_CLIENT_ID="${GOOGLE_CRED_USR}"
 
         STORAGE_CRED = credentials('pw45s_storage_id')
-        STORAGE_ENDPOINT="https://minio.viniciuspegorini.com.br"
+        STORAGE_ENDPOINT="https://rustfs.viniciuspegorini.com.br"
         STORAGE_PORT=443
         STORAGE_ACCESS_KEY="${STORAGE_CRED_USR}"
         STORAGE_SECRET_KEY="${STORAGE_CRED_PSW}"

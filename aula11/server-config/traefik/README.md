@@ -29,7 +29,7 @@ O **Traefik** é o ponto de entrada do ambiente de produção simulado. Ele atua
 
 ### Subdomínios roteados por outros serviços
 
-O Traefik não hospeda as aplicações; ele encaminha requisições para Jenkins, MinIO, pgAdmin, PostgreSQL e, após o pipeline, para API e cliente React.
+O Traefik não hospeda as aplicações; ele encaminha requisições para Jenkins, RustFS, pgAdmin, PostgreSQL e, após o pipeline, para API e cliente React.
 
 ## Execução isolada
 

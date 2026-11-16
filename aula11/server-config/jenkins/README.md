@@ -54,7 +54,7 @@ Configurar em *Manage Jenkins → Credentials → System → Global credentials*
 |----|-----|
 | `postgres_id` | Usuário/senha PostgreSQL |
 | `pw45s_google_client_id` | OAuth Google (cliente) |
-| `pw45s_storage_id` | Access key / secret do MinIO (S3) |
+| `pw45s_storage_id` | Access key / secret do RustFS (S3) |
 
 ### Privilégios
 
