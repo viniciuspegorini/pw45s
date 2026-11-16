@@ -10,18 +10,30 @@ import { useAuth } from "@/context/hooks/use-auth";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
 
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+
 export const LoginPage = () => {
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });  
+  } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });
   const navigate = useNavigate();
   const { login } = AuthService;
   const toast = useRef<Toast>(null);
   const [loading, setLoading] = useState(false);
-  
-  const { handleLogin } = useAuth();
+
+  const { handleLogin, handleLoginSocial } = useAuth();
+
+  //Autenticação GOOGLE
+  const onSuccess = (response: CredentialResponse) => {
+    console.log(response);
+
+    if (response.credential) {
+      handleLoginSocial(response.credential);
+    }
+
+  }
 
   const onSubmit = async (userLogin: IUserLogin) => {
     setLoading(true);
@@ -63,7 +75,7 @@ export const LoginPage = () => {
   return (
     <div className="flex justify-content-center align-items-center min-h-screen p-4">
       <Toast ref={toast} />
-      <Card title="Login - TESTE" className="w-full sm:w-20rem shadow-2">
+      <Card title="Login" className="w-full sm:w-20rem shadow-2">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-column gap-3"
@@ -112,15 +124,32 @@ export const LoginPage = () => {
               <small className="p-error">{errors.password.message}</small>
             )}
           </div>
-
-          <Button
-            type="submit"
-            label="Entrar"
-            icon="pi pi-sign-in"
-            className="w-full"
-            loading={loading || isSubmitting}
-            disabled={loading || isSubmitting}
-          />
+          <div className="mb-3">
+            <Button
+              type="submit"
+              label="Entrar"
+              icon="pi pi-sign-in"
+              className="w-full"
+              loading={loading || isSubmitting}
+              disabled={loading || isSubmitting}
+            />
+          </div>
+          <div className="flex justify-content-center mb-3">
+            <GoogleLogin
+              locale="pt-BR"
+              onSuccess={onSuccess}
+              type="standard"              
+              size="large"
+              onError={() => {
+                toast.current?.show({
+                  severity: "error",
+                  summary: "Erro",
+                  detail: "Falha ao efetuar autenticação com o Google.",
+                  life: 3000,
+                });                
+              }}
+            />
+          </div>
         </form>
 
         <div className="text-center mt-3">

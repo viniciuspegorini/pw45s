@@ -1,39 +1,14 @@
-# # Fetching the latest node image on apline linux
-# FROM node:alpine AS builder
-
-# # Declaring env
-# ENV NODE_ENV production
-
-# # Setting up the work directory
-# WORKDIR /app
-
-# # Installing dependencies
-# COPY ./package.json ./
-# RUN npm install
-
-# # Copying all the files in our project
-# COPY . .
-
-# # Building our application
-# RUN npm run build
-
-# # Fetching the latest nginx image
-# FROM nginx
-
-# # Copying built assets from builder
-# COPY --from=builder /app/build /usr/share/nginx/html
-
-# # Copying our nginx.conf
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-FROM node:18.15.0-alpine as build-step
-RUN mkdir /app
+# BUILD: gera os arquivos estáticos da aplicação (pasta dist) com as variáveis do arquivo .env.production
+FROM node:22-alpine AS build-step
 WORKDIR /app
-COPY package.json /app
-RUN npm install
-COPY . /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
 RUN npm run build
+
+# DELIVERY: o Nginx serve os arquivos estáticos gerados no build
 FROM nginx:stable-alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-step /app/dist /usr/share/nginx/html
-EXPOSE 8100
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

@@ -12,7 +12,7 @@ const TopMenu: React.FC = () => {
   const navigate = useNavigate();
   const user = "user@email.com";
   const [darkMode, setDarkMode] = useState<boolean>(() => getSavedTheme() === "dark");
-  const { authenticated, handleLogout } = useAuth();
+  const { authenticated, handleLogout, hasPermission } = useAuth();
 
   useEffect(() => {
     applyTheme(darkMode ? "dark" : "light");
@@ -58,6 +58,7 @@ const TopMenu: React.FC = () => {
             },
           ],
         },
+        hasPermission("ROLE_ADMIN") ? { label: "Prod. Show", icon: "pi pi-search", command: () => navigate("/products/show") } : {},
       ]
     : [];
 

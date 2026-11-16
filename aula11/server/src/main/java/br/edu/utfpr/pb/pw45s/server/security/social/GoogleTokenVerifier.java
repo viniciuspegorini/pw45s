@@ -8,6 +8,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,20 +22,21 @@ public class GoogleTokenVerifier {
 
     private static final HttpTransport transport = new NetHttpTransport();
     private static final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-    private static final String CLIENT_ID = "310109923674-la5thl4s4t0b2ajp6acdhq7tra74dn31.apps.googleusercontent.com";
 
-    public Payload verify(String idTokenString)
-            throws GeneralSecurityException, IOException {
-        return GoogleTokenVerifier.verifyToken(idTokenString);
+    // ID do cliente OAuth do Google, lido da variável de ambiente GOOGLE_CLIENT_ID (application.yaml)
+    private final String clientId;
+
+    public GoogleTokenVerifier(@Value("${google.client-id}") String clientId) {
+        this.clientId = clientId;
     }
 
-    private static Payload verifyToken(String idTokenString)
+    public Payload verify(String idTokenString)
             throws GeneralSecurityException, IOException {
         final GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
                                     .Builder(transport, jsonFactory)
                                         .setIssuers(Arrays.asList("https://accounts.google.com",
                                                 "accounts.google.com"))
-                                        .setAudience(Collections.singletonList(CLIENT_ID))
+                                        .setAudience(Collections.singletonList(clientId))
                                         .build();
         log.info("Validating token: {}", idTokenString);
         GoogleIdToken idToken = null;

@@ -39,7 +39,7 @@ O compose modular já define `POSTGRES_DB=pw45s`. No deploy pela raiz, após sub
 docker exec -it postgresql psql -U postgres -c "CREATE DATABASE pw45s;"
 ```
 
-A API Spring e o Jenkins (credencial `postgres-id`) utilizam esse banco.
+A API Spring e o Jenkins (credencial `postgres_id`) utilizam esse banco.
 
 ## Execução isolada
 

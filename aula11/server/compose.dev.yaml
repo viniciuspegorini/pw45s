@@ -1,0 +1,43 @@
+name: pw45s-aula11-dev
+
+# Serviços para executar a API em DESENVOLVIMENTO (perfil dev), na máquina local:
+#   docker compose -f compose.dev.yaml up -d
+#   ./mvnw spring-boot:run
+services:
+  ########################### POSTGRESQL
+  postgresql:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: pw45s
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432' # se a porta 5432 estiver em uso: POSTGRES_PORT=5433 e DATABASE_URL=jdbc:postgresql://localhost:5433/pw45s
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  ########################### RUSTFS (armazenamento de objetos compatível com S3)
+  rustfs:
+    image: rustfs/rustfs:1.0.1
+    environment:
+      RUSTFS_ACCESS_KEY: "rustfsadmin"
+      RUSTFS_SECRET_KEY: "rustfsadmin"
+      RUSTFS_VOLUMES: "/data"
+      RUSTFS_ADDRESS: "0.0.0.0:9000"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_ADDRESS: "0.0.0.0:9001"
+    volumes:
+      - rustfs-data:/data
+    ports:
+      - '9000:9000' # API S3
+      - '9001:9001' # Console web
+  ########################### GRAFANA LGTM (observabilidade, igual à aula09)
+  grafana-lgtm:
+    image: 'grafana/otel-lgtm:0.26.0'
+    ports:
+      - '3000:3000'
+      - '4317:4317' # OTLP gRPC
+      - '4318:4318' # OTLP HTTP
+
+volumes:
+  pgdata:
+  rustfs-data:

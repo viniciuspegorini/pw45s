@@ -1,8 +1,8 @@
 # Configurando o ambiente de produção
 
 Para apresentar uma simulação de ambiente de produção serão utilizadas as tecnologias e serviços:
-- React: Aplicação cliente ([Nesse Repositório](https://github.com/viniciuspegorini/pw45s-client-deploy))
-- Spring Framework: Aplicação servidor ([Nesse Repositório](https://github.com/viniciuspegorini/pw45s-server-deploy))
+- React: Aplicação cliente (pasta [`aula11/client`](../client/README.md) [deste repositório](https://github.com/viniciuspegorini/pw45s))
+- Spring Framework: Aplicação servidor (pasta [`aula11/server`](../server/README.md) [deste repositório](https://github.com/viniciuspegorini/pw45s))
 - PostgresSQL: Banco de dados
 - Registro.br: Registro do domínio
 - Cloudflare: Camada de segurança (ataques DDoS, Firewall, etc...)
@@ -193,8 +193,8 @@ Após isso acesse `http://ip:8081` ou `https://jenkins.dominio.com.br`
 
 ### 5 Realizando o deploy da API
 
-Será realizado o deploy da aplicação localizada em:
-[https://github.com/viniciuspegorini/pw45s-server-deploy](https://github.com/viniciuspegorini/pw45s-server-deploy)
+Será realizado o deploy da aplicação localizada na pasta `aula11/server` do repositório:
+[https://github.com/viniciuspegorini/pw45s](https://github.com/viniciuspegorini/pw45s) (detalhes em [`../server/README.md`](../server/README.md)).
 
 
 Será necessário criar as variáveis de ambiente com as senhas de acesso para o Postgres, Google e Minio. No menu Manage Jenkins > Credentials > System > Globla Credentias criar uma nova chave com as configurações:
@@ -219,14 +219,14 @@ ID: pw45s_google_client_id
 Description: Google
 ```
 
-##### Minio
+##### Armazenamento (MinIO)
 ```properties
 Kind=Username with password
 Scope: Global
 Username: admin
 Password: aula@PW45S
-ID: pw45s_minio_id
-Description: Minio
+ID: pw45s_storage_id
+Description: Armazenamento S3 (MinIO)
 ```
 
 #### 5.1 Criando o banco de dados
@@ -263,14 +263,19 @@ Description= Server application
 Triggers = [x] GitHub hook trigger for GITScm polling
 Definition= Pipeline script from SCM
 SCM= Git
-Repository URL = https://github.com/viniciuspegorini/pw45s-server-deploy
+Repository URL = https://github.com/viniciuspegorini/pw45s
 Branch Specifier: */main
+# O Jenkinsfile da API não está na raiz do repositório
+Script Path = aula11/server/Jenkinsfile
+# Opcional: executar o deploy somente quando a API for alterada
+# SCM > Additional Behaviours > Polling ignores commits in certain paths
+Included Regions = aula11/server/.*
 ```
 
 ### 6 Realizando o deploy do cliente
 
-Será realizado o deploy da aplicação localizada em:
-[https://github.com/viniciuspegorini/pw45s-client-deploy](https://github.com/viniciuspegorini/pw45s-client-deploy)
+Será realizado o deploy da aplicação localizada na pasta `aula11/client` do repositório:
+[https://github.com/viniciuspegorini/pw45s](https://github.com/viniciuspegorini/pw45s) (detalhes em [`../client/README.md`](../client/README.md)).
 
 ```properties
 Name= Client
@@ -280,6 +285,11 @@ Description= Client application
 Triggers = [x] GitHub hook trigger for GITScm polling
 Definition= Pipeline script from SCM
 SCM= Git
-Repository URL = https://github.com/viniciuspegorini/pw45s-client-deploy
+Repository URL = https://github.com/viniciuspegorini/pw45s
 Branch Specifier: */main
+# O Jenkinsfile do cliente não está na raiz do repositório
+Script Path = aula11/client/Jenkinsfile
+# Opcional: executar o deploy somente quando o cliente for alterado
+# SCM > Additional Behaviours > Polling ignores commits in certain paths
+Included Regions = aula11/client/.*
 ```

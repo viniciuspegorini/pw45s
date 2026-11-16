@@ -1,3 +1,5 @@
+# Todas as configurações que mudam entre os ambientes (desenvolvimento e produção) são lidas de variáveis de ambiente.
+# O valor após ":" é o padrão utilizado quando a variável não for informada (ex.: ${SERVER_PORT:8080}).
 server:
   port: ${SERVER_PORT:8080}
   shutdown: immediate
@@ -14,19 +16,73 @@ spring:
             mode: none
       hibernate:
         format_sql: false
-    show-sql: true
+    show-sql: false
+  flyway:
+    baseline-on-migrate: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
-minio:
-  endpoint: ${MINIO_ENDPOINT:http://127.0.0.1:9000}
-  port: ${MINIO_PORT:9000}
-  accessKey: ${MINIO_ACCESS_KEY:minio@admin} #Login Account
-  secretKey: ${MINIO_SECRET_KEY:minio@admin} # Login Password
-  secure: ${MINIO_SECURE:false}
-  bucket-name: ${MINIO_BUCKET_NAME:pw45s} # Bucket Name
+# Armazenamento de arquivos em serviço compatível com o Amazon S3 (RustFS, MinIO, AWS S3...)
+storage:
+  endpoint: ${STORAGE_ENDPOINT:http://127.0.0.1:9000}
+  port: ${STORAGE_PORT:9000}
+  accessKey: ${STORAGE_ACCESS_KEY:rustfsadmin} #Login Account
+  secretKey: ${STORAGE_SECRET_KEY:rustfsadmin} # Login Password
+  secure: ${STORAGE_SECURE:false}
+  region: ${STORAGE_REGION:us-east-1} # Region exigida pelo SDK S3 (o RustFS e o MinIO não a utilizam)
+  bucket-name: ${STORAGE_BUCKET_NAME:pw45s} # Bucket Name
   image-size: 10485760 #  Maximum size of picture file
   file-size: 104857600 #  Maximum file size
 
+# Autenticação com o Google: deve ser o mesmo Client ID utilizado na aplicação cliente
+google:
+  client-id: ${GOOGLE_CLIENT_ID:310109923674-la5thl4s4t0b2ajp6acdhq7tra74dn31.apps.googleusercontent.com}
+
+# Observabilidade (OpenTelemetry): métricas, traces e logs enviados via OTLP para o Grafana LGTM.
+# Em produção, sem um coletor OTLP disponível, defina OTLP_ENABLED=false para desativar o envio.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  tracing:
+    sampling:
+      probability: 1.0
+    export:
+      enabled: ${OTLP_ENABLED:true}
+  logging:
+    export:
+      enabled: ${OTLP_ENABLED:true}
+  metrics:
+    distribution:
+      # Publica os buckets do histograma de latência HTTP, permitindo calcular percentis (p95, p99) no Grafana
+      percentiles-histogram:
+        http.server: true
+  otlp:
+    metrics:
+      export:
+        enabled: ${OTLP_ENABLED:true}
+        url: ${OTLP_ENDPOINT:http://localhost:4318}/v1/metrics
+        step: 10s
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: ${OTLP_ENDPOINT:http://localhost:4318}/v1/logs
+  observations:
+    annotations:
+      enabled: true
+logging:
+  level:
+    br.edu.utfpr.pb.pw45s.server: INFO
+
 ---
+# Produção: PostgreSQL informado pelas variáveis de ambiente (Jenkinsfile / docker-compose.yml)
 spring:
   config:
     activate:
@@ -42,6 +98,7 @@ spring:
   flyway:
     locations: classpath:/db/prod
 ---
+# Desenvolvimento: PostgreSQL local (compose.dev.yaml)
 spring:
   config:
     activate:
@@ -57,13 +114,26 @@ spring:
   flyway:
     locations: classpath:/db/dev
 ---
+# Testes automatizados: banco H2 em memória
 spring:
   config:
     activate:
       on-profile: test
+  datasource:
+    url: jdbc:h2:mem:pw45s-test;DB_CLOSE_DELAY=-1
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
   flyway:
     locations: classpath:/db/test
-
+management:
+  tracing:
+    export:
+      enabled: false
+  logging:
+    export:
+      enabled: false
+  otlp:
+    metrics:
+      export:
+        enabled: false

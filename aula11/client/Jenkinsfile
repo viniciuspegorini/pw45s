@@ -2,14 +2,13 @@ pipeline {
     agent any
 
     stages {
-        stage('Docker Build') {    
+        stage('Docker Compose UP') {
             steps {
-                sh 'docker build -t react-app:latest .'
-            }
-        }
-        stage('Docker Compose UP') {    
-            steps {
-                sh 'docker compose up -d '
+                // O Jenkins faz o checkout do repositório completo (pw45s); o cliente está na pasta aula11/client
+                dir('aula11/client') {
+                    // build da imagem (npm run build + Nginx) e criação/atualização do container
+                    sh 'docker compose up -d --build'
+                }
             }
         }
     }

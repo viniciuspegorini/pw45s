@@ -41,8 +41,8 @@ Ou acompanhar os logs: `docker logs -f jenkins`.
 
 | Item Jenkins | Repositório | Função |
 |--------------|-------------|--------|
-| **Server** | [pw45s-server-deploy](https://github.com/viniciuspegorini/pw45s-server-deploy) | Deploy da API Spring |
-| **Client** | [pw45s-client-deploy](https://github.com/viniciuspegorini/pw45s-client-deploy) | Deploy do frontend React |
+| **Server** | [pw45s](https://github.com/viniciuspegorini/pw45s), *Script Path* `aula11/server/Jenkinsfile` | Deploy da API Spring |
+| **Client** | [pw45s](https://github.com/viniciuspegorini/pw45s), *Script Path* `aula11/client/Jenkinsfile` | Deploy do frontend React |
 
 Tipo: **Pipeline** com script from SCM (Git), branch `main`.
 
@@ -52,9 +52,9 @@ Configurar em *Manage Jenkins → Credentials → System → Global credentials*
 
 | ID | Uso |
 |----|-----|
-| `postgres-id` | Usuário/senha PostgreSQL |
+| `postgres_id` | Usuário/senha PostgreSQL |
 | `pw45s_google_client_id` | OAuth Google (cliente) |
-| `pw45s_minio_id` | Access key / secret MinIO |
+| `pw45s_storage_id` | Access key / secret do MinIO (S3) |
 
 ### Privilégios
 
@@ -76,5 +76,5 @@ docker compose -f docker-compose-jenkins.yml up -d --build
 - [Jenkins Credentials](https://www.jenkins.io/doc/book/using/using-credentials/)
 - [Usar Docker dentro do Jenkins](https://www.jenkins.io/doc/book/installing/docker/)
 - [Docker Engine — instalação Debian](https://docs.docker.com/engine/install/debian/)
-- Repositório servidor: [pw45s-server-deploy](https://github.com/viniciuspegorini/pw45s-server-deploy)
-- Repositório cliente: [pw45s-client-deploy](https://github.com/viniciuspegorini/pw45s-client-deploy)
+- Repositório servidor: [pw45s](https://github.com/viniciuspegorini/pw45s) (pasta `aula11/server`)
+- Repositório cliente: [pw45s](https://github.com/viniciuspegorini/pw45s) (pasta `aula11/client`)

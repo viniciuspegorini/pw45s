@@ -9,6 +9,13 @@ import { CategoryFormPage } from "@/pages/category-form";
 import { ProductListPage } from "@/pages/product-list";
 import { ProductFormPage } from "@/pages/product-form";
 import { NotFound } from "@/pages/not-found";
+import { ProductShow } from "@/pages/product-show";
+import { Unauthorized } from "@/pages/unauthorized";
+
+const ROLES = {
+  User: "ROLE_USER",
+  Admin: "ROLE_ADMIN",
+}
 
 export function AppRoutes() {
   return (
@@ -18,10 +25,12 @@ export function AppRoutes() {
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
 
-        {/* protected routes */}
-        <Route element={<RequireAuth />}>
+        {/* protected routes - Roles: User and Admin */}
+        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.User]} />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
+
+          <Route path="unauthorized" element={<Unauthorized />} />
 
           <Route path="/categories" element={<CategoryListPage />} />
           <Route path="/categories/new" element={<CategoryFormPage />} />
@@ -33,6 +42,11 @@ export function AppRoutes() {
 
           {/* catch all */}
           <Route path="*" element={<NotFound />} />
+        </Route>
+
+        {/* protected routes - Roles: Admin */}
+        <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+          <Route path="/products/show" element={<ProductShow />} />
         </Route>
       </Route>
     </Routes>

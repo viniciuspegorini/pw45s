@@ -1,6 +1,8 @@
 # PW45S — Cliente React (deploy)
 
-Aplicação **React 19** + **TypeScript** + **Vite** servida por **Nginx** em container Docker. O build de produção embute a URL da API; o tráfego público passa pelo **Traefik** (HTTPS). O deploy automatizado é feito pelo **Jenkins**, no mesmo servidor onde rodam Traefik, PostgreSQL (API) e demais serviços de [`../server-config/`](../server-config/).
+Aplicação **React 19** + **TypeScript** + **Vite** servida por **Nginx** em container Docker. O build de produção embute as URLs da API e do armazenamento de arquivos; o tráfego público passa pelo **Traefik** (HTTPS). O deploy automatizado é feito pelo **Jenkins**, no mesmo servidor onde rodam Traefik, PostgreSQL (API) e demais serviços de [`../server-config/`](../server-config/).
+
+O código-fonte é o mesmo da [aplicação cliente da aula07](../../aula07/client/README.md) (utilizada também nas aulas 08 e 09): cadastros de categorias e produtos, login com usuário e senha ou Google, upload e exibição da imagem do produto e tema claro/escuro. Nesta aula foram adicionados os arquivos de deploy e as URLs passaram a ser lidas de **variáveis de ambiente**.
 
 ## Visão geral do fluxo
 
@@ -9,62 +11,78 @@ flowchart LR
   Dev[Desenvolvedor] -->|push main| Git[Repositório Git]
   Git --> Jenkins[Jenkins]
   Jenkins -->|npm run build| Build[Estágio Node]
-  Build --> Nginx[Imagem nginx:alpine]
+  Build --> Nginx[Imagem nginx:stable-alpine]
   Nginx --> Traefik[Traefik :443]
   Traefik --> User[Usuário]
   Nginx -.->|VITE_SERVER_URL| API[API Spring]
+  Nginx -.->|VITE_STORAGE_URL| S3[MinIO / S3]
 ```
 
 1. Push na branch `main` dispara o pipeline (webhook ou polling).
-2. **Docker build** — estágio Node compila o Vite; estágio Nginx serve os arquivos estáticos em `/usr/share/nginx/html`.
+2. **Docker build**: o estágio Node compila o Vite; o estágio Nginx serve os arquivos estáticos em `/usr/share/nginx/html`.
 3. **Docker Compose** sobe o container `pw45s-client` na rede `web`.
 4. O **Traefik** roteia `https://<dominio>` para a porta 80 do container.
 
-A API (`server/`) é deployada separadamente; o cliente consome `VITE_SERVER_URL` configurada no momento do build.
+A API (`server/`) é publicada separadamente; o cliente consome `VITE_SERVER_URL`, configurada no momento do build.
 
 ## Arquivos envolvidos no deploy
 
 | Arquivo | Função |
 |---------|--------|
-| [`Dockerfile`](Dockerfile) | Build multi-stage: Node 18 → `npm run build`; Nginx Alpine serve `dist/` |
-| [`docker-compose.yml`](docker-compose.yml) | Serviço `pw45s-client`, labels Traefik e rede `web` |
-| [`Jenkinsfile`](Jenkinsfile) | `docker build` + `docker compose up -d` |
-| [`.env.production`](.env.production) | `VITE_SERVER_URL` usada no build de produção |
-| [`.env.development`](.env.development) | URL da API em desenvolvimento local |
-| [`vite.config.ts`](vite.config.ts) | Configuração Vite (alias `@` → `src`) |
-| [`package.json`](package.json) | Script `build`: `tsc -b && vite build` |
+| [`Dockerfile`](Dockerfile) | Build multi-stage: Node 22 executa `npm ci` e `npm run build`; Nginx Alpine serve `dist/` |
+| [`nginx.conf`](nginx.conf) | Configuração do Nginx: devolve o `index.html` para as rotas do React Router |
+| [`.dockerignore`](.dockerignore) | Evita copiar `node_modules`, `dist` e `.git` para a imagem |
+| [`docker-compose.yml`](docker-compose.yml) | Serviço `pw45s-client` (build da imagem), labels Traefik e rede `web` |
+| [`Jenkinsfile`](Jenkinsfile) | `docker compose up -d --build` |
+| [`.env.production`](.env.production) | Variáveis `VITE_*` usadas no build de produção |
+| [`.env.development`](.env.development) | Variáveis `VITE_*` usadas em desenvolvimento local (`npm run dev`) |
+| [`src/vite-env.d.ts`](src/vite-env.d.ts) | Tipos das variáveis `VITE_*` (TypeScript) |
 | [`src/lib/axios.ts`](src/lib/axios.ts) | Cliente HTTP com `import.meta.env.VITE_SERVER_URL` |
 
 ## Dockerfile
 
 Build em duas etapas:
 
-1. **`node:18.15.0-alpine`** — `npm install`, copia o projeto, `npm run build` (saída em `dist/`).
-2. **`nginx:stable-alpine`** — copia `dist/` para `/usr/share/nginx/html`, expõe porta **80** internamente.
+1. **`node:22-alpine`**: `npm ci` (instala exatamente as versões do `package-lock.json`), copia o projeto e executa `npm run build` (saída em `dist/`).
+2. **`nginx:stable-alpine`**: copia o `nginx.conf` e a pasta `dist/` para `/usr/share/nginx/html` e expõe a porta **80**.
 
-> As variáveis `VITE_*` são resolvidas **no build**. Para alterar a URL da API em produção, é necessário **rebuildar** a imagem com `.env.production` correto (o pipeline Jenkins faz isso a cada deploy).
+> As variáveis `VITE_*` são resolvidas **no build**. Para alterar as URLs em produção, é necessário **rebuildar** a imagem com o `.env.production` correto (o pipeline Jenkins faz isso a cada deploy).
+
+### Rotas do React Router no Nginx
+
+A aplicação utiliza o `BrowserRouter`, então rotas como `/products` não existem como arquivos na pasta `dist/`. Sem configuração, ao recarregar a página (F5) ou acessar um link direto, o Nginx retornaria **404**. O [`nginx.conf`](nginx.conf) resolve isso respondendo com o `index.html` sempre que o arquivo não existir:
+
+```nginx
+location / {
+    try_files $uri $uri/ /index.html;
+}
+```
 
 ## Variáveis de ambiente (Vite)
 
-| Arquivo | Variável | Exemplo |
-|---------|----------|---------|
-| `.env.development` | `VITE_SERVER_URL` | `http://localhost:8080` |
-| `.env.production` | `VITE_SERVER_URL` | `https://api.viniciuspegorini.com.br` |
+| Variável | `.env.development` | `.env.production` | Uso |
+|----------|--------------------|-------------------|-----|
+| `VITE_SERVER_URL` | `http://localhost:8080` | `https://api.viniciuspegorini.com.br` | URL base da API (`src/lib/axios.ts`) |
+| `VITE_STORAGE_URL` | `http://localhost:9000/pw45s` | `https://minio.viniciuspegorini.com.br/pw45s` | URL pública do bucket com as imagens dos produtos |
+| `VITE_GOOGLE_CLIENT_ID` | Client ID do curso | Client ID do curso | Login com o Google (`src/main.tsx`); deve ser o mesmo `GOOGLE_CLIENT_ID` da API |
 
 Uso no código:
 
 ```typescript
 // src/lib/axios.ts
 baseURL: import.meta.env.VITE_SERVER_URL
+
+// src/components/product-card/index.tsx e src/pages/product-form/index.tsx
+src={`${import.meta.env.VITE_STORAGE_URL}/${product.imageName}`}
 ```
 
-Antes do deploy, ajuste `.env.production` para o subdomínio real da API (o mesmo host configurado no Traefik para `pw45s-server`).
+Antes do deploy, ajuste o `.env.production` para os subdomínios reais da API e do MinIO (os mesmos hosts configurados no Traefik). No Google Cloud Console, adicione o domínio do cliente em **Authorized JavaScript origins** do Client ID.
 
 ## docker-compose.yml
 
 | Configuração | Valor |
 |--------------|-------|
-| Imagem | `react-app:latest` (tag gerada no Jenkins) |
+| Imagem / build | `pw45s-client` (build local via `Dockerfile`) |
 | Container | `pw45s-client` |
 | Porta host | `8100:80` (acesso direto opcional) |
 | Rede | `web` (externa, compartilhada com Traefik) |
@@ -93,23 +111,27 @@ Criar job **Client** no Jenkins:
 |-------|--------|
 | Tipo | Pipeline |
 | SCM | Git |
-| Repositório | Este código ou [pw45s-client-deploy](https://github.com/viniciuspegorini/pw45s-client-deploy) |
+| Repository URL | `https://github.com/viniciuspegorini/pw45s` |
 | Branch | `*/main` |
-| Script | `Jenkinsfile` do repositório |
+| **Script Path** | `aula11/client/Jenkinsfile` (o Jenkinsfile não está na raiz do repositório) |
 
-Estágios do [`Jenkinsfile`](Jenkinsfile):
+O [`Jenkinsfile`](Jenkinsfile) possui um único estágio, **Docker Compose UP**, que executa `docker compose up -d --build` dentro da pasta `aula11/client` (bloco `dir('aula11/client')`): gera a imagem `pw45s-client` e cria (ou atualiza) o container.
 
-1. **Docker Build** — `docker build -t react-app:latest .`
-2. **Docker Compose UP** — `docker compose up -d`
+Como o repositório contém todas as aulas, qualquer *push* dispararia o job pelo *webhook*. Para executar o deploy somente quando o cliente for alterado, em **SCM → Additional Behaviours → Polling ignores commits in certain paths**, informe em *Included Regions*:
+
+```text
+aula11/client/.*
+```
 
 O Jenkins utiliza o Docker do host (socket montado no container Jenkins da infraestrutura).
 
 ### Deploy manual
 
+Na pasta `aula11/client/`:
+
 ```bash
 # conferir .env.production
-docker build -t react-app:latest .
-docker compose up -d
+docker compose up -d --build
 ```
 
 Acesse via Traefik: `https://<seu-dominio>` ou diretamente: `http://<IP>:8100`.
@@ -119,33 +141,37 @@ Acesse via Traefik: `https://<seu-dominio>` ou diretamente: `http://<IP>:8100`.
 | Serviço | Papel no cliente |
 |---------|------------------|
 | **Traefik** | Termina TLS e roteia o domínio do frontend para o container Nginx |
-| **API Spring** | Backend REST; URL definida em `VITE_SERVER_URL` (não passa pelo Traefik do cliente) |
+| **API Spring** | Backend REST; URL definida em `VITE_SERVER_URL` |
+| **MinIO (S3)** | Imagens dos produtos, lidas diretamente pelo navegador em `VITE_STORAGE_URL` |
 | **PostgreSQL** | Usado apenas pela API; o cliente não conecta ao banco |
-| **Jenkins** | Automatiza build e publicação da imagem `react-app:latest` |
+| **Jenkins** | Automatiza o build e a publicação da imagem `pw45s-client` |
 
 Ordem sugerida no primeiro deploy:
 
 1. Infraestrutura (`server-config`)
 2. Banco `pw45s` + deploy da **API** (`server/`)
-3. Ajustar `.env.production` com a URL pública da API
+3. Ajustar `.env.production` com as URLs públicas da API e do MinIO
 4. Deploy do **cliente** (este projeto)
 
 ## Desenvolvimento local
+
+Com a API em execução (ver [`../server/README.md`](../server/README.md)):
 
 ```bash
 npm install
 npm run dev
 ```
 
-Com a API em `http://localhost:8080`, use `.env.development`. O Vite sobe em `http://localhost:5173` (porta padrão).
+O Vite utiliza o `.env.development` e sobe em `http://localhost:5173` (porta padrão).
 
 ## Checklist pós-deploy
 
-- [ ] `.env.production` com `VITE_SERVER_URL` da API em HTTPS
-- [ ] Imagem `react-app:latest` buildada após qualquer mudança de URL
+- [ ] `.env.production` com `VITE_SERVER_URL` e `VITE_STORAGE_URL` em HTTPS
+- [ ] Imagem `pw45s-client` gerada novamente após qualquer mudança de URL
 - [ ] Container `pw45s-client` na rede `web`
 - [ ] DNS do domínio raiz apontando para o Droplet (Cloudflare)
-- [ ] `https://<dominio>` carrega o SPA e as chamadas vão para a API
+- [ ] `https://<dominio>` carrega o SPA, as chamadas vão para a API e as imagens dos produtos são exibidas
+- [ ] Recarregar uma rota interna (ex.: `/products`) não retorna 404
 
 ## Referências
 
@@ -156,4 +182,3 @@ Com a API em `http://localhost:8080`, use `.env.development`. O Vite sobe em `ht
 - [Jenkins — Pipeline](https://www.jenkins.io/doc/book/pipeline/)
 - API e banco: [`../server/README.md`](../server/README.md)
 - Infraestrutura: [`../server-config/Readme.MD`](../server-config/Readme.MD)
-- Repositório de deploy (referência): [pw45s-client-deploy](https://github.com/viniciuspegorini/pw45s-client-deploy)
