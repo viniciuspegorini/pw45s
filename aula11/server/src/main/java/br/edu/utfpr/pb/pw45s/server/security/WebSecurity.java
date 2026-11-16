@@ -76,6 +76,10 @@ public class WebSecurity {
                 .requestMatchers("/api-docs/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
 
+                //endpoints de demonstração da observabilidade (HomeController) e health check do Actuator
+                .requestMatchers(HttpMethod.GET, "/", "/greet/**", "/slow").permitAll()
+                .requestMatchers("/actuator/health").permitAll()
+
                 .anyRequest().authenticated()
         );
         http.authenticationManager(authenticationManager)

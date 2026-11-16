@@ -2,14 +2,15 @@
 networks:
   web:
     external: true
-  internal:
-    external: false
 
 ########################### SERVICES
 services:
   pw45s-client:
-    image: react-app:latest
+    image: pw45s-client
     container_name: pw45s-client
+    build:
+      context: ./
+      dockerfile: Dockerfile
     restart: unless-stopped
     labels:
       - "traefik.enable=true"

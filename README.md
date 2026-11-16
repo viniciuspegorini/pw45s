@@ -68,7 +68,7 @@ O Cliente web desenvolvido utilizando a biblioteca **React** com a linguagem de 
 - Integração da API REST com APIs de processamento de Inteligência Artificial (IA) utilizando o **Spring AI**: OpenAI, DeepSeek e modelos locais com o **Ollama**.
 
 ### aula11
-- Deploy de aplicações utilizando Docker.
+- Deploy de aplicações utilizando Docker, Docker Compose, Traefik (proxy reverso com HTTPS) e Jenkins (CI/CD).
 
 ### aula12
 - Python no navegador com PyScript + Pyodide.

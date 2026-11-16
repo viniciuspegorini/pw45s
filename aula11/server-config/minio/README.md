@@ -31,7 +31,7 @@ O comando de inicialização é: `server /data --console-address :9001`.
 
 ### Integração com a aplicação
 
-A API Spring deve configurar endpoint, access key e secret compatíveis com o MinIO. No Jenkins, a credencial global `pw45s_minio_id` armazena usuário e senha para o pipeline de deploy do servidor.
+A API Spring deve configurar endpoint, access key e secret compatíveis com o MinIO. No Jenkins, a credencial global `pw45s_storage_id` armazena usuário e senha (variáveis `STORAGE_ACCESS_KEY` e `STORAGE_SECRET_KEY` da API) para o pipeline de deploy do servidor.
 
 ### DNS na Cloudflare
 
