@@ -1,41 +1,42 @@
-version: "3.9"
-    
 ########################### SERVICES
 services:
-  ########################### POSTGRESQL
-  minio:
-    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z
-    container_name: minio
+  ########################### RUSTFS - armazenamento de objetos compatível com S3
+  rustfs:
+    image: rustfs/rustfs:1.0.1
+    container_name: rustfs
     environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=aula@PW45S
-      - MINIO_BROWSER_REDIRECT_URL=http://minio-console.viniciuspegorini.com.br
+      - RUSTFS_ACCESS_KEY=${RUSTFS_ACCESS_KEY}
+      - RUSTFS_SECRET_KEY=${RUSTFS_SECRET_KEY}
+      - RUSTFS_VOLUMES=/data
+      - RUSTFS_ADDRESS=0.0.0.0:9000
+      - RUSTFS_CONSOLE_ENABLE=true
+      - RUSTFS_CONSOLE_ADDRESS=0.0.0.0:9001
+      - TZ=America/Sao_Paulo
     volumes:
-      - ./appdata/minio/data:/data
+      - ./appdata/rustfs/data:/data
     ports:
-      - 8000:9000
-      - 8001:9001
-    command: server /data --console-address :9001
+      - 8000:9000 # API S3
+      - 8001:9001 # Console web
     labels: # Configs for traefik
       - traefik.enable=true
       - traefik.docker.network=web
       - traefik.constraint-label=web
-      - traefik.http.routers.minio.service=minio
-      - traefik.http.routers.minio.rule=Host(`minio.viniciuspegorini.com.br`)
-      - traefik.http.routers.minio.entrypoints=websecure
-      - traefik.http.routers.minio.tls.certresolver=letsencrypt
-      - traefik.http.services.minio.loadbalancer.server.port=8000
-      - traefik.http.routers.minio-console.service=minio-console
-      - traefik.http.routers.minio-console.rule=Host(`minio-console.viniciuspegorini.com.br`)
-      - traefik.http.services.minio-console.loadbalancer.server.port=8001
-      - traefik.http.routers.minio-console.entrypoints=websecure
-      - traefik.http.routers.minio-console.tls.certresolver=letsencrypt
+      - traefik.http.routers.rustfs.service=rustfs
+      - traefik.http.routers.rustfs.rule=Host(`rustfs.${DOMAIN}`)
+      - traefik.http.routers.rustfs.entrypoints=websecure
+      - traefik.http.routers.rustfs.tls.certresolver=letsencrypt
+      - traefik.http.services.rustfs.loadbalancer.server.port=9000
+      - traefik.http.routers.rustfs-console.service=rustfs-console
+      - traefik.http.routers.rustfs-console.rule=Host(`rustfs-console.${DOMAIN}`)
+      - traefik.http.services.rustfs-console.loadbalancer.server.port=9001
+      - traefik.http.routers.rustfs-console.entrypoints=websecure
+      - traefik.http.routers.rustfs-console.tls.certresolver=letsencrypt
     networks:
       - web
       - database
     restart: unless-stopped
 
-########################### NETWORKS    
+########################### NETWORKS
 networks:
   web:
     name: web

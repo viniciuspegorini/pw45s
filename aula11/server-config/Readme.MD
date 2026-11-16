@@ -74,7 +74,7 @@ Selecione o plano e continue.
 Ele listará todos os registros DNS atuais (A, CNAME, MX, etc.).
 Revise cuidadosamente.
 Se já está usando DigitalOcean, mantenha o registro A apontando para o IP público da sua Droplet, criado no final do passo Configurando a Digital Ocean. 
-Vamos precisar criar subdomínios para o Jenkins, Minio, Minio Console, PgAdmin e Traefik.
+Vamos precisar criar subdomínios para o Jenkins, RustFS (`rustfs`), RustFS Console (`rustfs-console`), PgAdmin e Traefik.
 Para isso criar um Registro do Tipo A apontando para o IP do Droplet na Digital Ocean.
 
 ### 3.5. Alterar os Nameservers no seu provedor de domínio
@@ -166,6 +166,17 @@ chmod 600 ./appdata/traefik/acme.json
 chown root:root ./appdata/traefik/acme.json
 ```
 
+### 4.3.1 Pasta de dados do RustFS
+
+O container do RustFS (armazenamento de objetos compatível com S3, utilizado para as imagens dos produtos) não é executado como `root`. Crie a pasta de dados e altere o dono para o usuário do container (UID `10001`):
+
+```cmd
+mkdir -p ./appdata/rustfs/data
+sudo chown -R 10001:10001 ./appdata/rustfs/data
+```
+
+Mais detalhes em [`rustfs/README.md`](rustfs/README.md).
+
 ### 4.4 Executando o docker-compose.yml
 
 Todos os serviços estão configurados no arquivo docker-compose.yml, para executar basta criar o arquivo no servidorm junto com o Dockerfile e o arquivo .env com as variáveis de ambiente e executar:
@@ -197,7 +208,7 @@ Será realizado o deploy da aplicação localizada na pasta `aula11/server` do r
 [https://github.com/viniciuspegorini/pw45s](https://github.com/viniciuspegorini/pw45s) (detalhes em [`../server/README.md`](../server/README.md)).
 
 
-Será necessário criar as variáveis de ambiente com as senhas de acesso para o Postgres, Google e Minio. No menu Manage Jenkins > Credentials > System > Globla Credentias criar uma nova chave com as configurações:
+Será necessário criar as variáveis de ambiente com as senhas de acesso para o Postgres, Google e RustFS. No menu Manage Jenkins > Credentials > System > Globla Credentias criar uma nova chave com as configurações:
 
 ##### Postgres
 ```properties
@@ -219,14 +230,14 @@ ID: pw45s_google_client_id
 Description: Google
 ```
 
-##### Armazenamento (MinIO)
+##### Armazenamento (RustFS)
 ```properties
 Kind=Username with password
 Scope: Global
 Username: admin
 Password: aula@PW45S
 ID: pw45s_storage_id
-Description: Armazenamento S3 (MinIO)
+Description: Armazenamento S3 (RustFS)
 ```
 
 #### 5.1 Criando o banco de dados
